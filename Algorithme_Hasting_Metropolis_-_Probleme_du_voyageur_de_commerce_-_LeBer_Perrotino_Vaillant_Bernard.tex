@@ -1,0 +1,571 @@
+\documentclass{article}
+
+% Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
+\usepackage{ifxetex}
+\usepackage{ifluatex}
+\ifxetex
+  % XeTeX est utilisé :
+  \usepackage{fontspec}
+\else
+  \ifluatex
+    % LuaTeX est utilisé :
+    \usepackage{fontspec}
+  \else
+    % pdfLaTeX ou autre moteur est utilisé :
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+  \fi
+\fi
+
+% Autres packages :
+\usepackage[french]{babel}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{stmaryrd}
+\usepackage[explicit]{titlesec}
+% Package permettant de générer des graphes :
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{pgfplots}
+
+\sloppy % Pour que les URLs ne dépassent pas des marges.
+
+\title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
+\author{PEROTTINO Tony, VAILLANT Corentin,\\ LE BER Tom, BERNARD Léo}
+
+% Enable SageTeX to run SageMath code right inside this LaTeX file.
+% http://doc.sagemath.org/html/en/tutorial/sagetex.html
+% \usepackage{sagetex}
+
+% Enable PythonTeX to run Python – https://ctan.org/pkg/pythontex
+% \usepackage{pythontex}
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+\section*{Préambule}
+
+Ce rapport s'inscrit dans le cadre de la matière "Projet de Mathématiques" de l'université de Toulouse (Paul Sabatier). \\
+L'objectif de ce rapport est de présenter et de prouver l'algorithme d'Hastings-Metropolis. À la fois d'expliquer en détail son fonctionnement, mais aussi de comprendre l'intérêt qu'il présente dans les sciences et en quoi il prend sa valeur. \\
+Pour illustrer l'algorithme, nous nous intéresserons au problème du voyageur de commerce et étudierons sa complexité.
+
+
+\section{Introduction}
+
+Afin de comprendre en profondeur ce sujet, il est nécessaire de s'en faire une idée globale, même naïve, pour pouvoir suivre convenablement la ligne directrice de notre discours.
+
+\subsection{Informations générales et description historique}
+
+L'algorithme d'Hastings-Metropolis consiste en une méthode d'échantillonnage stochastique permettant, à partir d'une distribution de probabilité donnée, de pouvoir décrire son comportement et d'obtenir des statistiques dessus. Cet algorithme prend sa valeur quand la distribution est difficile à analyser (systèmes multidimensionnels, par exemple). Cette méthode est marquante, car elle a été conceptualisée tôt dans l'histoire de l'informatique et a mis des décennies avant d'être prouvée et expliquée entièrement. \\
+C'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
+Cela illustre une dynamique fréquente dans les sciences, où le mérite est disproportionnellement attribué à une personne alors qu'il s'agit des efforts de toute une équipe. En particulier, Arianna Rosenbluth était considérée comme brillante par le monde scientifique. \\
+
+\url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
+
+\url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius} \\
+
+En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribution quelconque, et c'est cette version généralisée qui est connue sous le nom d'algorithme de Metropolis-Hastings. Cette extension a eu de nombreuses applications dans divers domaines scientifiques, comme en statistique bayésienne (espaces complexes multidimensionnels), en biologie computationnelle (analyse des séquences génétiques), en économie et en finance (modèles stochastiques MCMC en général), etc. \\
+
+Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile et NP-complet, ce qui signifie qu'il est extrêmement difficile de trouver une solution optimale en temps polynomial, et il est peu probable que des algorithmes en temps polynomial existent pour résoudre ce problème de manière exacte. \\
+L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
+Le problème consiste à trouver le chemin le plus court entre des points donnés en connaissant la distance entre eux. Il faut alors tâcher de commencer et terminer par le même point (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
+
+% Insérer une image !
+\url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
+
+\url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+
+\subsection{Pourquoi HM permet-il de résoudre le problème du voyageur de commerce ?}
+
+Le principe mathématique derrière HM repose sur la construction dynamique d'une chaîne de Markov, qui n'est pas connue au préalable mais se développe au fil des itérations. À mesure que l'algorithme progresse, le comportement de cette chaîne converge vers la distribution cible, permettant d'obtenir un échantillon fiable par rapport aux états de la distribution. \\
+Quant au problème du voyageur de commerce, il peut être représenté par un graphe orienté ayant un sommet pour chaque ville et une arête pour chaque temps de trajet. Nous verrons par la suite qu'une chaîne de Markov peut être associée à un graphe orienté, c'est-à-dire que le problème du voyageur de commerce est résoluble par HM. \\
+
+De plus, nous avons précisé au préalable que le voyageur de commerce était NP-difficile et NP-complet. En conséquence, l'objectif de HM n'est pas d'apporter la réponse exacte au problème, mais une approximation fidèle de la solution, ce qui peut sembler contre-intuitif. Cette approximation est la caractéristique principale des méthodes MCMC que nous aborderons dans leur partie dédiée. \\
+Plus généralement, il faut donc comprendre que HM est un outil adapté à la résolution de problèmes ayant un trop grand nombre de possibilités pour être explorées toutes dans un temps raisonnable. C'est pour cela que la résolution de ces problèmes se fait par l'approximation de la bonne solution (en étudiant donc des échantillons de toutes les possibilités). \\
+Cette nuance est très importante, car elle révèle en quoi HM est un outil sophistiqué. \\ 
+
+\subsection{Objectif de ce rapport}
+
+Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abord comprendre le fonctionnement des chaînes de Markov et en expliciter les définitions fondamentales, puis leur comportement sur le temps long, pour pouvoir ensuite construire la preuve mathématique derrière HM et déterminer les raisons de son fonctionnement. Nous étudierons à la fois cette preuve et ferons un détour par les méthodes MCMC (Monte-Carlo), dont HM est issu. Nous finirons par conclure ce rapport avec une implémentation personnelle de HM pour illustrer nos propos.
+
+
+
+\newpage
+\section{Chaines de Markov}
+
+% J'ai trouvé un cours ici : \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}, sûrement pertinent (j'ai juste survolé le doc).
+
+\subsection{Définitions}
+
+% TODO
+% Parler des définitions et surtout placer le contexte, j'entends par là :
+% - En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
+% - Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
+
+Une chaîne de Markov est un processus aléatoire vérifiant la propriété de Markov.
+Dit simplement, la probabilité de passer d'un état $X_n$ à $X_{n+1}$ ne dépend que de $X_n$, 
+nous pouvons dire de façon plus grossière que le système ne se souvient pas.
+La chaîne de Markov possède un espace d'états fini ou dénombrable (que l'on va noter $\mathfrak{X}$), 
+tel que pour $\alpha$ et $ \beta \in \mathfrak{X}$, 
+il existe une probabilité $ \mathcal{P}_\alpha(\beta) \in [0,1]$, 
+de passage de l'état $\beta$ sachant $\alpha$, autrement dit, 
+il s'agit de la probabilité que de l'état $\alpha$, nous passions à l'état $\beta$.
+
+% Je suprime cette phrase, un peu trop hors contexte, à placer autrepart je pense -Corentin
+% Markov est le premier mathématicien à avoir publié des résultats sur l'étude de ces processus.
+
+\subsection{Propriétés fondamentales}
+
+% TODO
+% Propriétés à parler : 
+% - [X] Matricer de transition
+% - [X] Lien avec les graphes orientés
+% - [X] Propriétés en n-pas
+
+\subsubsection{Matrice de Transition}
+
+Nous pouvons représenter les probabilités de passage à l'état $\beta$ sachant $\alpha$ avec une matrice dite de transition P, ou donc $P_{\alpha,\beta}$ représente $ \mathcal{P}_\alpha(\beta)$.  
+Si les états sont ordonné d'une quelconque manière, et selon que le nombre d'états soit fini ($N \in \mathbb{N}$) ou infini dénombrable, les éléments de la matrice de transition $P$ peuvent être notés $P_{i,j}$, où $i,j \in \llbracket 1, N \rrbracket$ ou $i,j \in \llbracket 1, +\infty \llbracket$ respectivement, où $P_{i,j}$ représente $\mathcal{P}_\alpha(\beta)$ si $\alpha$ est le i-ème élément et $\beta$ le j-ème.
+Cette matrice est une matrice stochastique, ce qui signifie que la somme des éléments de chaque ligne est égale à 1.
+
+Ou de façon plus imagée, avec une chaîne de Markov à N états :  
+Avec la matrice de transition 
+$
+P = \begin{bmatrix}
+P_{1,1} & P_{1,2} & ... & P_{1,N}\\
+P_{2,1} & P_{2,2} & ... & P_{2,N}\\
+\vdots & &\ddots & \vdots\\
+P_{N,1} & P_{N,2} & ... & P_{N, N}\\
+\end{bmatrix} \in \mathcal{M}([0,1]) \\$
+$\forall i \in [1,N] : P_{i,1} + P_{i,2} + \dots + P_{i, N} = 1 \space \\$
+ou écrit autrement  
+$\forall i \in [1,N]: \sum_{j = 1}^N P_{i j} = 1\\$ 
+
+\subsubsection{Représentation sous forme de Graphe Orienté}
+\label{subsubsec: Représentation sous forme de graphe orienté}
+
+Il est relativement naturel de représenter la matrice de transition d'une chaîne de Markov par un graphe orienté.
+Ceci qui permet de visualiser les probabilités de transition entre les états. \\
+
+Par exemple, voici le cas d'une chaîne de Markov disposant de 3 états ; $\alpha, \beta$ et $\gamma $, ordonnés respectivement, dans la matrice de transition suivante :
+\begin{center}
+$
+P = \begin{bmatrix}
+0,1 & 0,4 & 0,5 \\
+0,6 & 0,4 & 0   \\
+0,1 & 0,1 & 0,8 \\
+\end{bmatrix}
+$
+\end{center}
+Nous avons donc par exemple $ P_{\alpha,\beta} = P_{1,2} = \mathcal{P}_\alpha(\beta) = 0,4$. \\
+
+% Je viens de me rendre compte d'un sous-entendu terrible !
+% Dans mes sous-parties, à chaque fois que je parle d'un état i ou j, je parle en réalité des états d'INDICE i et j.
+% Sachant que l'on a utilisé cette écriture (voir phrase du dessus), pensez-vous vraiment que ce que j'ai écrit est faux ?
+% Envoyez un message sur le groupe Discord quand vous verrez ce message.
+
+Nous obtenons ainsi le graphe suivant :
+
+% Graph's creation :
+\begin{center}
+\begin{tikzpicture}[
+    >={Latex[length=3mm, width=2mm]},
+    node distance=2cm,
+    state/.style={circle, draw, minimum size=0.5cm, font=\large},
+    every edge/.append style={draw, -latex, font=\small}
+]
+
+% Nodes :
+\node[state] (A) at (0, 0) {$\alpha$};
+\node[state] (B) at (2, 3) {$\beta$};
+\node[state] (C) at (4, 0) {$\gamma$};
+
+% Edges :
+\draw[->] (A) edge[loop left, out=150, in=210, looseness=8] node[left] {0.1} (A);
+\draw[->] (A) edge[bend right=20] node[left] {0.4} (B);
+\draw[->] (A) edge[bend right=16] node[below] {0.5} (C);
+
+\draw[->] (B) edge[bend right=20] node[left] {0.6} (A);
+\draw[->] (B) edge[loop above, out=60, in=120, looseness=8] node[above] {0.4} (B);
+
+\draw[->] (C) edge[bend right=16] node[below] {0.1} (A);
+\draw[->] (C) edge[bend right=20] node[right] {0.1} (B);
+\draw[->] (C) edge[loop right, out=330, in=30, looseness=8] node[right] {0.8} (C);
+
+\end{tikzpicture}
+\end{center}
+
+\subsubsection{Matrice de Transition en $k$-pas}
+Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$,$j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
+\[
+\mathbb{P}(X_1 = j \mid X_0 = i)
+\]
+Où $X_t$ désigne l'état de la chaîne à l'instant $t$. \\
+
+Cependant, il peut être nécessaire de chercher à déterminer la probabilité de passer de l'état $i$ à l'état $j$ après exactement $k$ étapes. Pour cela, on utilise la matrice de transition en $k$-pas, notée $P^k$, pour laquelle chaque élément $P_{i,j}^{(k)}$ représente la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $k$ étapes. Plus formellement :
+\[
+P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
+% Je crois que les parenthèses autour du "n" ne sont pas nécessaire, tu ferais peut être mieux de les retirer -corentin
+% Elles sont dans toutes les démos, donc je les aies laissées, je ne pense pas qu'elles dérangent ou ne soient pas correctes, si ? - Tom
+\]
+
+Cette matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
+\[
+P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
+\]
+
+Nous allons démontrer ce résultat en utilisant la propriété de markov ainsi que le produit matriciel.
+La relation ci-dessus repose sur la propriété fondamentale des chaînes de Markov ; pour chaque étape, la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents. En d'autres termes :
+\[
+\mathbb{P}(X_{k+1} = j \mid X_0 = i) = \sum_{n=1}^N \mathbb{P}(X_{k+1} = j \mid X_k = n) \cdot \mathbb{P}(X_k = n \mid X_0 = i).
+\]
+
+En termes matriciels, cette équation ce traduit donc par :
+\[
+P_{i,j}^{(k+1)} = \sum_{n=1}^N P_{i,n}^{(k)} \cdot P_{n,j}.
+\]
+Cela correspond précisément à la règle du produit matriciel, ce qui montre en conséquence que $P^{n+1} = P \cdot P^n$. Par récurrence, on en déduit donc que :
+\[
+P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
+\]
+
+Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
+\begin{center}
+$
+P^{5} = \begin{bmatrix}
+0,22350 & 0,24385 & 0,53265 \\
+0,24150 & 0,26140 & 0,49710 \\
+0,20595 & 0,22252 & 0,57153 \\
+\end{bmatrix}
+$
+\end{center}
+Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
+\[
+P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
+\]
+
+\subsection{Classes de communication et d'équivalence}
+
+\subsubsection{Les différents types d'états}
+\label{subsubsec: Les différents types d'états}
+
+Dans une chaîne de Markov, chaque état peut être classifié en différente(s) catégorie(s) en fonction de ses laisons avec les autres états. Ces différentes classifications nous permettentrons d'analyser le comportement de la chaîne en temps long.
+
+Dans cette sous-section, nous définirons les différents types d'états que chaque état peut prendre dans une chaîne de markov. \\ % Est-ce que cette phrase est utile ? J'hésite à l'enlever. - Tom
+
+Un premier type que peut prendre un état est l'état récurrent.
+Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, la probabilité de le revisiter à un moment donné est égale à 1. Autrement dit, l'état $i$ sera obligatoirement revisité / visité une infinité de fois lorsque l'on réalise une infité de transitions. Plus rigouresement, cela signifie que :
+\[
+\mathbb{P}_i(\text{Num}_i(X) = \infty) = 1.
+\]
+où \(\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|\).
+
+Si cette probabilité est strictement inférieure à 1, l'état $i$ est à l'inverse qualifié de \textbf{transitoire}. Le cas échant, la chaîne quiterra de manière systématique et définitive cet état lorsque l'on réalisera une infinité de transitions. \\
+
+Un deuxième type que peut prendre un état est l'état absorbant.
+Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
+\[
+P_{i,i} = 1 \quad \text{et} \quad \forall j \neq i, \quad P_{i,j} = 0.
+\]
+A l'inverse, tout état ne respectant pas cette condition est appelé état \textbf{non-absorbant} ou encore état \textbf{évanescent}. \\
+
+Un troisième type que peut prendre un état est le type périodique.
+Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$. La période $d(i)$ est définie comme :
+\[
+d(i) = \text{PGCD}\{n \geq 1 \mid P_{i,i}^{(n)} > 0\}.
+\]
+Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité. \\
+
+Un quatrième et dernier type d'état que nous étudierons est le type accessible.
+Un état $j$ est dit \textbf{accessible} depuis un état $i$ si la probabilité de passer de $i$ à $j$ est non-nulle après un nombre fixé $n$ de pas. Autrement dit :
+\[
+\exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
+\]
+Réciproquement, un état $i$ est dit \textbf{co-accessible} depuis $j$ si $j$ est accessible depuis $i$.
+
+% Est-ce qu'il faudrait ajouter le dernier type d'état suivant ? Il est super pratique dans notre cas mais ces notions ne sont pas encore introduites à ce niveau... - Tom
+% Un dernier type d'état que nous étudierons est le type ergotique.
+% Un état $i$ est dit \textbf{ergodique} si, en plus d'être récurrent, il est apériodique et appartient à une classe de communication contenant tous les autres états de la chaîne.
+% Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
+
+\subsubsection{Classes de communication}
+
+Soit $\alpha$, $\beta \in \mathfrak{X}$ et $i$, $j$ leurs indices respectifs dans $\mathfrak{X}$. On note $\alpha \rightarrow \beta$ si, et seulement si :
+\[
+\exists n \geq 0, \quad P_{i,j}^{(n)} > 0.
+\]
+
+On dit que les deux états $\alpha$ et $\beta$ communiquent si $\alpha \rightarrow \beta$ et $\beta \rightarrow \alpha$. On note alors $\alpha \leftrightarrow \beta$. Nous avons ainsi :
+\[
+\alpha \leftrightarrow \beta \quad \iff \quad \exists n \geq 0, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \geq 0, \quad P_{j,i}^{(m)} > 0.
+\]
+
+$\leftrightarrow$ est une relation d'équivalence dont les classes sont appelée \textbf{classes de communications} de la chaîne de Markov. Autrement dit, dans une chaîne de Markov, une classe de communication est un ensemble d'états qui sont accessibles les uns depuis les autres. \\
+
+L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des état de cette chaîne.
+Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\ % Tony, j'imagine que je ne m'en sortirais pas sans peuve ici, hein ? - Tom
+
+Il est important de noter qu'une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
+\begin{itemize}
+\item \textbf{Fermée} : Une fois qu'un état de cette classe est atteint, il est impossible de quitter cette classe. Formellement, pour une classe $C$, cela signifie que :
+  \[
+  \forall i \in C, \quad \forall j \notin C, \quad \forall n \geq 1, \quad P_{i,j}^{(n)} = 0.
+  \]
+\item \textbf{Ouverte} : L'opposée de fermée ; il existe au moins un état de la classe qui permet de sortir de celle-ci. Plus formellement, cela signifie que :
+  \[
+  \exists i \in C, \quad \exists j \notin C, \quad \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
+  \]
+\end{itemize}
+
+% est-ce que je devrais ajouter la phrase suivante ? Elle me semble bien pour introduire la notion de distribution stationnaire mais je pense qu'elle serait encore mieux dans la partie de définition des distributions stationnaires. - Tom
+% Les classes de communication fermées jouent un rôle central dans l'étude asymptotique des chaînes de Markov, car toute chaîne converge vers une distribution stationnaire si et seulement si elle se trouve dans une classe fermée récurrente et apériodique.
+
+\subsubsection{Classes d'équivalence}
+
+Les classes d'équivalence sont des sous-ensembles d'états dans une chaîne de Markov qui partagent des propriétés spécifiques en plus d'être dans une même classe de communication. Une classe d'équivalence est donc une classe de communication qui regroupe des états voisins présentant une ou plusieurs des propriétés suivantes :
+
+\begin{enumerate}
+\item \textbf{Récurrence} : Tous les états de la classe sont récurrents. Cela signifie qu'une fois entré dans cette classe, il est certain que la chaîne revisitera un état de cette classe une infinité de fois au cours des transitions suivantes. Cette classe d'équivalence est systématiquement fermée.
+\item \textbf{Transcience (transitivité)} : Dans certaines classes de communication, les états peuvent être transitoires, ce qui signifie qu'il est possible de quitter définitivement la classe par ces états. Cette classe d'équivalence, à l'opposé de la promière est toujours ouverte.
+\item \textbf{Absorption} : Une classe d'équivalence récurrence (et fermée) peut également être absorbante. Cela signifie que, si la chaîne entre dans cette classe, elle ne pourra plus jamais en sortir.
+\item \textbf{Apériodicité} : Tous les états d'une classe peuvent également être apériodiques, ce qui garantit l'absence de contraintes sur le moment où la chaîne peut revisiter un état donné. La classe d'équivalence ainsi formée peut être puverte ou fermée. \\
+\end{enumerate}
+
+Ainsi, une classe d'équivalence est une classe de communication fermée qui regroupe des états partageant une même propriété structurelle (tous les états de cette classe d'équivalence possède le même type d'état), telle que la récurrence, l'absorption, ou l'apériodicité. \\
+
+Les classes d'équivalence jouent en conséquence un rôle crucial dans l'étude des chaînes de Markov. En effet, elles permettent de décomposer la chaîne en sous-ensembles analytiquement indépendants.
+
+Par exemple ; les propriétés asymptotiques d'une chaîne dépendent fortement des classes d'équivalence fermées et récurrentes. % Je peux balancer cet "exemple" sans le justifier ? J'ai vraiment l'impression de tricher là. - Tom
+
+\subsubsection{Exemples}
+
+TODO \\
+% J'ai eu un problème de génération de graphe par rapport à mes exemples, je les rajouterais de nouveau plus tard, quand j'aurai réglé ce problème. - Tom
+
+
+%TODO \\
+% A partager avec le point précédent :
+% - [?] Convergences des chaines de Markov
+% - [X] Loi stationnaire/invariante
+% - ...
+
+\subsection{Loi stationnaire}
+
+Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $\mathfrak{X}$, et ayant pour matrice de transition $P$. \\
+
+Une mesure $\pi = (\pi_i)_{i \in \mathfrak{X}}$ sur l'espace d'état $\mathfrak{X}$ est dite stationnaire si elle satisfait la relation $\pi = \pi P$. \\
+
+Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\top}$, associé à la valeur propre $1$ :
+\[
+\pi = \pi P \iff \pi^{\top} = P^{\top} \pi^{\top}.
+\]
+
+De plus, pour que $\pi$ soit une mesure de probabilité, elle doit respecter les conditions suivantes :
+\[
+\forall i \in \mathfrak{X}, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in \mathfrak{X}} \pi_i = 1.
+\]
+
+\subsection{Comportement en temps long}
+
+Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe. % Corentin, tu signifies quoi par "fortement" ? - Tom
+Autrement dit, tous les couples $(\alpha, \beta)$ de sommets du graphe, avec $\alpha \neq \beta$, communiquent mutuellement ; $\alpha \leftrightarrow \beta$. \\
+
+Une chaîne de Markov est dite \textbf{récurrente} si tous ses états sont récurrents (voir sous-section ~\ref{subsubsec: Les différents types d'états}). \\ % A quoi sert cette définition ? Elle me semble un peu perdue. - Tom
+
+Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $\mathfrak{X}$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in \mathfrak{X}}$ telle que $\pi_\alpha > 0$.
+
+Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
+
+Une chaîne de Markov est dite \textbf{récurrente positive} si tous ses états sont récurrents positifs. \\
+
+Si une chaîne de Markov est irréductible et récurrente positive, alors sa matrice de transition $P$, élevée à une puissance $k$, converge lorsque $k \to +\infty$. Plus formellement :
+\[
+L = \lim_{k \to +\infty} P^k
+\]
+Où la matrice limite $L$ est bien définie, et chaque ligne de cette matrice est égale à l'unique distribution stationnaire $\pi$ associée à la chaîne.
+
+\newpage
+\section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
+
+\subsection{Qu'est-ce qu'une méthode dite MCMC ?}
+
+Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillon de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
+Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
+
+Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l’on souhaite estimer. \\
+Il devient ainsi possible d'exploiter les propriétés des chaînes de Markov, notamment leur convergence vers une distribution stationnaire et leur propriété d'ergodicité, qui peuvent être plus utiles que la loi des grands nombres seule, utilisée dans les méthodes MC classiques. \\
+La principale différence entre les méthodes MC et MCMC réside dans la dépendance entre les points générés. Les méthodes MC choisissent aléatoirement des points de l'espace, réalisant ainsi un échantillonnage direct de la distribution cible, avec des échantillons indépendants les uns des autres. Leur seul point commun est d'appartenir à l'intervalle des valeurs possibles de la distribution de départ. En revanche, les méthodes MCMC reposent sur une marche aléatoire : elles génèrent chaque nouveau point à partir du précédent selon une règle de transition déterminée. Cela crée une chaîne de points corrélés, qui possède les propriétés des chaînes de Markov. \\
+Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espace, l’utilisation de MCMC sera généralement préférable, car elle permet d'obtenir, dans un temps raisonnable, des échantillons représentatifs de cette distribution. \\
+
+On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l’échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
+
+\subsection{Definitions}
+
+TODO \\
+% Pour les defs je pensais par exemples à celles :
+% - De l'échantillonnage (en maths)
+% - Espace dense de probabilité (je crois c'est ça), c'est le P(x) qu'on retrouve dans les démos
+% - ...
+
+\subsection{Description des étapes de l'algorithme}
+
+TODO \\
+% Bien faire le lien avec les précédentes propriétés et en quoi elles sont importantes, décrire l'algo point par point.
+
+\subsection{Preuve de l'algorithme}
+
+TODO \\
+% Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
+
+\subsection{Exemple d'application}
+
+\begin{tikzpicture}
+    % Axes
+    \draw[->,black,thick] (-1,0) -- (7,0) node[right] {$x$}; % Axe des abscisses en noir
+    \draw[->,thick] (0,-0.2) -- (0,2.5) node[above] {$\pi(x)$}; % Axe des ordonnées
+
+    % Distribution cible (exemple : distribution normale)
+    \begin{scope}
+        \clip (-0.5,-0.2) rectangle (6.5,2);
+        \draw[thick,gray!50] plot[domain=0:6, samples=100] (\x, {2*exp(-(\x-3)^2)});
+    \end{scope}
+    \node at (6,1.8) {Distribution cible $\pi(x)$};
+
+    % Points de la chaîne de Markov sur l'axe x
+    \filldraw[blue] (1.5,0) circle (1pt) node[below] {$x_0$}; % Encore légèrement déplacé vers la droite
+    \filldraw[blue] (2,0) circle (1pt) node[below] {$x_1$};
+    \filldraw[blue] (3.2,0) circle (1pt) node[below] {$x_2$};
+    \filldraw[blue] (4,0) circle (1pt) node[below] {$x_3$}; % x3 inchangé
+    \filldraw[red] (2.5,0) circle (1pt) node[below=8pt] {$x'_{}$ rejeté}; % Aligné avec x'' rejeté
+    \filldraw[red] (4.4,0) circle (1pt) node[below=8pt] {$x''$ rejeté}; % Déplacé légèrement plus à gauche
+
+    % Points correspondants sur la courbe
+    \foreach \x in {1.5,2,3.2,4} {
+        \filldraw[blue] (\x,{2*exp(-(\x-3)^2)}) circle (1pt);
+        \draw[dashed,gray] (\x,0) -- (\x,{2*exp(-(\x-3)^2)});
+    }
+    % Points rejetés sur la courbe
+    \filldraw[red] (2.5,{2*exp(-(2.5-3)^2)}) circle (1pt);
+    \draw[dashed,gray] (2.5,0) -- (2.5,{2*exp(-(2.5-3)^2)});
+    \filldraw[red] (4.4,{2*exp(-(4.4-3)^2)}) circle (1pt);
+    \draw[dashed,gray] (4.4,0) -- (4.4,{2*exp(-(4.4-3)^2)});
+
+    % Transitions acceptées (flèches bleues bien espacées)
+    \draw[->,blue,thick] (1.5,0) .. controls (1.8,0.3) .. (2,0);
+    \draw[->,blue,thick] (2,0) .. controls (2.6,0.3) .. (3.2,0);
+    \draw[->,blue,thick] (3.2,0) .. controls (3.6,0.5) .. (4,0); % Flèche vers x3
+
+    % Transitions rejetées (flèches rouges en pointillé repositionnées)
+    \draw[->,red,dashed,thick] (3.2,0) .. controls (2.8,0.8) .. (2.5,0); % x2 vers x' rejeté
+    \draw[->,red,dashed,thick] (4,0) .. controls (4.2,0.6) .. (4.4,0); % Flèche de x'' moins haute
+
+    % Légende
+    \draw[blue,thick] (1,-1.2) -- (1.5,-1.2) node[right] {Transitions acceptées};
+    \draw[red,dashed,thick] (1,-1.6) -- (1.5,-1.6) node[right] {Transitions rejetées};
+    \filldraw[blue] (1,-2) circle (1pt) node[right] {Échantillons acceptés};
+    \filldraw[red] (1,-2.4) circle (1pt) node[right] {Échantillons rejetés};
+
+\end{tikzpicture}
+
+
+
+\begin{tikzpicture}
+    % Titre du diagramme
+    \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};  % Titre au-dessus du diagramme
+
+    % Nœuds du diagramme
+    \node (A) at (0,0) {A};
+    \node (B) at (2,1) {B};
+    \node (C) at (4,0) {C};
+    \node (E) at (3,-2) {E};
+    \node (D) at (1,-2) {D};
+    
+    % Trajets
+    \draw[thick] (A) -- (C) -- (D) -- (E) -- (B) -- (A);
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
+
+    \node (A) at (0,0) {A};
+    \node (B) at (2,1) {B};
+    \node (C) at (4,0) {C};
+    \node (E) at (3,-2) {E};
+    \node (D) at (1,-2) {D};
+
+    \draw[thick] (A) -- (B); 
+    \draw[thick] (E) -- (D) -- (C); 
+    \draw[green, thick, dashed] (A) -- (C);
+    \draw[green, thick, dashed] (B) -- (E);
+    \draw[blue, thick] (B) -- (C);
+    \draw[blue, thick] (A) -- (E);
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition rejetée par HM}};
+
+    \node (A) at (0,0) {A};
+    \node (B) at (2,1) {B};
+    \node (C) at (4,0) {C};
+    \node (E) at (3,-2) {E};
+    \node (D) at (1,-2) {D};
+
+    \draw[thick] (A) -- (C) -- (D); 
+    \draw[thick] (B) -- (E); 
+    \draw[orange, thick, dashed] (A) -- (B);
+    \draw[orange, thick, dashed] (D) -- (E);
+    \draw[red, thick] (D) -- (B);
+    \draw[red, thick] (A) -- (E);
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
+
+% On va sûrement modéliser HM avec Godot (si on est chauds) ou en Python 3 (on peut refaire l'algo de cette vidéo où les sources sont en description \url{https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/6231/Mireuta_Matei_2011_memoire.pdf}).
+% L'objectif ici est de parler de NOTRE implémentation surtout je pense, ça sera la majeure partie de l'oral.
+
+\subsection{Comparaison avec d'autres méthodes d'échantillonnage}
+
+TODO \\
+% Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
+
+\newpage
+\section{Conclusion}
+
+TODO \\
+
+\newpage
+\section{Sources}
+
+Documents textuels :
+\begin{itemize}
+\item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
+\item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
+\item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
+\item \url{https://www.imo.universite-paris-saclay.fr/~pierre-loic.meliot/agreg/markov.pdf}
+\item \url{https://www.college-de-france.fr/fr/agenda/cours/apprentissage-et-generation-par-echantillonnage-aleatoire/algorithme-de-metropolis-hasting}
+\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf} \\
+\item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov} \\
+\end{itemize}
+
+Documents vidéos :
+\begin{itemize}
+\item \url{https://www.youtube.com/watch?v=yCv2N7wGDCw}
+\item \url{https://www.youtube.com/watch?v=MxI78mpq_44}
+\item \url{https://www.youtube.com/watch?v=e0ZHDK4DSEI&list=PLWoShwK0FEjovcc32x9LbpDTf8pquPimV}
+\item \url{https://www.youtube.com/playlist?list=PLM8wYQRetTxBkdvBtz-gw8b9lcVkdXQKV} \\
+\end{itemize}
+
+\end{document}
