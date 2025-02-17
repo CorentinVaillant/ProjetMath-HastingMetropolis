@@ -417,20 +417,20 @@ TODO \\
 
 \subsection{Description des étapes de l'algorithme}
 
-Voici une description de cette algorithme :
+Voici une description de cet algorithme :
 
 \begin{enumerate}
-\item Il faut avant tout choisir un point $x_0$, comme étant le première échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in \mathfrak{X}$.  
+\item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in \mathfrak{X}$.  
 
-\item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itération voulue)  \begin{itemize}
+\item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)  \begin{itemize}
     \item On tire $x$ avec $g_{x_t}(x)$  
-    \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (nottons que si nous ne possédons q'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
+    \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (notons que si nous ne possédons qu'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
     \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$  \begin{itemize}
         \item Si $u \leqslant \alpha$ alors : $x_{t+1} \coloneqq x$  
-        \item Sinon : $x_{t} \coloneqq x$  
+        \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x$  
         \end{itemize}
     \end{itemize}
-\item La liste des $x_0 ... x_{N-1}$ correspond au tirage de notre chaîne de Markov ayant pour loi $\pi$, il suffit donc de la retourner
+\item La séquence $\{x_0,x_1, ... ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
 \end{enumerate}
 
 \subsection{Preuve de l'algorithme}
