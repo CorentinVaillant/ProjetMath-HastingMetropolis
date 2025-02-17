@@ -32,6 +32,7 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{arrows.meta}
 \usepackage{pgfplots}
+\pgfplotsset{compat=1.18} % Préciser la version de pgfplots afin qu'il soit compatible avec le type de cocument (ici "article").
 
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
@@ -204,7 +205,7 @@ Nous obtenons ainsi le graphe suivant :
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Matrice de Transition en $k$-pas}
+\subsubsection{Matrice de Transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
 Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$,$j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
 \[
 \mathbb{P}(X_1 = j \mid X_0 = i)
