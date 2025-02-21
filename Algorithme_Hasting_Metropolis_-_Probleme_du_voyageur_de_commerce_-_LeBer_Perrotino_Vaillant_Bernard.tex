@@ -22,12 +22,14 @@
 
 % Autres packages :
 \usepackage[french]{babel}
+\usepackage{mdframed}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{stmaryrd}
 \usepackage[explicit]{titlesec}
+\usepackage{framed}
 % Package permettant de générer des graphes :
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -105,18 +107,30 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 % Questions pour le prof :
 % (1) Doit-t'on définir la notion de lois ?
 % (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
+% (3) Doit-on définir la notion de processus stochastique ?
+% (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
+% (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
+
+% Où mettre ce bloc ?
+% Pour tout couple $(\alpha,\beta) \in E \times E$, on a :
+% \[
+% \mathcal{P}(\beta \mid \alpha) = \mathbb{P}(X_{n+1}=\beta \mid X_n=\alpha) \in [0,1].
+% \]
+% 
+% Où $\mathcal{P}(\beta \mid \alpha)$ correspond à la probabilité de passer dans l'état $\beta$ sachant $\alpha$. Autrement dit, $\mathcal{P}(\beta \mid \alpha)$ correspond à la probalilité de passer dans l'état $\beta$ en partant de l'état $\alpha$.
 
 \section{Chaines de Markov à états finis}
 % J'ai trouvé un cours ici : \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}, sûrement pertinent (j'ai juste survolé le doc).
 
-\subsection{Définition(s) (fondamentales ?)}
+\subsection{Définitions}
 
 % TODO
 % Parler des définitions et surtout placer le contexte, j'entends par là :
 % - En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
 % - Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
 
-% DE ICI.
+\noindent\textbf{Chaîne de Markov}
+\begin{leftbar}
 Soit $E$ un ensemble fini ou dénombrable.
 
 Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs dans $E$. \\
@@ -134,19 +148,13 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
 \]
 
 \medskip
-$E$ est alors appelé l'espace d'états de $(X_n)_{n \in \mathbb{N}}$. \\ \\
+$E$ est alors appelé l'espace d'états de $(X_n)_{n \in \mathbb{N}}$.
+\end{leftbar}
 
+En d'autres termes, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état $X_n$ vers l'état $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
 
+Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques.
 
-Ainsi, la suite $(X_n)_{n \in \mathbb{N}}$ est une chaîne de Markov, qui est un processus aléatoire vérifiant la propriété de Markov. % Moyen, oà redire.
-% A LA.
-
-
-Dit simplement, la probabilité de passer d'un état $X_n$ à $X_{n+1}$ ne dépend que de $X_n$, % dire ça en français !
-nous pouvons dire de façon plus grossière que le système ne se souvient pas.
-
-% Je suprime cette phrase, un peu trop hors contexte, à placer autrepart je pense -Corentin
-% Markov est le premier mathématicien à avoir publié des résultats sur l'étude de ces processus.
 
 \subsection{Propriétés fondamentales}
 
@@ -156,33 +164,40 @@ nous pouvons dire de façon plus grossière que le système ne se souvient pas.
 % - [X] Lien avec les graphes orientés
 % - [X] Propriétés en n-pas
 
-\subsubsection{Matrice de Transition}
+\noindent\textbf{Matrice de transition}
+\begin{leftbar}
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov à valeurs dans un ensemble fini ou dénombrable $E$.
 
-Nous avons, pour tout couple \((\alpha,\beta) \in E \times E\), on a :
+La \textbf{matrice de transition} associée à $(X_n)_{n \in \mathbb{N}}$ est la famille de nombres réels $\{P_{ij}\}_{i,j \in E}$ définie par :
 \[
-\mathcal{P}(\beta \mid \alpha) = \mathbb{P}(X_{n+1}=\beta \mid X_n=\alpha) \in [0,1].
+\forall n \geq 0,\; \forall i,j \in E,\quad P_{ij} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
 \]
-\newline
 
-Où $\mathcal{P}(\beta \mid \alpha)$ correspond à la probabilité de passer dans l'état $\beta$ sachant $\alpha$. Autrement dit, $\mathcal{P}(\beta \mid \alpha)$ correspond à la probalilité de passer dans l'état $\beta$ en partant de l'état $\alpha$.
-\newline
-
-Nous pouvons représenter les probabilités de passage à l'état $\beta$ sachant $\alpha$ avec une matrice dite de transition P, ou donc $P_{\alpha,\beta}$ représente $ \mathcal{P}_\alpha(\beta)$.  
-Si les états sont ordonné d'une quelconque manière, et selon que le nombre d'états soit fini ($N \in \mathbb{N}$) ou infini dénombrable, les éléments de la matrice de transition $P$ peuvent être notés $P_{i,j}$, où $i,j \in \llbracket 1, N \rrbracket$ ou $i,j \in \llbracket 1, +\infty \llbracket$ respectivement, où $P_{i,j}$ représente $\mathcal{P}_\alpha(\beta)$ si $\alpha$ est le i-ème élément et $\beta$ le j-ème.
-Cette matrice est une matrice stochastique, ce qui signifie que la somme des éléments de chaque ligne est égale à 1.
-
-Ou de façon plus imagée, avec une chaîne de Markov à N états :  
-Avec la matrice de transition 
-$
+On regroupe cette famille de probabilités sous forme d'une matrice de transition $P$ où chaque élément $P_{ij}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
+Lorsque l'ensemble des états $E$ est fini, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
+\[
 P = \begin{bmatrix}
-P_{1,1} & P_{1,2} & ... & P_{1,N}\\
-P_{2,1} & P_{2,2} & ... & P_{2,N}\\
-\vdots & &\ddots & \vdots\\
-P_{N,1} & P_{N,2} & ... & P_{N, N}\\
-\end{bmatrix} \in \mathcal{M}([0,1]) \\$
-$\forall i \in [1,N] : P_{i,1} + P_{i,2} + \dots + P_{i, N} = 1 \space \\$
-ou écrit autrement  
-$\forall i \in [1,N]: \sum_{j = 1}^N P_{i j} = 1\\$ 
+P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
+P_{21} & P_{22} & \cdots & P_{2N}\\[1mm]
+\vdots & \vdots & \ddots & \vdots\\[1mm]
+P_{N1} & P_{N2} & \cdots & P_{NN}
+\end{bmatrix}
+\]
+\end{leftbar}
+
+Chaque ligne de $P$ représente les probabilités de transition depuis un état fixé $i$ vers tous les autres états du système. Ces probabilités sont normalisées, c'est à dire :
+\[
+\forall i \in \{1, \dots, N\}, \quad \sum_{j=1}^{N} P_{ij} = 1.
+\]
+Autrement dit, la somme des probabilités de transition depuis chaque état $i$ fixé vers tous les autres états vaut 1. \\
+
+De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
+\[
+\forall i \in E, \quad \sum_{j \in E} P_{ij} = 1,
+\]
+reste valable. \\
+
+La matrice $P$ est ainsi dite \emph{stochastique (par lignes)} car chacun de ses éléments satisfait $0 \leq P_{ij} \leq 1$ et la somme des éléments de chaque ligne vaut 1.
 
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
@@ -301,7 +316,7 @@ Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, la probabi
 \[
 \mathbb{P}_i(\text{Num}_i(X) = \infty) = 1.
 \]
-où \(\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|\).
+où $\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|$.
 
 Si cette probabilité est strictement inférieure à 1, l'état $i$ est à l'inverse qualifié de \textbf{transitoire}. Le cas échant, la chaîne quiterra de manière systématique et définitive cet état lorsque l'on réalisera une infinité de transitions. \\
 
