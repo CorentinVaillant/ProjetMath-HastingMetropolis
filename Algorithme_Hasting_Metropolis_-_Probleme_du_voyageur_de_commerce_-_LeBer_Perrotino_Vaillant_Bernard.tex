@@ -105,19 +105,24 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 \newpage
 % Questions pour le prof :
-% (1) Doit-t'on définir la notion de lois ?
-% (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
-% (3) Doit-on définir la notion de processus stochastique ? Et la notion de temps discret/continu ?
-% (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
-% (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
+%   (1) Doit-t'on définir la notion de lois ?
+%   (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
+%   (3) Doit-on définir la notion de processus stochastique ? Et la notion de temps discret/continu ?
+%   (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
+%   (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
+%   (6) Est-ce grave / à éviter que les définitions soient coupées par un changement de page ?
 
 % Où mettre ce bloc ?
-% Pour tout couple $(i,j) \in E \times E$, on a :
-% \[
-% \mathcal{P}(j \mid i) = \mathbb{P}(X_{n+1}=j \mid X_n=i) \in [0,1].
-% \]
+%   Pour tout couple $(i,j) \in E \times E$, on a :
+%   \[
+%   \mathcal{P}(j \mid i) = \mathbb{P}(X_{n+1}=j \mid X_n=i) \in [0,1].
+%   \]
 % 
-% Où $\mathcal{P}(j \mid i)$ correspond à la probabilité de passer dans l'état $j$ sachant $i$. Autrement dit, $\mathcal{P}(j \mid i)$ correspond à la probalilité de passer dans l'état $j$ en partant de l'état $i$.
+%   Où $\mathcal{P}(j \mid i)$ correspond à la probabilité de passer dans l'état $j$ sachant $i$. Autrement dit, $\mathcal{P}(j \mid i)$ correspond à la probalilité de passer dans l'état $j$ en partant de l'état $i$.
+
+% Objets à remplacer :
+%   (1) /!\ Les "alpha" et "beta" par des "i" et des "j" lorsque l'on parle d'états quelconques (si on est dans des exemples avec des états nommés, autant les laisser, ça sera les noms "typiques" / que l'on utilisera pour TOUS les exemples).
+%   (2) La définition d'états récurrents positifs.
 
 \section{Chaînes de Markov à états finis}
 
@@ -237,20 +242,33 @@ La matrice $P$ est ainsi dite \emph{stochastique (par lignes)} car chacun de ses
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
 
-Il est relativement naturel de représenter la matrice de transition d'une chaîne de Markov par un graphe orienté.
-Ceci qui permet de visualiser les probabilités de transition entre les états. \\
+\noindent\textbf{Graphe Orienté d'une Chaîne de Markov}
+\begin{leftbar}
+Une chaîne de Markov peut être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
+\begin{enumerate}[leftmargin=5em, label=(\arabic*)]
+    \item $ V $ est l'ensemble des sommets, correspondant aux états de l'espace d'états $ E $.
+    \item $ A $ est l'ensemble des arêtes orientées pondérées, où une arête de $ i $ vers $ j $ est présente si et seulement si $ P_{i,j} > 0 $, avec une pondération correspondant à la probabilité de transition $ P_{i,j} $.
+\end{enumerate}
+\end{leftbar}
 
-Par exemple, voici le cas d'une chaîne de Markov disposant de 3 états ; $\alpha, \beta$ et $\gamma $, ordonnés respectivement, dans la matrice de transition suivante :
+Cette représentation graphique d'une chaîne de Markov permet d’illustrer visuellement les différentes dynamiques de transitions entre chaque états et de mieux appréhender la structure du processus stochastique. \\
+
+Considérons par exemple une chaîne de Markov ayant trois états $ \alpha, \beta, \gamma $, ordonnés respectivement, et dont la matrice de transition est donnée par :
+
 \begin{center}
 $
 P = \begin{bmatrix}
-0,1 & 0,4 & 0,5 \\
-0,6 & 0,4 & 0   \\
-0,1 & 0,1 & 0,8 \\
+0.1 & 0.4 & 0.5 \\
+0.6 & 0.4 & 0.0 \\
+0.1 & 0.1 & 0.8 \\
 \end{bmatrix}
 $
 \end{center}
-Nous avons donc par exemple $ P_{\alpha,\beta} = P_{1,2} = \mathcal{P}_\alpha(\beta) = 0,4$. \\
+
+Dans cette configuration, la probabilité de transition de l’état $ \alpha $ vers l’état $ \beta $ est donnée par :
+\[
+P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
+\]
 
 % Je viens de me rendre compte d'un sous-entendu terrible !
 % Dans mes sous-parties, à chaque fois que je parle d'un état i ou j, je parle en réalité des états d'INDICE i et j.
@@ -382,6 +400,7 @@ Réciproquement, un état $i$ est dit \textbf{co-accessible} depuis $j$ si $j$ e
 % Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
 
 \subsubsection{Classes de communication}
+% REMPLACER LES ALPHA ET BETA PAR DES I ET J - Tom
 
 Soit $\alpha$, $\beta \in E$ et $i$, $j$ leurs indices respectifs dans $E$. On note $\alpha \rightarrow \beta$ si, et seulement si :
 \[
@@ -459,6 +478,7 @@ De plus, pour que $\pi$ soit une mesure de probabilité, elle doit respecter les
 \]
 
 \subsection{Comportement en temps long}
+% REMPLACER LES ALPHA ET BETA PAR DES I ET J (si cette partie survie) - Tom
 
 Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe. % Corentin, tu signifies quoi par "fortement" ? - Tom
 Autrement dit, tous les couples $(\alpha, \beta)$ de sommets du graphe, avec $\alpha \neq \beta$, communiquent mutuellement ; $\alpha \leftrightarrow \beta$. \\
