@@ -107,27 +107,59 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 % Questions pour le prof :
 % (1) Doit-t'on définir la notion de lois ?
 % (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
-% (3) Doit-on définir la notion de processus stochastique ?
+% (3) Doit-on définir la notion de processus stochastique ? Et la notion de temps discret/continu ?
 % (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
 % (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
 
 % Où mettre ce bloc ?
-% Pour tout couple $(\alpha,\beta) \in E \times E$, on a :
+% Pour tout couple $(i,j) \in E \times E$, on a :
 % \[
-% \mathcal{P}(\beta \mid \alpha) = \mathbb{P}(X_{n+1}=\beta \mid X_n=\alpha) \in [0,1].
+% \mathcal{P}(j \mid i) = \mathbb{P}(X_{n+1}=j \mid X_n=i) \in [0,1].
 % \]
 % 
-% Où $\mathcal{P}(\beta \mid \alpha)$ correspond à la probabilité de passer dans l'état $\beta$ sachant $\alpha$. Autrement dit, $\mathcal{P}(\beta \mid \alpha)$ correspond à la probalilité de passer dans l'état $\beta$ en partant de l'état $\alpha$.
+% Où $\mathcal{P}(j \mid i)$ correspond à la probabilité de passer dans l'état $j$ sachant $i$. Autrement dit, $\mathcal{P}(j \mid i)$ correspond à la probalilité de passer dans l'état $j$ en partant de l'état $i$.
 
-\section{Chaines de Markov à états finis}
-% J'ai trouvé un cours ici : \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}, sûrement pertinent (j'ai juste survolé le doc).
+\section{Chaînes de Markov à états finis}
 
-\subsection{Définitions}
+\subsection{Définitions fondamentales}
 
-% TODO
-% Parler des définitions et surtout placer le contexte, j'entends par là :
-% - En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
-% - Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
+% TODO = Parler des définitions et surtout placer le contexte, j'entends par là :
+% - [X] En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
+% - [X] Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
+
+
+\noindent\textbf{Temps Discret et Temps Continu}
+\begin{leftbar}
+Soit $T$ un ensemble d'indices représentant le temps. \\
+
+On distingue généralement deux types de modélisation temporelle :
+\begin{enumerate}[leftmargin=5em, label=(\arabic*)]
+  \item Un processus est dit \textbf{à temps discret} si $T = \mathbb{N}$ ou $T = \mathbb{Z}_+$. Dans ce cas, les évolutions du processus se produisent à des instants distincts et dénombrables.
+  \item Un processus est dit \textbf{à temps continu} si $T = \mathbb{R}_+$. Cela signifie que le processus évolue en tout instant dans un continuum temporel.
+\end{enumerate}
+\end{leftbar}
+
+En d'autres termes, un processus à temps discret est observé uniquement à des instants discrets (intercouppés pas des intervalles de temps fixes et généralement indexés par des nombres entiers), tandis qu'un processus à temps continu évolue de manière fluide dans le temps, sans interruption.
+
+Cette distinction joue un rôle fondamental dans la classification et l'analyse des \textbf{processus stochastiques}. \\
+
+
+\noindent\textbf{Processus Stochastique}
+\begin{leftbar}
+Soit $(\Omega, \mathcal{F}, \mathbb{P})$ un espace de probabilité.
+
+Soit $T$ un ensemble d'indices (souvent $T = \mathbb{N}$, $\mathbb{Z}_+$ ou $\mathbb{R}_+$). \\
+
+Un \textbf{processus stochastique} est une famille de variables aléatoires $\{X_t\}_{t \in T}$ définies sur $(\Omega, \mathcal{F}, \mathbb{P})$ et à valeurs dans un espace d'états $E$.
+
+Autrement dit, pour tout $t \in T$, $X_t$ est une variable aléatoire prenant ses valeurs dans $E$, et l'évolution de $\{X_t\}_{t \in T}$ décrit une dynamique aléatoire au cours du temps.
+\end{leftbar}
+
+Un processus stochastique permet de modéliser un système évoluant de manière aléatoire en fonction du temps.
+
+Différents types de processus peuvent être étudiés en fonction des propriétés de dépendance temporelle et de la nature de l'espace d'états $E$.
+Au cours de ce rapport, nous nous concentrerons l'un des principaux processus stochastiques à temps discret et à espace d'états fini ; les \textbf{chaînes de Markov}. \\
+
 
 \noindent\textbf{Chaîne de Markov}
 \begin{leftbar}
@@ -151,10 +183,11 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
 $E$ est alors appelé l'espace d'états de $(X_n)_{n \in \mathbb{N}}$.
 \end{leftbar}
 
-En d'autres termes, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état $X_n$ vers l'état $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
+En termes mathématiques, une chaîne de Markov est un processus de Markov à temps discret ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
+
+Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état présent $X_n$ vers l'état futur $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
 
 Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques.
-
 
 \subsection{Propriétés fondamentales}
 
@@ -164,7 +197,9 @@ Cette propriété, que l'on peut qualifier de « sans mémoire » ou de proprié
 % - [X] Lien avec les graphes orientés
 % - [X] Propriétés en n-pas
 
-\noindent\textbf{Matrice de transition}
+\subsubsection{Matrice de Transition}
+
+\noindent\textbf{Matrice de Transition}
 \begin{leftbar}
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov à valeurs dans un ensemble fini ou dénombrable $E$.
 
@@ -619,9 +654,11 @@ Documents textuels :
 \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
 \item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
 \item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
+\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}
 \item \url{https://www.imo.universite-paris-saclay.fr/~pierre-loic.meliot/agreg/markov.pdf}
 \item \url{https://www.college-de-france.fr/fr/agenda/cours/apprentissage-et-generation-par-echantillonnage-aleatoire/algorithme-de-metropolis-hasting}
-\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf} \\
+\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf}
+\item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
 \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov} \\
 \end{itemize}
 
