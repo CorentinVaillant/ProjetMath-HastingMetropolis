@@ -30,6 +30,9 @@
 \usepackage{stmaryrd}
 \usepackage[explicit]{titlesec}
 \usepackage{framed}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
 % Package permettant de générer des graphes :
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -132,50 +135,43 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 % - [X] En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
 % - [X] Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
 
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Temps Discret et Temps Continu]
+Soit $T$ un ensemble d'indices numérotées représentant le temps. \\
 
-\noindent\textbf{Temps Discret et Temps Continu}
-\begin{leftbar}
-Soit $T$ un ensemble d'indices représentant le temps. \\
-
-On distingue généralement deux types de modélisation temporelle :
+Il existe deux types de modélisation temporelle :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
-  \item Un processus est dit \textbf{à temps discret} si $T = \mathbb{N}$ ou $T = \mathbb{Z}_+$. Dans ce cas, les évolutions du processus se produisent à des instants distincts et dénombrables.
-  \item Un processus est dit \textbf{à temps continu} si $T = \mathbb{R}_+$. Cela signifie que le processus évolue en tout instant dans un continuum temporel.
+  \item Un processus \textbf{à temps discret} signifie que l'on considère les valeurs de la modélisation comme espacées régulièrement dans le temps.
+  On peut prendre des ensembles dénombrables comme $T = \mathbb{N}$ ou $T = \mathbb{Z}$ où chaque instant est distinct.
+  \item Un processus \textbf{à temps continu} signifie que $T$ n'est pas dénombrable. Il existe toujours un temps intermédiaire entre deux indices de $T$.
+  Cela signifie que le processus évolue en tout instant dans un continuum temporel.
 \end{enumerate}
-\end{leftbar}
+\end{tcolorbox}
 
-En d'autres termes, un processus à temps discret est observé uniquement à des instants discrets (intercouppés pas des intervalles de temps fixes et généralement indexés par des nombres entiers), tandis qu'un processus à temps continu évolue de manière fluide dans le temps, sans interruption.
+Dans ce rapport nous nous interesserons uniquement au temps discret, pour pouvoir modéliser le problème du voyageur de commerce.
+De plus, cette distinction joue un rôle fondamental dans la classification et l'analyse des \textbf{processus stochastiques} et n'implique pas les mêmes théorèmes. \\
 
-Cette distinction joue un rôle fondamental dans la classification et l'analyse des \textbf{processus stochastiques}. \\
-
-
-\noindent\textbf{Processus Stochastique}
-\begin{leftbar}
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Processus Stochastique]
 Soit $(\Omega, \mathcal{F}, \mathbb{P})$ un espace de probabilité.
 
-Soit $T$ un ensemble d'indices (souvent $T = \mathbb{N}$, $\mathbb{Z}_+$ ou $\mathbb{R}_+$). \\
+Soit $T$ un ensemble d'indices discret ou continu (souvent $T = \mathbb{N}$ ou $\mathbb{R}_+$). \\
 
-Un \textbf{processus stochastique} est une famille de variables aléatoires $\{X_t\}_{t \in T}$ définies sur $(\Omega, \mathcal{F}, \mathbb{P})$ et à valeurs dans un espace d'états $E$.
-
-Autrement dit, pour tout $t \in T$, $X_t$ est une variable aléatoire prenant ses valeurs dans $E$, et l'évolution de $\{X_t\}_{t \in T}$ décrit une dynamique aléatoire au cours du temps.
-\end{leftbar}
+Un \textbf{processus stochastique} est une famille de variables aléatoires $\{X_t\}_{t \in T}$ définies sur $(\Omega, \mathcal{F}, \mathbb{P})$ et à valeurs dans un espace d'états $E$ (appelé espace d'états du processus).
+\end{tcolorbox}
 
 Un processus stochastique permet de modéliser un système évoluant de manière aléatoire en fonction du temps.
 
 Différents types de processus peuvent être étudiés en fonction des propriétés de dépendance temporelle et de la nature de l'espace d'états $E$.
 Au cours de ce rapport, nous nous concentrerons l'un des principaux processus stochastiques à temps discret et à espace d'états fini ; les \textbf{chaînes de Markov}. \\
 
-
-\noindent\textbf{Chaîne de Markov}
-\begin{leftbar}
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Chaîne de Markov]
 Soit $E$ un ensemble fini ou dénombrable.
 
-Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs dans $E$. \\
+Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs dans l'espace d'états $E$. \\
 
 $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulement si :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
   \item Sa loi de probabilité initiale $X_0$ est bien définie.
-  \item Et si elle respecte la \textbf{propriété de Markov}, définie ci-dessous :
+  \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
 \forall n \geq 0, \quad \exists x_1, x_2, \dots, x_{n+1} \in E,
@@ -183,12 +179,9 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
 \[
 \mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n)
 \]
+\end{tcolorbox}
 
-\medskip
-$E$ est alors appelé l'espace d'états de $(X_n)_{n \in \mathbb{N}}$.
-\end{leftbar}
-
-En termes mathématiques, une chaîne de Markov est un processus de Markov à temps discret ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
+Une chaîne de Markov est un processus de Markov à temps discret ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
 
 Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état présent $X_n$ vers l'état futur $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
 
@@ -204,17 +197,32 @@ Cette propriété, que l'on peut qualifier de « sans mémoire » ou de proprié
 
 \subsubsection{Matrice de Transition}
 
-\noindent\textbf{Matrice de Transition}
-\begin{leftbar}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/par colonnes]
+
+  Une matrice \textbf{stochastique par lignes} (appelée aussi \textbf{stochastique à droite}) est une matrice dont la somme des probabilités de ses lignes vaut 1 chacune et toutes ses probabilités sont positives :
+  \[
+  \forall i, \quad \sum_{j=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
+  \]
+  Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \textbf{stochastique à gauche}) lorsque :
+  \[
+  \forall j, \quad \sum_{i=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
+  \]
+  Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
+\end{tcolorbox}
+  
+
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de Transition]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov à valeurs dans un ensemble fini ou dénombrable $E$.
 
-La \textbf{matrice de transition} associée à $(X_n)_{n \in \mathbb{N}}$ est la famille de nombres réels $\{P_{ij}\}_{i,j \in E}$ définie par :
+Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à une autre, définie comme :
 \[
 \forall n \geq 0,\; \forall i,j \in E,\quad P_{ij} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
 \]
 
-On regroupe cette famille de probabilités sous forme d'une matrice de transition $P$ où chaque élément $P_{ij}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
-Lorsque l'ensemble des états $E$ est fini, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
+La \textbf{matrice de transition} $P$ regroupe ces probabilités tel que chaque élément $P_{ij}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
+Lorsque l'ensemble des états $E$ est discret, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
 \[
 P = \begin{bmatrix}
 P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
@@ -223,13 +231,10 @@ P_{21} & P_{22} & \cdots & P_{2N}\\[1mm]
 P_{N1} & P_{N2} & \cdots & P_{NN}
 \end{bmatrix}
 \]
-\end{leftbar}
 
-Chaque ligne de $P$ représente les probabilités de transition depuis un état fixé $i$ vers tous les autres états du système. Ces probabilités sont normalisées, c'est à dire :
-\[
-\forall i \in \{1, \dots, N\}, \quad \sum_{j=1}^{N} P_{ij} = 1.
-\]
-Autrement dit, la somme des probabilités de transition depuis chaque état $i$ fixé vers tous les autres états vaut 1. \\
+\end{tcolorbox}
+
+Dans le cadre des chaines de Markov, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées. C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -237,35 +242,32 @@ De manière analogue, si l'espace des états est infini dénombrable (par exempl
 \]
 reste valable. \\
 
-La matrice $P$ est ainsi dite \emph{stochastique (par lignes)} car chacun de ses éléments satisfait $0 \leq P_{ij} \leq 1$ et la somme des éléments de chaque ligne vaut 1.
-
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
 
-\noindent\textbf{Graphe Orienté d'une Chaîne de Markov}
-\begin{leftbar}
-Une chaîne de Markov peut être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Graphe Orienté d'une Chaîne de Markov]
+Une chaîne de Markov peut toujours être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
     \item $ V $ est l'ensemble des sommets, correspondant aux états de l'espace d'états $ E $.
-    \item $ A $ est l'ensemble des arêtes orientées pondérées, où une arête de $ i $ vers $ j $ est présente si et seulement si $ P_{i,j} > 0 $, avec une pondération correspondant à la probabilité de transition $ P_{i,j} $.
+    \item $ A $ est l'ensemble des arcs, où chaque arc possède une pondération correspondant à la probabilité de transition $P_{i,j}$. Un arc de $i$ vers $j$ est représenté que si $P_{i,j} > 0$.
 \end{enumerate}
-\end{leftbar}
+\end{tcolorbox}
 
-Cette représentation graphique d'une chaîne de Markov permet d’illustrer visuellement les différentes dynamiques de transitions entre chaque états et de mieux appréhender la structure du processus stochastique. \\
+Représenter graphiquement une chaîne de Markov permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
 
-Considérons par exemple une chaîne de Markov ayant trois états $ \alpha, \beta, \gamma $, ordonnés respectivement, et dont la matrice de transition est donnée par :
+Considérons par exemple une chaîne de Markov ayant trois états $\alpha, \beta, \gamma$, ordonnés respectivement, et dont la matrice de transition est donnée par :
 
 \begin{center}
 $
 P = \begin{bmatrix}
 0.1 & 0.4 & 0.5 \\
-0.6 & 0.4 & 0.0 \\
+0.6 & 0.4 & 0 \\
 0.1 & 0.1 & 0.8 \\
 \end{bmatrix}
 $
 \end{center}
 
-Dans cette configuration, la probabilité de transition de l’état $ \alpha $ vers l’état $ \beta $ est donnée par :
+Dans cette configuration, la probabilité de transition de l'état $\alpha$ vers l'état $ \beta $ est donnée par :
 \[
 P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
 \]
