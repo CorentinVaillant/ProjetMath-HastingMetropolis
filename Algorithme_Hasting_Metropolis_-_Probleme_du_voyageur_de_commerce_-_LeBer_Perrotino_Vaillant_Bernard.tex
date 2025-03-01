@@ -187,6 +187,16 @@ Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l
 
 Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques.
 
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
+Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
+\[
+  \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i]
+\]
+\end{tcolorbox}
+
+En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
+Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
+
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -196,7 +206,6 @@ Cette propriété, que l'on peut qualifier de « sans mémoire » ou de proprié
 % - [X] Propriétés en n-pas
 
 \subsubsection{Matrice de Transition}
-
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/par colonnes]
 
@@ -210,11 +219,9 @@ Cette propriété, que l'on peut qualifier de « sans mémoire » ou de proprié
   \]
   Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
 \end{tcolorbox}
-  
-
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de Transition]
-Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov à valeurs dans un ensemble fini ou dénombrable $E$.
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
 
 Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à une autre, définie comme :
 \[
@@ -234,7 +241,7 @@ P_{N1} & P_{N2} & \cdots & P_{NN}
 
 \end{tcolorbox}
 
-Dans le cadre des chaines de Markov, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées. C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées. C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -246,14 +253,14 @@ reste valable. \\
 \label{subsubsec: Représentation sous forme de graphe orienté}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Graphe Orienté d'une Chaîne de Markov]
-Une chaîne de Markov peut toujours être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
+Une chaîne de Markov homogène peut toujours être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
     \item $ V $ est l'ensemble des sommets, correspondant aux états de l'espace d'états $ E $.
     \item $ A $ est l'ensemble des arcs, où chaque arc possède une pondération correspondant à la probabilité de transition $P_{i,j}$. Un arc de $i$ vers $j$ est représenté que si $P_{i,j} > 0$.
 \end{enumerate}
 \end{tcolorbox}
 
-Représenter graphiquement une chaîne de Markov permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
+Représenter graphiquement une chaîne de Markov homogène permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
 
 Considérons par exemple une chaîne de Markov ayant trois états $\alpha, \beta, \gamma$, ordonnés respectivement, et dont la matrice de transition est donnée par :
 
@@ -279,7 +286,6 @@ P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4
 
 Nous obtenons ainsi le graphe suivant :
 
-% Graph's creation :
 \begin{center}
 \begin{tikzpicture}[
     >={Latex[length=3mm, width=2mm]},
@@ -308,7 +314,58 @@ Nous obtenons ainsi le graphe suivant :
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Matrice de Transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
+\subsubsection{Matrice de transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de transition en $n$ transitions]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaine de Markov homogène d'espace d'états $E$ fini ou dénombrable tel que $\left\{1,2,\ldots,N\right\}$. On note $P$ sa matrice de transition. \\
+Pour tout état $E_i$ et $E_j$ et pour tout entier naturel $k \geq 1$, le coefficient de la ligne $i$ et de la colonne $j$ de \textbf{la matrice $P^k$ est la probabilité de passer de l'état $E_i$ à celui $E_j$ en $k$ transitions}.
+\end{tcolorbox}
+
+Les chaînes de Markov homogènes permettent de déterminer l'état d'un système après $k$ transitions, c'est-à-dire au bout du $k$-ième mouvement dans la chaine, en élevant la matrice de transition à la puissance $k$. \\
+Plus formellement, on a :
+\[
+P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
+\]
+Ce résultat vient de la propriété de Markov, qui indique que la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+La démonstration de cette propriété passe par celle de l'\textbf{équation de Chapman-Kolmogorov}, telle que $\forall i,j \in E$ et $\forall n,m \in \mathbb{N}$ :
+\[
+\mathbb{P}(X_{n+m} = j \mid X_0 = i) = \sum_{k \in E} \mathbb{P}(X_{m} = j \mid X_0 = k) \cdot \mathbb{P}(X_n = k \mid X_0 = i).
+\]
+
+Ce qui équivaut en termes matriciels :
+\[
+P_{i,j}^{(m+n)} = \sum_{k \in E} P_{i,k}^{(m)} \cdot P_{k,j}^{(n)}.
+\]
+
+Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. \\
+
+On reconnait alors l'expression de l'associativité du produit matriciel tel que :
+\[
+P^{n+m} = P^{n}P^{m}
+\]
+
+\end{tcolorbox}
+
+Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
+\begin{center}
+$
+P^{5} = \begin{bmatrix}
+0,22350 & 0,24385 & 0,53265 \\
+0,24150 & 0,26140 & 0,49710 \\
+0,20595 & 0,22252 & 0,57153 \\
+\end{bmatrix}
+$
+\end{center}
+Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
+\[
+P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
+\]
+
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Box a supprimer/modifier (backup)]
+Ce qui est à l'intérieur de cette box est la version précédente de la partie, comme j'ai pas mal modifié de choses je la laisse en backup - Tony \\
+
 Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$,$j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
 \[
 \mathbb{P}(X_1 = j \mid X_0 = i)
@@ -341,21 +398,7 @@ Cela correspond précisément à la règle du produit matriciel, ce qui montre e
 \[
 P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
 \]
-
-Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
-\begin{center}
-$
-P^{5} = \begin{bmatrix}
-0,22350 & 0,24385 & 0,53265 \\
-0,24150 & 0,26140 & 0,49710 \\
-0,20595 & 0,22252 & 0,57153 \\
-\end{bmatrix}
-$
-\end{center}
-Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
-\[
-P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
-\]
+\end{tcolorbox}
 
 \subsection{Classes de communication et d'équivalence}
 
@@ -682,6 +725,7 @@ Documents textuels :
 \item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf}
 \item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
 \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov} \\
+\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf}
 \end{itemize}
 
 Documents vidéos :
