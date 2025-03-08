@@ -22,11 +22,17 @@
 
 % Autres packages :
 \usepackage[french]{babel}
+\usepackage{mdframed}
+\usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{stmaryrd}
 \usepackage[explicit]{titlesec}
+\usepackage{framed}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
 % Package permettant de générer des graphes :
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -78,7 +84,7 @@ En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribu
 
 Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile et NP-complet, ce qui signifie qu'il est extrêmement difficile de trouver une solution optimale en temps polynomial, et il est peu probable que des algorithmes en temps polynomial existent pour résoudre ce problème de manière exacte. \\
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
-Le problème consiste à trouver le chemin le plus court entre des points donnés en connaissant la distance entre eux. Il faut alors tâcher de commencer et terminer par le même point (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
+Le problème consiste à déterminer le chemin le plus court passant par tous les points d'un graphe une seule fois chacun, en terminant par le point de départ (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
 
 % Insérer une image !
 \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
@@ -101,28 +107,95 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 \newpage
-\section{Chaines de Markov}
+% Questions pour le prof :
+%   (1) Doit-t'on définir la notion de lois ?
+%   (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
+%   (3) Doit-on définir la notion de processus stochastique ? Et la notion de temps discret/continu ?
+%   (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
+%   (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
+%   (6) Est-ce grave / à éviter que les définitions soient coupées par un changement de page ?
 
-% J'ai trouvé un cours ici : \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}, sûrement pertinent (j'ai juste survolé le doc).
+% Où mettre ce bloc ?
+%   Pour tout couple $(i,j) \in E \times E$, on a :
+%   \[
+%   \mathcal{P}(j \mid i) = \mathbb{P}(X_{n+1}=j \mid X_n=i) \in [0,1].
+%   \]
+% 
+%   Où $\mathcal{P}(j \mid i)$ correspond à la probabilité de passer dans l'état $j$ sachant $i$. Autrement dit, $\mathcal{P}(j \mid i)$ correspond à la probalilité de passer dans l'état $j$ en partant de l'état $i$.
 
-\subsection{Définitions}
+% Objets à remplacer :
+%   (1) /!\ Les "alpha" et "beta" par des "i" et des "j" lorsque l'on parle d'états quelconques (si on est dans des exemples avec des états nommés, autant les laisser, ça sera les noms "typiques" / que l'on utilisera pour TOUS les exemples).
+%   (2) La définition d'états récurrents positifs.
 
-% TODO
-% Parler des définitions et surtout placer le contexte, j'entends par là :
-% - En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
-% - Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
+\section{Chaînes de Markov à états finis}
 
-Une chaîne de Markov est un processus aléatoire vérifiant la propriété de Markov.
-Dit simplement, la probabilité de passer d'un état $X_n$ à $X_{n+1}$ ne dépend que de $X_n$, 
-nous pouvons dire de façon plus grossière que le système ne se souvient pas.
-La chaîne de Markov possède un espace d'états fini ou dénombrable (que l'on va noter $\mathfrak{X}$), 
-tel que pour $\alpha$ et $ \beta \in \mathfrak{X}$, 
-il existe une probabilité $ \mathcal{P}_\alpha(\beta) \in [0,1]$, 
-de passage de l'état $\beta$ sachant $\alpha$, autrement dit, 
-il s'agit de la probabilité que de l'état $\alpha$, nous passions à l'état $\beta$.
+\subsection{Définitions fondamentales}
 
-% Je suprime cette phrase, un peu trop hors contexte, à placer autrepart je pense -Corentin
-% Markov est le premier mathématicien à avoir publié des résultats sur l'étude de ces processus.
+% TODO = Parler des définitions et surtout placer le contexte, j'entends par là :
+% - [X] En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
+% - [X] Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Temps Discret et Temps Continu]
+Soit $T$ un ensemble d'indices numérotées représentant le temps. \\
+
+Il existe deux types de modélisation temporelle :
+\begin{enumerate}[leftmargin=5em, label=(\arabic*)]
+  \item Un processus \textbf{à temps discret} signifie que l'on considère les valeurs de la modélisation comme espacées régulièrement dans le temps.
+  On peut prendre des ensembles dénombrables comme $T = \mathbb{N}$ ou $T = \mathbb{Z}$ où chaque instant est distinct.
+  \item Un processus \textbf{à temps continu} signifie que $T$ n'est pas dénombrable. Il existe toujours un temps intermédiaire entre deux indices de $T$.
+  Cela signifie que le processus évolue en tout instant dans un continuum temporel.
+\end{enumerate}
+\end{tcolorbox}
+
+Dans ce rapport nous nous interesserons uniquement au temps discret, pour pouvoir modéliser le problème du voyageur de commerce.
+De plus, cette distinction joue un rôle fondamental dans la classification et l'analyse des \textbf{processus stochastiques} et n'implique pas les mêmes théorèmes. \\
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Processus Stochastique]
+Soit $(\Omega, \mathcal{F}, \mathbb{P})$ un espace de probabilité.
+
+Soit $T$ un ensemble d'indices discret ou continu (souvent $T = \mathbb{N}$ ou $\mathbb{R}_+$). \\
+
+Un \textbf{processus stochastique} est une famille de variables aléatoires $\{X_t\}_{t \in T}$ définies sur $(\Omega, \mathcal{F}, \mathbb{P})$ et à valeurs dans un espace d'états $E$ (appelé espace d'états du processus).
+\end{tcolorbox}
+
+Un processus stochastique permet de modéliser un système évoluant de manière aléatoire en fonction du temps.
+
+Différents types de processus peuvent être étudiés en fonction des propriétés de dépendance temporelle et de la nature de l'espace d'états $E$.
+Au cours de ce rapport, nous nous concentrerons l'un des principaux processus stochastiques à temps discret et à espace d'états fini ; les \textbf{chaînes de Markov}. \\
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Chaîne de Markov]
+Soit $E$ un ensemble fini ou dénombrable.
+
+Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs dans l'espace d'états $E$. \\
+
+$(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulement si :
+\begin{enumerate}[leftmargin=5em, label=(\arabic*)]
+  \item Sa loi de probabilité initiale $X_0$ est bien définie.
+  \item Elle respecte la \textbf{propriété de Markov}, telle que :
+\end{enumerate}
+\[
+\forall n \geq 0, \quad \exists x_1, x_2, \dots, x_{n+1} \in E,
+\]
+\[
+\mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n)
+\]
+\end{tcolorbox}
+
+Une chaîne de Markov est un processus de Markov à temps discret ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
+
+Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état présent $X_n$ vers l'état futur $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
+
+Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques.
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
+Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
+\[
+  \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i]
+\]
+\end{tcolorbox}
+
+En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
+Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
 \subsection{Propriétés fondamentales}
 
@@ -134,40 +207,77 @@ il s'agit de la probabilité que de l'état $\alpha$, nous passions à l'état $
 
 \subsubsection{Matrice de Transition}
 
-Nous pouvons représenter les probabilités de passage à l'état $\beta$ sachant $\alpha$ avec une matrice dite de transition P, ou donc $P_{\alpha,\beta}$ représente $ \mathcal{P}_\alpha(\beta)$.  
-Si les états sont ordonné d'une quelconque manière, et selon que le nombre d'états soit fini ($N \in \mathbb{N}$) ou infini dénombrable, les éléments de la matrice de transition $P$ peuvent être notés $P_{i,j}$, où $i,j \in \llbracket 1, N \rrbracket$ ou $i,j \in \llbracket 1, +\infty \llbracket$ respectivement, où $P_{i,j}$ représente $\mathcal{P}_\alpha(\beta)$ si $\alpha$ est le i-ème élément et $\beta$ le j-ème.
-Cette matrice est une matrice stochastique, ce qui signifie que la somme des éléments de chaque ligne est égale à 1.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/par colonnes]
 
-Ou de façon plus imagée, avec une chaîne de Markov à N états :  
-Avec la matrice de transition 
-$
+  Une matrice \textbf{stochastique par lignes} (appelée aussi \textbf{stochastique à droite}) est une matrice dont la somme des probabilités de ses lignes vaut 1 chacune et toutes ses probabilités sont positives :
+  \[
+  \forall i, \quad \sum_{j=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
+  \]
+  Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \textbf{stochastique à gauche}) lorsque :
+  \[
+  \forall j, \quad \sum_{i=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
+  \]
+  Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de Transition]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
+
+Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à une autre, définie comme :
+\[
+\forall n \geq 0,\; \forall i,j \in E,\quad P_{ij} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
+\]
+
+La \textbf{matrice de transition} $P$ regroupe ces probabilités tel que chaque élément $P_{ij}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
+Lorsque l'ensemble des états $E$ est discret, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
+\[
 P = \begin{bmatrix}
-P_{1,1} & P_{1,2} & ... & P_{1,N}\\
-P_{2,1} & P_{2,2} & ... & P_{2,N}\\
-\vdots & &\ddots & \vdots\\
-P_{N,1} & P_{N,2} & ... & P_{N, N}\\
-\end{bmatrix} \in \mathcal{M}([0,1]) \\$
-$\forall i \in [1,N] : P_{i,1} + P_{i,2} + \dots + P_{i, N} = 1 \space \\$
-ou écrit autrement  
-$\forall i \in [1,N]: \sum_{j = 1}^N P_{i j} = 1\\$ 
+P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
+P_{21} & P_{22} & \cdots & P_{2N}\\[1mm]
+\vdots & \vdots & \ddots & \vdots\\[1mm]
+P_{N1} & P_{N2} & \cdots & P_{NN}
+\end{bmatrix}
+\]
+
+\end{tcolorbox}
+
+Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées. C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+
+De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
+\[
+\forall i \in E, \quad \sum_{j \in E} P_{ij} = 1,
+\]
+reste valable. \\
 
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
 
-Il est relativement naturel de représenter la matrice de transition d'une chaîne de Markov par un graphe orienté.
-Ceci qui permet de visualiser les probabilités de transition entre les états. \\
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Graphe Orienté d'une Chaîne de Markov]
+Une chaîne de Markov homogène peut toujours être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
+\begin{enumerate}[leftmargin=5em, label=(\arabic*)]
+    \item $ V $ est l'ensemble des sommets, correspondant aux états de l'espace d'états $ E $.
+    \item $ A $ est l'ensemble des arcs, où chaque arc possède une pondération correspondant à la probabilité de transition $P_{i,j}$. Un arc de $i$ vers $j$ est représenté que si $P_{i,j} > 0$.
+\end{enumerate}
+\end{tcolorbox}
 
-Par exemple, voici le cas d'une chaîne de Markov disposant de 3 états ; $\alpha, \beta$ et $\gamma $, ordonnés respectivement, dans la matrice de transition suivante :
+Représenter graphiquement une chaîne de Markov homogène permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
+
+Considérons par exemple une chaîne de Markov ayant trois états $\alpha, \beta, \gamma$, ordonnés respectivement, et dont la matrice de transition est donnée par :
+
 \begin{center}
 $
 P = \begin{bmatrix}
-0,1 & 0,4 & 0,5 \\
-0,6 & 0,4 & 0   \\
-0,1 & 0,1 & 0,8 \\
+0.1 & 0.4 & 0.5 \\
+0.6 & 0.4 & 0 \\
+0.1 & 0.1 & 0.8 \\
 \end{bmatrix}
 $
 \end{center}
-Nous avons donc par exemple $ P_{\alpha,\beta} = P_{1,2} = \mathcal{P}_\alpha(\beta) = 0,4$. \\
+
+Dans cette configuration, la probabilité de transition de l'état $\alpha$ vers l'état $ \beta $ est donnée par :
+\[
+P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
+\]
 
 % Je viens de me rendre compte d'un sous-entendu terrible !
 % Dans mes sous-parties, à chaque fois que je parle d'un état i ou j, je parle en réalité des états d'INDICE i et j.
@@ -176,7 +286,6 @@ Nous avons donc par exemple $ P_{\alpha,\beta} = P_{1,2} = \mathcal{P}_\alpha(\b
 
 Nous obtenons ainsi le graphe suivant :
 
-% Graph's creation :
 \begin{center}
 \begin{tikzpicture}[
     >={Latex[length=3mm, width=2mm]},
@@ -205,7 +314,58 @@ Nous obtenons ainsi le graphe suivant :
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Matrice de Transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
+\subsubsection{Matrice de transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de transition en $n$ transitions]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaine de Markov homogène d'espace d'états $E$ fini ou dénombrable tel que $\left\{1,2,\ldots,N\right\}$. On note $P$ sa matrice de transition. \\
+Pour tout état $E_i$ et $E_j$ et pour tout entier naturel $k \geq 1$, le coefficient de la ligne $i$ et de la colonne $j$ de \textbf{la matrice $P^k$ est la probabilité de passer de l'état $E_i$ à celui $E_j$ en $k$ transitions}.
+\end{tcolorbox}
+
+Les chaînes de Markov homogènes permettent de déterminer l'état d'un système après $k$ transitions, c'est-à-dire au bout du $k$-ième mouvement dans la chaine, en élevant la matrice de transition à la puissance $k$. \\
+Plus formellement, on a :
+\[
+P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
+\]
+Ce résultat vient de la propriété de Markov, qui indique que la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+La démonstration de cette propriété passe par celle de l'\textbf{équation de Chapman-Kolmogorov}, telle que $\forall i,j \in E$ et $\forall n,m \in \mathbb{N}$ :
+\[
+\mathbb{P}(X_{n+m} = j \mid X_0 = i) = \sum_{k \in E} \mathbb{P}(X_{m} = j \mid X_0 = k) \cdot \mathbb{P}(X_n = k \mid X_0 = i).
+\]
+
+Ce qui équivaut en termes matriciels :
+\[
+P_{i,j}^{(m+n)} = \sum_{k \in E} P_{i,k}^{(m)} \cdot P_{k,j}^{(n)}.
+\]
+
+Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. \\
+
+On reconnait alors l'expression de l'associativité du produit matriciel tel que :
+\[
+P^{n+m} = P^{n}P^{m}
+\]
+
+\end{tcolorbox}
+
+Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
+\begin{center}
+$
+P^{5} = \begin{bmatrix}
+0,22350 & 0,24385 & 0,53265 \\
+0,24150 & 0,26140 & 0,49710 \\
+0,20595 & 0,22252 & 0,57153 \\
+\end{bmatrix}
+$
+\end{center}
+Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
+\[
+P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
+\]
+
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Box a supprimer/modifier (backup)]
+Ce qui est à l'intérieur de cette box est la version précédente de la partie, comme j'ai pas mal modifié de choses je la laisse en backup - Tony \\
+
 Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$,$j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
 \[
 \mathbb{P}(X_1 = j \mid X_0 = i)
@@ -238,21 +398,7 @@ Cela correspond précisément à la règle du produit matriciel, ce qui montre e
 \[
 P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
 \]
-
-Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
-\begin{center}
-$
-P^{5} = \begin{bmatrix}
-0,22350 & 0,24385 & 0,53265 \\
-0,24150 & 0,26140 & 0,49710 \\
-0,20595 & 0,22252 & 0,57153 \\
-\end{bmatrix}
-$
-\end{center}
-Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
-\[
-P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
-\]
+\end{tcolorbox}
 
 \subsection{Classes de communication et d'équivalence}
 
@@ -268,7 +414,7 @@ Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, la probabi
 \[
 \mathbb{P}_i(\text{Num}_i(X) = \infty) = 1.
 \]
-où \(\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|\).
+où $\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|$.
 
 Si cette probabilité est strictement inférieure à 1, l'état $i$ est à l'inverse qualifié de \textbf{transitoire}. Le cas échant, la chaîne quiterra de manière systématique et définitive cet état lorsque l'on réalisera une infinité de transitions. \\
 
@@ -299,8 +445,9 @@ Réciproquement, un état $i$ est dit \textbf{co-accessible} depuis $j$ si $j$ e
 % Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
 
 \subsubsection{Classes de communication}
+% REMPLACER LES ALPHA ET BETA PAR DES I ET J - Tom
 
-Soit $\alpha$, $\beta \in \mathfrak{X}$ et $i$, $j$ leurs indices respectifs dans $\mathfrak{X}$. On note $\alpha \rightarrow \beta$ si, et seulement si :
+Soit $\alpha$, $\beta \in E$ et $i$, $j$ leurs indices respectifs dans $E$. On note $\alpha \rightarrow \beta$ si, et seulement si :
 \[
 \exists n \geq 0, \quad P_{i,j}^{(n)} > 0.
 \]
@@ -361,9 +508,9 @@ TODO \\
 
 \subsection{Loi stationnaire}
 
-Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $\mathfrak{X}$, et ayant pour matrice de transition $P$. \\
+Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et ayant pour matrice de transition $P$. \\
 
-Une mesure $\pi = (\pi_i)_{i \in \mathfrak{X}}$ sur l'espace d'état $\mathfrak{X}$ est dite stationnaire si elle satisfait la relation $\pi = \pi P$. \\
+Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite stationnaire si elle satisfait la relation $\pi = \pi P$. \\
 
 Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\top}$, associé à la valeur propre $1$ :
 \[
@@ -372,17 +519,18 @@ Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\t
 
 De plus, pour que $\pi$ soit une mesure de probabilité, elle doit respecter les conditions suivantes :
 \[
-\forall i \in \mathfrak{X}, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in \mathfrak{X}} \pi_i = 1.
+\forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
 \]
 
 \subsection{Comportement en temps long}
+% REMPLACER LES ALPHA ET BETA PAR DES I ET J (si cette partie survie) - Tom
 
 Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe. % Corentin, tu signifies quoi par "fortement" ? - Tom
 Autrement dit, tous les couples $(\alpha, \beta)$ de sommets du graphe, avec $\alpha \neq \beta$, communiquent mutuellement ; $\alpha \leftrightarrow \beta$. \\
 
 Une chaîne de Markov est dite \textbf{récurrente} si tous ses états sont récurrents (voir sous-section ~\ref{subsubsec: Les différents types d'états}). \\ % A quoi sert cette définition ? Elle me semble un peu perdue. - Tom
 
-Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $\mathfrak{X}$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in \mathfrak{X}}$ telle que $\pi_\alpha > 0$.
+Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $E$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in E}$ telle que $\pi_\alpha > 0$.
 
 Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
 
@@ -422,7 +570,7 @@ TODO \\
 Voici une description de cet algorithme :
 
 \begin{enumerate}
-\item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in \mathfrak{X}$.  
+\item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.  
 
 \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)  \begin{itemize}
     \item On tire $x$ avec $g_{x_t}(x)$  
@@ -494,7 +642,7 @@ TODO \\
 
 \begin{tikzpicture}
     % Titre du diagramme
-    \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};  % Titre au-dessus du diagramme
+    \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};
 
     % Nœuds du diagramme
     \node (A) at (0,0) {A};
@@ -571,10 +719,13 @@ Documents textuels :
 \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
 \item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
 \item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
+\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}
 \item \url{https://www.imo.universite-paris-saclay.fr/~pierre-loic.meliot/agreg/markov.pdf}
 \item \url{https://www.college-de-france.fr/fr/agenda/cours/apprentissage-et-generation-par-echantillonnage-aleatoire/algorithme-de-metropolis-hasting}
-\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf} \\
+\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf}
+\item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
 \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov} \\
+\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf}
 \end{itemize}
 
 Documents vidéos :
