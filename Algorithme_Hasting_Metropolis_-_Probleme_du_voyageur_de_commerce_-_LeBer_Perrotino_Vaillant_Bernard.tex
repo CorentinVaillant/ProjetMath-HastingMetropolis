@@ -402,51 +402,73 @@ P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
 
 \subsection{Classes de communication et d'équivalence}
 
-\subsubsection{Les différents types d'états}
+\subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
 
-Dans une chaîne de Markov, chaque état peut être classifié en différente(s) catégorie(s) en fonction de ses laisons avec les autres états. Ces différentes classifications nous permettentrons d'analyser le comportement de la chaîne en temps long.
+Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses laisons avec les autres états. Ces différentes classifications nous permettentrons d'analyser le comportement de la chaîne en temps long.
 
-Dans cette sous-section, nous définirons les différents types d'états que chaque état peut prendre dans une chaîne de markov. \\ % Est-ce que cette phrase est utile ? J'hésite à l'enlever. - Tom
-
-Un premier type que peut prendre un état est l'état récurrent.
-Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, la probabilité de le revisiter à un moment donné est égale à 1. Autrement dit, l'état $i$ sera obligatoirement revisité / visité une infinité de fois lorsque l'on réalise une infité de transitions. Plus rigouresement, cela signifie que :
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Accessibilité]
+Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
 \[
-\mathbb{P}_i(\text{Num}_i(X) = \infty) = 1.
+\exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
 \]
-où $\text{Num}_i(X) = |\{n \geq 0, X_n = i\}|$.
+ce que l'on note $i \to j$. \\
+Et si $i \to j$ et $j \to i$, alors les éléments $i$ et $j$ \textbf{communiquent}, on écrit :
+\[
+i \leftrightarrow j
+\]
+\end{tcolorbox}
 
-Si cette probabilité est strictement inférieure à 1, l'état $i$ est à l'inverse qualifié de \textbf{transitoire}. Le cas échant, la chaîne quiterra de manière systématique et définitive cet état lorsque l'on réalisera une infinité de transitions. \\
+En particulier, $i \to j$ si et seulement s'il existe une suite d'états $(i_0, i_1, \dots, i_n)$ avec $i_0 = i$ et $i_n = j$ telle que :
+\[
+P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
+\]
+Ce qui veut dire qu'il existe un chemin de probabilité strictement positive
+qui mène de i à j.
 
-Un deuxième type que peut prendre un état est l'état absorbant.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent]
+Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, ill est certain d'y retourner.  
+Autrement dit, en effectuant un nombre infini de transitions, on retourne à $i$ une infinité de fois.  
+
+Plus rigoureusement, cela signifie que :  
+\[
+\mathbb{P}_i(\text{Num}_i(X) = \infty) = 1,
+\]
+où  
+\[
+\text{Num}_i(X) = |\{n \geq 0 \mid X_n = i\}|
+\]
+représente le nombre total de visites de l'état $i$, y compris la première.  
+
+Un état qui n'est pas récurrent est dit \textbf{transient} ou \textbf{transitoire}.  
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant]
 Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
 \[
 P_{i,i} = 1 \quad \text{et} \quad \forall j \neq i, \quad P_{i,j} = 0.
 \]
 A l'inverse, tout état ne respectant pas cette condition est appelé état \textbf{non-absorbant} ou encore état \textbf{évanescent}. \\
+\end{tcolorbox}
 
-Un troisième type que peut prendre un état est le type périodique.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique]
 Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$. La période $d(i)$ est définie comme :
 \[
 d(i) = \text{PGCD}\{n \geq 1 \mid P_{i,i}^{(n)} > 0\}.
 \]
 Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité. \\
-
-Un quatrième et dernier type d'état que nous étudierons est le type accessible.
-Un état $j$ est dit \textbf{accessible} depuis un état $i$ si la probabilité de passer de $i$ à $j$ est non-nulle après un nombre fixé $n$ de pas. Autrement dit :
-\[
-\exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
-\]
-Réciproquement, un état $i$ est dit \textbf{co-accessible} depuis $j$ si $j$ est accessible depuis $i$.
+\end{tcolorbox}
 
 % Est-ce qu'il faudrait ajouter le dernier type d'état suivant ? Il est super pratique dans notre cas mais ces notions ne sont pas encore introduites à ce niveau... - Tom
 % Un dernier type d'état que nous étudierons est le type ergotique.
 % Un état $i$ est dit \textbf{ergodique} si, en plus d'être récurrent, il est apériodique et appartient à une classe de communication contenant tous les autres états de la chaîne.
 % Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
+% TODO A AJOUTER APRES
 
 \subsubsection{Classes de communication}
 % REMPLACER LES ALPHA ET BETA PAR DES I ET J - Tom
 
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Backup à modifier/supprimer]
 Soit $\alpha$, $\beta \in E$ et $i$, $j$ leurs indices respectifs dans $E$. On note $\alpha \rightarrow \beta$ si, et seulement si :
 \[
 \exists n \geq 0, \quad P_{i,j}^{(n)} > 0.
@@ -456,10 +478,12 @@ On dit que les deux états $\alpha$ et $\beta$ communiquent si $\alpha \rightarr
 \[
 \alpha \leftrightarrow \beta \quad \iff \quad \exists n \geq 0, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \geq 0, \quad P_{j,i}^{(m)} > 0.
 \]
+\end{tcolorbox}
 
-$\leftrightarrow$ est une relation d'équivalence dont les classes sont appelée \textbf{classes de communications} de la chaîne de Markov. Autrement dit, dans une chaîne de Markov, une classe de communication est un ensemble d'états qui sont accessibles les uns depuis les autres. \\
+Soit deux états communiquant $i$ et $j$. Selon la définition précédente, $\leftrightarrow$ est une relation d'équivalence dont les classes sont appelées \textbf{classes de communications} de la chaîne de Markov.
+Autrement dit, dans une chaîne de Markov, une classe de communication est un ensemble d'états qui sont accessibles les uns depuis les autres. \\
 
-L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des état de cette chaîne.
+L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
 Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\ % Tony, j'imagine que je ne m'en sortirais pas sans peuve ici, hein ? - Tom
 
 Il est important de noter qu'une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
