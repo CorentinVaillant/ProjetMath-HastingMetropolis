@@ -360,7 +360,7 @@ $
 \end{center}
 Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
 \[
-P_{\alpha,\beta}^{5} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
+P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Box a supprimer/modifier (backup)]
@@ -405,7 +405,7 @@ P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
 \subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
 
-Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses laisons avec les autres états. Ces différentes classifications nous permettentrons d'analyser le comportement de la chaîne en temps long.
+Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Accessibilité]
 Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
@@ -480,13 +480,18 @@ On dit que les deux états $\alpha$ et $\beta$ communiquent si $\alpha \rightarr
 \]
 \end{tcolorbox}
 
-Soit deux états communiquant $i$ et $j$. Selon la définition précédente, $\leftrightarrow$ est une relation d'équivalence dont les classes sont appelées \textbf{classes de communications} de la chaîne de Markov.
-Autrement dit, dans une chaîne de Markov, une classe de communication est un ensemble d'états qui sont accessibles les uns depuis les autres. \\
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Classe de communication]
+Soit deux états communiquant $i$ et $j$, on a selon la définition précédente que $\leftrightarrow$ est une relation d'équivalence. De plus dans le contexte des chaines de Markov, ces classes d'équivalences sont appelées \textbf{classes de communications}.
+Une classe de communication est donc un ensemble d'états accessibles les uns depuis les autres. \\
+\end{tcolorbox}
 
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
 Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\ % Tony, j'imagine que je ne m'en sortirais pas sans peuve ici, hein ? - Tom
 
-Il est important de noter qu'une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
+Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états.
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Qualificatif ouvert/fermé pour une classe de communication]
+Une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
 \begin{itemize}
 \item \textbf{Fermée} : Une fois qu'un état de cette classe est atteint, il est impossible de quitter cette classe. Formellement, pour une classe $C$, cela signifie que :
   \[
@@ -497,29 +502,12 @@ Il est important de noter qu'une classe de communication appartienent systémati
   \exists i \in C, \quad \exists j \notin C, \quad \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
   \]
 \end{itemize}
+\end{tcolorbox}
 
-% est-ce que je devrais ajouter la phrase suivante ? Elle me semble bien pour introduire la notion de distribution stationnaire mais je pense qu'elle serait encore mieux dans la partie de définition des distributions stationnaires. - Tom
-% Les classes de communication fermées jouent un rôle central dans l'étude asymptotique des chaînes de Markov, car toute chaîne converge vers une distribution stationnaire si et seulement si elle se trouve dans une classe fermée récurrente et apériodique.
-
-\subsubsection{Classes d'équivalence}
-
-Les classes d'équivalence sont des sous-ensembles d'états dans une chaîne de Markov qui partagent des propriétés spécifiques en plus d'être dans une même classe de communication. Une classe d'équivalence est donc une classe de communication qui regroupe des états voisins présentant une ou plusieurs des propriétés suivantes :
-
-\begin{enumerate}
-\item \textbf{Récurrence} : Tous les états de la classe sont récurrents. Cela signifie qu'une fois entré dans cette classe, il est certain que la chaîne revisitera un état de cette classe une infinité de fois au cours des transitions suivantes. Cette classe d'équivalence est systématiquement fermée.
-\item \textbf{Transcience (transitivité)} : Dans certaines classes de communication, les états peuvent être transitoires, ce qui signifie qu'il est possible de quitter définitivement la classe par ces états. Cette classe d'équivalence, à l'opposé de la promière est toujours ouverte.
-\item \textbf{Absorption} : Une classe d'équivalence récurrence (et fermée) peut également être absorbante. Cela signifie que, si la chaîne entre dans cette classe, elle ne pourra plus jamais en sortir.
-\item \textbf{Apériodicité} : Tous les états d'une classe peuvent également être apériodiques, ce qui garantit l'absence de contraintes sur le moment où la chaîne peut revisiter un état donné. La classe d'équivalence ainsi formée peut être puverte ou fermée. \\
-\end{enumerate}
-
-Ainsi, une classe d'équivalence est une classe de communication fermée qui regroupe des états partageant une même propriété structurelle (tous les états de cette classe d'équivalence possède le même type d'état), telle que la récurrence, l'absorption, ou l'apériodicité. \\
-
-Les classes d'équivalence jouent en conséquence un rôle crucial dans l'étude des chaînes de Markov. En effet, elles permettent de décomposer la chaîne en sous-ensembles analytiquement indépendants.
-
-Par exemple ; les propriétés asymptotiques d'une chaîne dépendent fortement des classes d'équivalence fermées et récurrentes. % Je peux balancer cet "exemple" sans le justifier ? J'ai vraiment l'impression de tricher là. - Tom
+L'intérêt de ces distinctions est de diviser les chaînes de Markov en sous-ensembles analytiquement indépendants, ce qui permet ensuite de tirer des conclusions sur les sous-ensembles présentant ces propriétés.
 
 \subsubsection{Exemples}
-
+Par exemple ; les propriétés asymptotiques d'une chaîne dépendent fortement des classes d'équivalence fermées et récurrentes. \\ % Je peux balancer cet "exemple" sans le justifier ? J'ai vraiment l'impression de tricher là. - Tom
 TODO \\
 % J'ai eu un problème de génération de graphe par rapport à mes exemples, je les rajouterais de nouveau plus tard, quand j'aurai réglé ce problème. - Tom
 
