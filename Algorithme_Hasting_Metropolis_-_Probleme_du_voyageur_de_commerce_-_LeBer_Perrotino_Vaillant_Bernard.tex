@@ -520,19 +520,73 @@ TODO \\
 
 \subsection{Loi stationnaire}
 
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Mesure invariante/stationnaire]
 Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et ayant pour matrice de transition $P$. \\
 
-Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite stationnaire si elle satisfait la relation $\pi = \pi P$. \\
+Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariante (ou stationnaire) si elle satisfait la relation $\pi P = \pi$. \\
+\end{tcolorbox}
 
 Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\top}$, associé à la valeur propre $1$ :
 \[
-\pi = \pi P \iff \pi^{\top} = P^{\top} \pi^{\top}.
+\pi P = \pi \iff P^{\top} \pi^{\top} = \pi^{\top}.
 \]
 
-De plus, pour que $\pi$ soit une mesure de probabilité, elle doit respecter les conditions suivantes :
+De plus, comme $\pi$ est une mesure de probabilité, elle doit respecter les conditions suivantes :
 \[
 \forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
 \]
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Existence d'une probabilité invariante]
+Soit $(X_n)_{n \geq 0}$ une chaîne de Markov homogène sur un espace d'états $E$ fini, de matrice de transition $P$. Alors $(X_n)_{n \geq 0}$ admet au moins une probabilité invariante.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^T \pi^T = \pi^T$, c'est-à-dire que $\pi^T$ est un vecteur propre de $P^T$ associé à la valeur propre $1$.
+Or $P$ et sa transposée $P^T$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
+Donc 1 est vecteur propre de $P$ et donc de $P^T$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
+Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
+
+\[
+\pi(x) = |\mu(x)| = |\mu P(x)| = \left| \sum_{y \in E} \mu(y) P(y,x) \right|,
+\]
+\[
+\leq \sum_{y \in E} |\mu(y)| P(y,x) = \sum_{y \in E} \pi(y) P(y,x) = \pi P(x),
+\]
+
+\end{tcolorbox} \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration] % Pour la mise en page
+
+donc $\pi(x) \leq \pi P(x)$, pour tout $x \in E$. De plus,
+\[
+\sum_{x \in E} \pi(x) = \sum_{x \in E} |\mu(x)| = \sum_{x \in E} \left| \sum_{y \in E} \mu(y) P(y,x) \right|,
+\]
+\[
+\leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P(y,x) = \sum_{y \in E} \pi(y) \sum_{x \in E} P(y,x) = \sum_{y \in E} \pi(y).
+\]
+
+Finalement, $\pi(x) \leq \pi P(x)$ pour tout $x \in E$, et les vecteurs ont même somme, c’est donc qu’ils sont égaux : on a
+\[
+\sum_{x \in E} (\pi P(x) - \pi(x)) = 0,
+\]
+et comme $\pi P(x) - \pi(x) \geq 0$ pour tout $x \in E$, on a $\pi P(x) = \pi(x)$. Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Chaîne de Markov irréductible]
+Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe.
+
+Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement : $i \leftrightarrow j$.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Mesures invariantes d'une chaîne de Markov irréductible]
+Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les mesures invariantes sont proportionnelles entre elles.
+\end{tcolorbox}
+
+La loi stationnaire (ou mesure invariante) décrit le comportement à long terme de la chaîne de Markov. 
+
+Si la chaîne est irréductible et apériodique sur un espace d'états fini, alors :
+\[
+\lim_{n \to \infty} P^n(i, j) = \pi_j,
+\]
+et ce, indépendamment de l'état initial $i$. Autrement dit, la distribution des états converge vers $\pi$ quelle que soit la condition initiale.
 
 \subsection{Comportement en temps long}
 % REMPLACER LES ALPHA ET BETA PAR DES I ET J (si cette partie survie) - Tom
