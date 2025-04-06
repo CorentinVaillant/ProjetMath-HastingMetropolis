@@ -520,10 +520,17 @@ TODO \\
 
 \subsection{Loi stationnaire}
 
+La loi stationnaire peut permettre sous certaines conditions à décrire le comportement à long terme de la chaîne de Markov. \\
+
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Mesure invariante/stationnaire]
 Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et ayant pour matrice de transition $P$. \\
 
 Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariante (ou stationnaire) si elle satisfait la relation $\pi P = \pi$. \\
+
+C'esr-à-dire
+\[
+\forall y \in E, \quad \sum_{x \in E} \pi(x) P_{x, y} = \pi(y)
+\]
 \end{tcolorbox}
 
 Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\top}$, associé à la valeur propre $1$ :
@@ -531,13 +538,13 @@ Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\t
 \pi P = \pi \iff P^{\top} \pi^{\top} = \pi^{\top}.
 \]
 
-De plus, comme $\pi$ est une mesure de probabilité, elle doit respecter les conditions suivantes :
+De plus dans notre cas, comme $\pi$ est une mesure de probabilité, elle doit respecter les conditions suivantes :
 \[
 \forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
 \]
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Existence d'une probabilité invariante]
-Soit $(X_n)_{n \geq 0}$ une chaîne de Markov homogène sur un espace d'états $E$ fini, de matrice de transition $P$. Alors $(X_n)_{n \geq 0}$ admet au moins une probabilité invariante.
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène sur un espace d'états $E$ fini, de matrice de transition $P$. Alors $(X_n)_{n \in \mathbb{N}}$ admet au moins une probabilité invariante.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
@@ -546,31 +553,32 @@ Or $P$ et sa transposée $P^T$ ont même valeurs propres (car même polynôme ca
 Donc 1 est vecteur propre de $P$ et donc de $P^T$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
 Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
 
-\[
-\pi(x) = |\mu(x)| = |\mu P(x)| = \left| \sum_{y \in E} \mu(y) P(y,x) \right|,
-\]
-\[
-\leq \sum_{y \in E} |\mu(y)| P(y,x) = \sum_{y \in E} \pi(y) P(y,x) = \pi P(x),
-\]
-
 \end{tcolorbox} \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration] % Pour la mise en page
 
-donc $\pi(x) \leq \pi P(x)$, pour tout $x \in E$. De plus,
 \[
-\sum_{x \in E} \pi(x) = \sum_{x \in E} |\mu(x)| = \sum_{x \in E} \left| \sum_{y \in E} \mu(y) P(y,x) \right|,
+\pi(x) = |\mu(x)| = |\mu P_x| = \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
 \]
 \[
-\leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P(y,x) = \sum_{y \in E} \pi(y) \sum_{x \in E} P(y,x) = \sum_{y \in E} \pi(y).
+\leq \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) P_{y,x} = \pi P_x,
 \]
 
-Finalement, $\pi(x) \leq \pi P(x)$ pour tout $x \in E$, et les vecteurs ont même somme, c’est donc qu’ils sont égaux : on a
+donc $\pi(x) \leq \pi P_x$, pour tout $x \in E$. De plus,
 \[
-\sum_{x \in E} (\pi P(x) - \pi(x)) = 0,
+\sum_{x \in E} \pi(x) = \sum_{x \in E} |\mu(x)| = \sum_{x \in E} \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
 \]
-et comme $\pi P(x) - \pi(x) \geq 0$ pour tout $x \in E$, on a $\pi P(x) = \pi(x)$. Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
+\[
+\leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) \sum_{x \in E} P_{y,x} = \sum_{y \in E} \pi(y).
+\]
+
+Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c’est donc qu’ils sont égaux : on a
+\[
+\sum_{x \in E} (\pi P_x - \pi(x)) = 0,
+\]
+et comme $\pi P_x - \pi(x) \geq 0$ pour tout $x \in E$, on a $\pi P_x = \pi(x)$. Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
 \end{tcolorbox}
+  
 
-\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Chaîne de Markov irréductible]
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaîne de Markov irréductible]
 Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe.
 
 Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement : $i \leftrightarrow j$.
@@ -580,16 +588,38 @@ Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, 
 Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les mesures invariantes sont proportionnelles entre elles.
 \end{tcolorbox}
 
-La loi stationnaire (ou mesure invariante) décrit le comportement à long terme de la chaîne de Markov. 
-
-Si la chaîne est irréductible et apériodique sur un espace d'états fini, alors :
-\[
-\lim_{n \to \infty} P^n(i, j) = \pi_j,
-\]
-et ce, indépendamment de l'état initial $i$. Autrement dit, la distribution des états converge vers $\pi$ quelle que soit la condition initiale.
-
 \subsection{Comportement en temps long}
-% REMPLACER LES ALPHA ET BETA PAR DES I ET J (si cette partie survie) - Tom
+
+Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène.
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème de convergence]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Alors, il existe une unique mesure invariante \( \pi \), et pour tout état initial \( i \in E \) et tout \( j \in E \),
+\[
+\lim_{n \to \infty} P^n_{i,j} = \pi_j.
+\]
+Donc la loi de \( X_n \) converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Valeur de convergence]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. Soit Alors, pour toute mesure initiale $\lambda$ et pour tout état $j$ :
+\[
+\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi(j)
+\]
+où $\pi$ est l'unique probabilité invariante.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Convergence des méthodes de Monte-Carlo]
+Soit \( X \) une chaine de Markov homogène irréductible, alors pour toute mesure initiale $\lambda$ et pour toute fonction mesurable bornée $f$, on a :
+\[
+\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f \, d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda
+\]
+
+Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
+\end{tcolorbox}
+  
+Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
+
+
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Backup (à supprimer)]
 Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe. % Corentin, tu signifies quoi par "fortement" ? - Tom
