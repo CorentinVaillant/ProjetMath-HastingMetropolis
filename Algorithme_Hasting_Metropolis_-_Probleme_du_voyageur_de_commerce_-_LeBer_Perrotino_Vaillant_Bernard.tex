@@ -527,7 +527,7 @@ Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et 
 
 Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariante (ou stationnaire) si elle satisfait la relation $\pi P = \pi$. \\
 
-C'esr-à-dire
+C'est-à-dire
 \[
 \forall y \in E, \quad \sum_{x \in E} \pi(x) P_{x, y} = \pi(y)
 \]
@@ -593,17 +593,45 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène.
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème de convergence]
-Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Alors, il existe une unique mesure invariante \( \pi \), et pour tout état initial \( i \in E \) et tout \( j \in E \),
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Soit P sa matrice de transition.\\
+Alors, il existe une unique mesure invariante $\pi$, et pour tout état initial $i \in E$ et tout $j \in E$,
 \[
 \lim_{n \to \infty} P^n_{i,j} = \pi_j.
 \]
+
+Ce qui est équivalent à :
+\[
+\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j
+\]
+
 Donc la loi de \( X_n \) converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration]
+Commençons par montrer l'unicité de la probabilité invariante.
+La transposée d'une probabilité invariante est un vecteur propre de $P^T$ associé à la valeur propre $1$.
+Comme les valeurs propres de $P$ et de $P^T$ sont les mêmes et ont même multiplicité, il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
+Soit $f$ un vecteur propre de $P$ pour la valeur propre $1$, i.e., $Pf = f$. Comme le vecteur $1$ est vecteur propre, il s'agit de montrer que $f$ est constante. \\
+
+Soit $x_i$ le point où $f$ atteint son maximum, i.e. $f(x_i) = \max\{f(x) \mid x \in E\}$. Soit $y$ un autre état. Comme $P$ est irréductible, $y$ communique avec $x_i$, donc il existe $n \geq 1$ tel que $P^n(x_i, y) > 0$. Comme $Pf = f$, on a aussi $P^n f = f$. Alors, d'une part,
+\[
+f(x_i) = P^n f(x_i) = \sum_{y \in E} f(y) P^n(x_i, y),
+\]
+et d'autre part,
+\[
+f(x_i) = \sum_{y \in E} f(x_i) P^n(x_i, y),
+\]
+donc on a
+\[
+\sum_{y \in E} P^n(x_i, y) \left(f(x_i) - f(y)\right) = 0,
+\]
+qui est une somme de termes positifs. Ainsi, comme $P^n(x_i, y) > 0$, on a $f(y) = f(x_i)$, et donc, $f$ est constante, et la chaîne admet une unique probabilité invariante, notée $\pi_j$.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Valeur de convergence]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. Soit Alors, pour toute mesure initiale $\lambda$ et pour tout état $j$ :
 \[
-\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi(j)
+\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j
 \]
 où $\pi$ est l'unique probabilité invariante.
 \end{tcolorbox}
@@ -618,7 +646,6 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
 \end{tcolorbox}
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
-
 
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Backup (à supprimer)]
