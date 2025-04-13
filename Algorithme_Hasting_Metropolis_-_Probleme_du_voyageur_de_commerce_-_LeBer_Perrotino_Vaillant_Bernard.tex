@@ -111,25 +111,6 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 \newpage
-% Questions pour le prof :
-%   (1) Doit-t'on définir la notion de lois ?
-%   (2) Doit-on séparer la définition de la propriété de Markov de celle d'une chaîne de Markov ?
-%   (3) Doit-on définir la notion de processus stochastique ? Et la notion de temps discret/continu ?
-%   (4) Pour la première sous-section, est-ce "Définitions" ou "Définitions fondamentales" ?
-%   (5) Pour les propriétés fondamentales, la sous-section "Matrice de transistion" a été retirée, on ne la verra donc plus dans la légende, est-ce un problème ?
-%   (6) Est-ce grave / à éviter que les définitions soient coupées par un changement de page ?
-
-% Où mettre ce bloc ?
-%   Pour tout couple $(i,j) \in E \times E$, on a :
-%   \[
-%   \mathcal{P}(j \mid i) = \mathbb{P}(X_{n+1}=j \mid X_n=i) \in [0,1].
-%   \]
-% 
-%   Où $\mathcal{P}(j \mid i)$ correspond à la probabilité de passer dans l'état $j$ sachant $i$. Autrement dit, $\mathcal{P}(j \mid i)$ correspond à la probalilité de passer dans l'état $j$ en partant de l'état $i$.
-
-% Objets à remplacer :
-%   (1) /!\ Les "alpha" et "beta" par des "i" et des "j" lorsque l'on parle d'états quelconques (si on est dans des exemples avec des états nommés, autant les laisser, ça sera les noms "typiques" / que l'on utilisera pour TOUS les exemples).
-%   (2) La définition d'états récurrents positifs.
 
 \section{Chaînes de Markov à états finis}
 
@@ -144,10 +125,10 @@ Soit $T$ un ensemble d'indices numérotées représentant le temps. \\
 
 Il existe deux types de modélisation temporelle :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
-  \item Un processus \textbf{à temps discret} signifie que l'on considère les valeurs de la modélisation comme espacées régulièrement dans le temps.
-  On peut prendre des ensembles dénombrables comme $T = \mathbb{N}$ ou $T = \mathbb{Z}$ où chaque instant est distinct.
-  \item Un processus \textbf{à temps continu} signifie que $T$ n'est pas dénombrable. Il existe toujours un temps intermédiaire entre deux indices de $T$.
-  Cela signifie que le processus évolue en tout instant dans un continuum temporel.
+    \item Un processus \textbf{à temps discret} signifie que l'on considère les valeurs de la modélisation comme espacées régulièrement dans le temps.
+          On peut prendre des ensembles dénombrables comme $T = \mathbb{N}$ ou $T = \mathbb{Z}$ où chaque instant est distinct.
+    \item Un processus \textbf{à temps continu} signifie que $T$ n'est pas dénombrable. Il existe toujours un temps intermédiaire entre deux indices de $T$.
+          Cela signifie que le processus évolue en tout instant dans un continuum temporel, on peut prendre des ensembles non dénombrables comme $T = \mathbb{R}_+$ où chaque instant est continu.
 \end{enumerate}
 \end{tcolorbox}
 
@@ -174,14 +155,14 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs da
 
 $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulement si :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
-  \item Sa loi de probabilité initiale $X_0$ est bien définie.
-  \item Elle respecte la \textbf{propriété de Markov}, telle que :
+    \item Sa loi de probabilité initiale $X_0$ est bien définie.
+    \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
 \forall n \geq 0, \quad \exists x_1, x_2, \dots, x_{n+1} \in E,
 \]
 \[
-\mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n)
+\mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
 \]
 \end{tcolorbox}
 
@@ -194,7 +175,7 @@ Cette propriété, que l'on peut qualifier de « sans mémoire » ou de proprié
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
 Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 \[
-  \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i]
+  \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i].
 \]
 \end{tcolorbox}
 
@@ -211,23 +192,10 @@ Dans ce rapport, toutes les chaînes de Markov seront considérées comme homog�
 
 \subsubsection{Matrice de Transition}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/par colonnes]
-
-  Une matrice \textbf{stochastique par lignes} (appelée aussi \textbf{stochastique à droite}) est une matrice dont la somme des probabilités de ses lignes vaut 1 chacune et toutes ses probabilités sont positives :
-  \[
-  \forall i, \quad \sum_{j=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
-  \]
-  Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \textbf{stochastique à gauche}) lorsque :
-  \[
-  \forall j, \quad \sum_{i=1}^{N} P_{ij} = 1 \quad \text{et} \quad P_{ij} \geq 0.
-  \]
-  Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
-\end{tcolorbox}
-
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de Transition]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
 
-Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à une autre, définie comme :
+Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à un autre, définie comme :
 \[
 \forall n \geq 0,\; \forall i,j \in E,\quad P_{ij} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
 \]
@@ -245,7 +213,20 @@ P_{N1} & P_{N2} & \cdots & P_{NN}
 
 \end{tcolorbox}
 
-Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées. C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/colonnes]
+Une matrice \textbf{stochastique par lignes} (appelée aussi \textbf{stochastique à droite}) est une matrice dont la somme des probabilités de ses lignes vaut 1 chacune et toutes ses probabilités sont positives :
+\[
+\forall i, \quad \sum_{j=1}^{N} P_{ij} = 1 \quad \text{et} \quad 0 \leq P_{ij} \leq 1.
+\]
+
+Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \textbf{stochastique à gauche}) lorsque :
+\[
+\forall j, \quad \sum_{i=1}^{N} P_{ij} = 1 \quad \text{et} \quad 0 \leq P_{ij} \leq 1.
+\]
+Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
+\end{tcolorbox}
+
+Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l’ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -319,9 +300,11 @@ Nous obtenons ainsi le graphe suivant :
 \end{center}
 
 \subsubsection{Matrice de transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
+\label{subsubsec: Matrice de transition en k-pas}
 
-\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de transition en $n$ transitions]
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de transition pour $k$-transitions]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaine de Markov homogène d'espace d'états $E$ fini ou dénombrable tel que $\left\{1,2,\ldots,N\right\}$. On note $P$ sa matrice de transition. \\
+
 Pour tout état $E_i$ et $E_j$ et pour tout entier naturel $k \geq 1$, le coefficient de la ligne $i$ et de la colonne $j$ de \textbf{la matrice $P^k$ est la probabilité de passer de l'état $E_i$ à celui $E_j$ en $k$ transitions}.
 \end{tcolorbox}
 
@@ -340,19 +323,18 @@ La démonstration de cette propriété passe par celle de l'\textbf{équation de
 
 Ce qui équivaut en termes matriciels :
 \[
-P_{i,j}^{(m+n)} = \sum_{k \in E} P_{i,k}^{(m)} \cdot P_{k,j}^{(n)}.
+P_{i,j}^{(n+m)} = \sum_{k \in E} P_{i,k}^{(n)} \cdot P_{k,j}^{(m)}.
 \]
 
 Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. \\
 
 On reconnait alors l'expression de l'associativité du produit matriciel tel que :
 \[
-P^{n+m} = P^{n}P^{m}
+P^{n+m} = \underbrace{P \cdot \ldots \cdot P}_\textit{n fois} \cdot \underbrace{P \cdot \ldots \cdot P}_\textit{m fois} = P^{n}P^{m}.
 \]
-
 \end{tcolorbox}
 
-Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section ~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
+Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
 \begin{center}
 $
 P^{5} = \begin{bmatrix}
@@ -367,25 +349,21 @@ Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alp
 P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
 
-\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Box a supprimer/modifier (backup)]
-Ce qui est à l'intérieur de cette box est la version précédente de la partie, comme j'ai pas mal modifié de choses je la laisse en backup - Tony \\
-
-Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$,$j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas}]
+Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$, $j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
 \[
-\mathbb{P}(X_1 = j \mid X_0 = i)
+\mathbb{P}(X_1 = j \mid X_0 = i).
 \]
 Où $X_t$ désigne l'état de la chaîne à l'instant $t$. \\
 
 Cependant, il peut être nécessaire de chercher à déterminer la probabilité de passer de l'état $i$ à l'état $j$ après exactement $k$ étapes. Pour cela, on utilise la matrice de transition en $k$-pas, notée $P^k$, pour laquelle chaque élément $P_{i,j}^{(k)}$ représente la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $k$ étapes. Plus formellement :
 \[
 P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
-% Je crois que les parenthèses autour du "n" ne sont pas nécessaire, tu ferais peut être mieux de les retirer -corentin
-% Elles sont dans toutes les démos, donc je les aies laissées, je ne pense pas qu'elles dérangent ou ne soient pas correctes, si ? - Tom
 \]
 
-Cette matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
+La matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
 \[
-P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
+P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
 \]
 
 Nous allons démontrer ce résultat en utilisant la propriété de markov ainsi que le produit matriciel.
@@ -400,41 +378,42 @@ P_{i,j}^{(k+1)} = \sum_{n=1}^N P_{i,n}^{(k)} \cdot P_{n,j}.
 \]
 Cela correspond précisément à la règle du produit matriciel, ce qui montre en conséquence que $P^{n+1} = P \cdot P^n$. Par récurrence, on en déduit donc que :
 \[
-P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\text{(k fois)}.
+P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
 \]
 \end{tcolorbox}
 
-\subsection{Classes de communication et d'équivalence}
+\subsection{Classes d'équivalence et de communication}
 
 \subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
 
 Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Accessibilité]
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
 Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
 \[
 \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
 \]
-ce que l'on note $i \to j$. \\
-Et si $i \to j$ et $j \to i$, alors les éléments $i$ et $j$ \textbf{communiquent}, on écrit :
+Ce que l'on note $i \to j$. \\
+
+On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$ et $j \rightarrow i$. On a ainsi :
 \[
-i \leftrightarrow j
+\exists n \geq 0, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \geq 0, \quad P_{j,i}^{(m)} > 0.
 \]
+Ce que l'on note $i \leftrightarrow j$.
 \end{tcolorbox}
 
 En particulier, $i \to j$ si et seulement s'il existe une suite d'états $(i_0, i_1, \dots, i_n)$ avec $i_0 = i$ et $i_n = j$ telle que :
 \[
 P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
 \]
-Ce qui veut dire qu'il existe un chemin de probabilité strictement positive
-qui mène de i à j.
+Ce qui veut dire qu'il existe un chemin de probabilité strictement positive qui mène de i à j.
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent]
-Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, ill est certain d'y retourner.  
-Autrement dit, en effectuant un nombre infini de transitions, on retourne à $i$ une infinité de fois.  
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transitoire]
+Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, ill est certain d'y retourner.
+Autrement dit, en effectuant un nombre infini de transitions, on retourne à $i$ une infinité de fois.
 
-Plus rigoureusement, cela signifie que :  
+Plus rigoureusement, cela signifie que :
 \[
 \mathbb{P}_i(\text{Num}_i(X) = \infty) = 1,
 \]
@@ -442,25 +421,25 @@ où
 \[
 \text{Num}_i(X) = |\{n \geq 0 \mid X_n = i\}|
 \]
-représente le nombre total de visites de l'état $i$, y compris la première.  
+représente le nombre total de visites de l'état $i$, y compris la première.
 
-Un état qui n'est pas récurrent est dit \textbf{transient} ou \textbf{transitoire}.  
+Un état qui n'est pas récurrent est dit \textbf{transient} ou \textbf{transitoire}.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant]
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant/évanescent]
 Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
 \[
 P_{i,i} = 1 \quad \text{et} \quad \forall j \neq i, \quad P_{i,j} = 0.
 \]
-A l'inverse, tout état ne respectant pas cette condition est appelé état \textbf{non-absorbant} ou encore état \textbf{évanescent}. \\
+A l'inverse, tout état ne respectant pas cette condition est appelé état \textbf{non-absorbant} ou encore état \textbf{évanescent}.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique]
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique/apériodique]
 Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$. La période $d(i)$ est définie comme :
 \[
 d(i) = \text{PGCD}\{n \geq 1 \mid P_{i,i}^{(n)} > 0\}.
 \]
-Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité. \\
+Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité.
 \end{tcolorbox}
 
 % Est-ce qu'il faudrait ajouter le dernier type d'état suivant ? Il est super pratique dans notre cas mais ces notions ne sont pas encore introduites à ce niveau... - Tom
@@ -470,23 +449,10 @@ Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il 
 % TODO A AJOUTER APRES
 
 \subsubsection{Classes de communication}
-% REMPLACER LES ALPHA ET BETA PAR DES I ET J - Tom
-
-\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Backup à modifier/supprimer]
-Soit $\alpha$, $\beta \in E$ et $i$, $j$ leurs indices respectifs dans $E$. On note $\alpha \rightarrow \beta$ si, et seulement si :
-\[
-\exists n \geq 0, \quad P_{i,j}^{(n)} > 0.
-\]
-
-On dit que les deux états $\alpha$ et $\beta$ communiquent si $\alpha \rightarrow \beta$ et $\beta \rightarrow \alpha$. On note alors $\alpha \leftrightarrow \beta$. Nous avons ainsi :
-\[
-\alpha \leftrightarrow \beta \quad \iff \quad \exists n \geq 0, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \geq 0, \quad P_{j,i}^{(m)} > 0.
-\]
-\end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Classe de communication]
-Soit deux états communiquant $i$ et $j$, on a selon la définition précédente que $\leftrightarrow$ est une relation d'équivalence. De plus dans le contexte des chaines de Markov, ces classes d'équivalences sont appelées \textbf{classes de communications}.
-Une classe de communication est donc un ensemble d'états accessibles les uns depuis les autres. \\
+Soit deux états communicants $i$ et $j$. Selon la définition précédente, on a que $\leftrightarrow$ est une relation d'équivalence. De plus dans le contexte des chaines de Markov, ces classes d'équivalences sont appelées \textbf{classes de communications}.
+Une classe de communication est donc un ensemble d'états accessibles les uns depuis les autres.
 \end{tcolorbox}
 
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
@@ -497,14 +463,14 @@ Les classes de communcation peuvent parfois partager les propriétés énoncées
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Qualificatif ouvert/fermé pour une classe de communication]
 Une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
 \begin{itemize}
-\item \textbf{Fermée} : Une fois qu'un état de cette classe est atteint, il est impossible de quitter cette classe. Formellement, pour une classe $C$, cela signifie que :
-  \[
-  \forall i \in C, \quad \forall j \notin C, \quad \forall n \geq 1, \quad P_{i,j}^{(n)} = 0.
-  \]
-\item \textbf{Ouverte} : L'opposée de fermée ; il existe au moins un état de la classe qui permet de sortir de celle-ci. Plus formellement, cela signifie que :
-  \[
-  \exists i \in C, \quad \exists j \notin C, \quad \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
-  \]
+    \item \textbf{Fermée} : Une fois qu'un état de cette classe est atteint, il est impossible de quitter cette classe. Formellement, pour une classe $C$, cela signifie que :
+        \[
+        \forall i \in C, \quad \forall j \notin C, \quad \forall n \geq 1, \quad P_{i,j}^{(n)} = 0.
+        \]
+    \item \textbf{Ouverte} : L'opposée de fermée ; il existe au moins un état de la classe qui permet de sortir de celle-ci. Plus formellement, cela signifie que :
+        \[
+        \exists i \in C, \quad \exists j \notin C, \quad \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
+        \]
 \end{itemize}
 \end{tcolorbox}
 
@@ -533,7 +499,7 @@ Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariant
 
 C'est-à-dire
 \[
-\forall y \in E, \quad \sum_{x \in E} \pi(x) P_{x, y} = \pi(y)
+\forall y \in E, \quad \sum_{x \in E} \pi(x) P_{x, y} = \pi(y).
 \]
 \end{tcolorbox}
 
@@ -542,7 +508,7 @@ Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\t
 \pi P = \pi \iff P^{\top} \pi^{\top} = \pi^{\top}.
 \]
 
-De plus dans notre cas, comme $\pi$ est une mesure de probabilité, elle doit respecter les conditions suivantes :
+De plus dans notre cas, comme $\pi$ est une mesure de probabilité, elle respecte les conditions suivantes :
 \[
 \forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
 \]
@@ -557,7 +523,8 @@ Or $P$ et sa transposée $P^T$ ont même valeurs propres (car même polynôme ca
 Donc 1 est vecteur propre de $P$ et donc de $P^T$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
 Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
 
-\end{tcolorbox} \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration] % Pour la mise en page
+\end{tcolorbox}
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
 
 \[
 \pi(x) = |\mu(x)| = |\mu P_x| = \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
@@ -605,7 +572,7 @@ Alors, il existe une unique mesure invariante $\pi$, et pour tout état initial 
 
 Ce qui est équivalent à :
 \[
-\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j
+\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j.
 \]
 
 Donc la loi de \( X_n \) converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
@@ -635,7 +602,7 @@ qui est une somme de termes positifs. Ainsi, comme $P^n(x_i, y) > 0$, on a $f(y)
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Valeur de convergence]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. Soit Alors, pour toute mesure initiale $\lambda$ et pour tout état $j$ :
 \[
-\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j
+\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j,
 \]
 où $\pi$ est l'unique probabilité invariante.
 \end{tcolorbox}
@@ -643,7 +610,7 @@ où $\pi$ est l'unique probabilité invariante.
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Convergence des méthodes de Monte-Carlo]
 Soit \( X \) une chaine de Markov homogène irréductible, alors pour toute mesure initiale $\lambda$ et pour toute fonction mesurable bornée $f$, on a :
 \[
-\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f \, d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda
+\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f \, d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda.
 \]
 
 Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
@@ -666,7 +633,7 @@ Une chaîne de Markov est dite \textbf{récurrente positive} si tous ses états 
 
 Si une chaîne de Markov est irréductible et récurrente positive, alors sa matrice de transition $P$, élevée à une puissance $k$, converge lorsque $k \to +\infty$. Plus formellement :
 \[
-L = \lim_{k \to +\infty} P^k
+L = \lim_{k \to +\infty} P^k.
 \]
 Où la matrice limite $L$ est bien définie, et chaque ligne de cette matrice est égale à l'unique distribution stationnaire $\pi$ associée à la chaîne.
 \end{tcolorbox}
@@ -700,17 +667,18 @@ TODO \\
 Voici une description de cet algorithme:
 
 \begin{enumerate}
-\item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.  
-
-\item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)  \begin{itemize}
-    \item On tire $x$ avec $g_{x_t}(x)$  
-    \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (notons que si nous ne possédons qu'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
-    \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$  \begin{itemize}
-        \item Si $u \leqslant \alpha$ alors : $x_{t+1} \coloneqq x$  
-        \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x$  
+    \item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
+    \begin{itemize}
+        \item On tire $x$ avec $g_{x_t}(x)$  
+        \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (notons que si nous ne possédons qu'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
+        \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
+        \begin{itemize}
+            \item Si $u \leqslant \alpha$ alors : $x_{t+1} \coloneqq x$  
+            \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x$  
         \end{itemize}
     \end{itemize}
-\item La séquence $\{x_0,x_1, ... ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+    \item La séquence $\{x_0,x_1, ... ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
 \end{enumerate}
 
 \subsection{Preuve de l'algorithme}
@@ -1071,24 +1039,25 @@ résulats:
 
 Documents textuels:
 \begin{itemize}
-\item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
-\item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
-\item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
-\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}
-\item \url{https://www.imo.universite-paris-saclay.fr/~pierre-loic.meliot/agreg/markov.pdf}
-\item \url{https://www.college-de-france.fr/fr/agenda/cours/apprentissage-et-generation-par-echantillonnage-aleatoire/algorithme-de-metropolis-hasting}
-\item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf}
-\item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
-\item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov}
-\item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf} \\
+    \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
+    \item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
+    \item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
+    \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1213-COURS5-CM.pdf}
+    \item \url{https://www.imo.universite-paris-saclay.fr/~pierre-loic.meliot/agreg/markov.pdf}
+    \item \url{https://www.college-de-france.fr/fr/agenda/cours/apprentissage-et-generation-par-echantillonnage-aleatoire/algorithme-de-metropolis-hasting}
+    \item \url{https://www.math.u-bordeaux.fr/~mibonnef/mimse-markov/recurence-transience.pdf}
+    \item \url{https://perso.univ-rennes1.fr/jean-christophe.breton/agreg/AGREG/COURS/ch-mark2.pdf}
+    \item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
+    \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov}
+    \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf} \\
 \end{itemize}
 
 Documents vidéos :
 \begin{itemize}
-\item \url{https://www.youtube.com/watch?v=yCv2N7wGDCw}
-\item \url{https://www.youtube.com/watch?v=MxI78mpq_44}
-\item \url{https://www.youtube.com/watch?v=e0ZHDK4DSEI&list=PLWoShwK0FEjovcc32x9LbpDTf8pquPimV}
-\item \url{https://www.youtube.com/playlist?list=PLWoShwK0FEjovcc32x9LbpDTf8pquPimV} \\
+    \item \url{https://www.youtube.com/watch?v=yCv2N7wGDCw}
+    \item \url{https://www.youtube.com/watch?v=MxI78mpq_44}
+    \item \url{https://www.youtube.com/watch?v=e0ZHDK4DSEI&list=PLWoShwK0FEjovcc32x9LbpDTf8pquPimV}
+    \item \url{https://www.youtube.com/playlist?list=PLWoShwK0FEjovcc32x9LbpDTf8pquPimV} \\
 \end{itemize}
 
 \end{document}
