@@ -4,11 +4,6 @@ import matplotlib.pyplot as plt
 
 from math import factorial, comb
 
-pi = np.pi
-exp = np.exp
-
-
-
 def poisson(l):
     return lambda k: ((l**k)/(factorial(k)))*np.exp(-l)
 
