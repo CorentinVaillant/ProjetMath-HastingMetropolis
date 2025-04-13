@@ -456,10 +456,27 @@ Soit deux états communicants $i$ et $j$. Selon la définition précédente, on 
 Une classe de communication est donc un ensemble d'états accessibles les uns depuis les autres.
 \end{tcolorbox}
 
-L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
-Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\ % Tony, j'imagine que je ne m'en sortirais pas sans peuve ici, hein ? - Tom
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration, breakable]
+Montrons que la relation $\leftrightarrow$ est une relation d'équivalence. \\
 
-Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états, que l'on appelle \textbf{propriété de classe}.
+Il nous suffit alors de vérifier les trois propriétés suivantes :
+\begin{enumerate}
+    \item \textbf{Réflexivité} : Pour tout état $i \in E$, $i \leftrightarrow i$. \\
+        Pour tout état $i \in E$, il existe trivialement un chemin $i \to i$. En effet, en considérant le chemin de longueur zéro (via le fait que $P_{ii}^{(0)} = 1$ en définissant $P^{(0)}$ comme la matrice identité), on conclut directement que $i \leftrightarrow i$.
+\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de la démonstration.
+    \item \textbf{Symétrie} : Si $i \leftrightarrow j$, alors $j \leftrightarrow i$. \\
+        Si $i \leftrightarrow j$, par définition il existe un chemin $i \to j$, (et inversement un chemin de $j \to i$). Ainsi, la relation est symétrique : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
+    \item \textbf{Transitivité} : Si $i \leftrightarrow j$ et $j \leftrightarrow k$, alors $i \leftrightarrow k$. \\
+    Supposons que $i \leftrightarrow j$ et $j \leftrightarrow k$. En composant ces deux chemins, on obtient un chemin $i \to k$. De manière analogue, la composition des chemins $k \to j$ et $j \to i$ nous fournit un chemin $k \to i$. Ainsi, $i \leftrightarrow k$. \\
+\end{enumerate}
+
+Comme la relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité, elle est bien une relation d'équivalence sur $E$. Les classes d'équivalences ainsi obtenues sont allors appelées \textbf{classes de communication}.
+\end{tcolorbox}
+
+L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
+Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\
+
+Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états, que l'on appelle \textbf{propriété de classe}. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Qualificatif ouvert/fermé pour une classe de communication]
 Une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
@@ -678,7 +695,7 @@ Ce qui est équivalent à :
 \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j.
 \]
 
-Donc la loi de \( X_n \) converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
+Donc la loi de $X_n$ converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration, breakable]
@@ -711,7 +728,7 @@ où $\pi$ est l'unique probabilité invariante.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Convergence des méthodes de Monte-Carlo]
-Soit \( X \) une chaine de Markov homogène irréductible, alors pour toute mesure initiale $\lambda$ et pour toute fonction mesurable bornée $f$, on a :
+Soit $X$ une chaine de Markov homogène irréductible, alors pour toute mesure initiale $\lambda$ et pour toute fonction mesurable bornée $f$, on a :
 \[
 \frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f \, d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda.
 \]
@@ -931,7 +948,7 @@ def geo(p):
 
 L’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
 
-La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état \( y \) (un entier), avec une probabilité donnée par \( g_x(y) \) :
+La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
 \begin{verbatim}
 def next_state_markov(x: int, transitions: np.array) -> int:
