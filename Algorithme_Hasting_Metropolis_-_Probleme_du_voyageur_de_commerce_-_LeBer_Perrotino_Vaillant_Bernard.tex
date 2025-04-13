@@ -40,6 +40,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18} % Préciser la version de pgfplots afin qu'il soit compatible avec le type de cocument (ici "article").
 
+
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
 \title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
@@ -834,102 +835,95 @@ TODO \\
 
 \subsection{Code source}
 
-Cette section contient des implémentations des algorithmes aborder, le code source est consultable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
+Cette section contient des implémentations des algorithmes abordés. Le code source complet est disponible à l’adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
 
 \subsubsection{Code utilitaires}
 
-Voici le code source de utilis.py qui contient des fonctions utiles au reste du code (Seul le code d'utilitaire mathématique est présent dans cette section, les fonction d'utilitées graphiques sont présentent dans le code source directement):
+Voici le code source de `utilis.py` qui contient des fonctions utiles au reste du projet. Seul le code des utilitaires mathématiques est présenté ici — les fonctions utilitaires liées aux graphiques sont disponibles directement dans le dépôt.
 
 \begin{verbatim}
-  import numpy as np
-  import networkx as nx
-  import matplotlib.pyplot as plt
-  
-  from math import factorial, comb
-  
-  def poisson(l):
-      return lambda k: ((l**k)/(factorial(k)))*np.exp(-l)
-  
-  def binomial(n,p):
-      return lambda k: comb(n,k) * p**k * (1-p)**(n-k)
-  
-  def geo(p):
-      return lambda k: p*((1-p)**(k-1))
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
 
-  
+from math import factorial, comb
+
+def poisson(l):
+    return lambda k: ((l**k)/(factorial(k)))*np.exp(-l)
+
+def binomial(n, p):
+    return lambda k: comb(n, k) * p**k * (1-p)**(n-k)
+
+def geo(p):
+    return lambda k: p * ((1-p)**(k-1))
 \end{verbatim}
 
-\subsubsection{Implémentation d'Hasting Metropolis}
+\subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
-Il s'agit de l'implémentation de l'algorithme d'Hasting Metropolis, comme décrit en \ref{description-algo-hast-met}, 
-l'implémentation est relativement idiomatique.
-La fonction \texttt{next\_state\_markov(x,P)} renvoir un état y (un entier) avec comme probabilité : $g_{x}(y)$
+Il s’agit de l’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met}.  
+L’implémentation est relativement idiomatique.
+
+La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état \( y \) (un entier), avec une probabilité donnée par \( g_x(y) \) :
 
 \begin{verbatim}
-def next_state_markov(x:int,transitions:np.array)->int:
-      return np.random.choice(len(transitions),p=transitions[x])
+def next_state_markov(x: int, transitions: np.array) -> int:
+    return np.random.choice(len(transitions), p=transitions[x])
 \end{verbatim}
 
-\texttt{markov\_chain\_from\_tirage(tirage,nb\_etats)} prends un tirage, et en fait une matrice de distribution (représentant donc un chaîne de Markov)
+La fonction \texttt{markov\_chain\_from\_tirage(tirage, nb\_etats)} transforme un tirage en une matrice de transition, représentant une chaîne de Markov :
 
 \begin{verbatim}
-def markov_chain_from_tirage(tirage,nb_etats)->np.array:
-  sommes = np.full((nb_etats,nb_etats),0)
-  derniere_etat = tirage[0]
-  for col in tirage[1:]:
-      sommes[derniere_etat][col]+=1
-      derniere_etat = col
-  result = []
-  for i in range(nb_etats):
-      denominateur =0
-      result.append([])
-      for col in sommes[i]:
-            denominateur += col
-
-      for j in range(nb_etats):
-            result[i].append(sommes[i][j]/denominateur)
-      
-  
-  return np.array(result) 
+def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
+    sommes = np.full((nb_etats, nb_etats), 0)
+    derniere_etat = tirage[0]
+    for col in tirage[1:]:
+        sommes[derniere_etat][col] += 1
+        derniere_etat = col
+    result = []
+    for i in range(nb_etats):
+        denominateur = sum(sommes[i])
+        result.append([
+            sommes[i][j] / denominateur if denominateur != 0 else 0 
+            for j in range(nb_etats)
+        ])
+    return np.array(result)
 \end{verbatim}
 
-La fonction \texttt{hasting\_metropolis\_tirage(x0,\ distribution\_cible,\ proposition,\ iterations)}
-renvoie un tirage en suivant l'algorithme d'Hasting-Metropolis
+La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
 
 \begin{verbatim}
-def hasting_metropolis_tirage(x0:int,distribution_cible,proposition : np.array,iterations:int = 1000)->np.array:
-  x_t = x0
-  tirage = [x_t]
+def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
+    x_t = x0
+    tirage = [x_t]
 
-  for _ in range(iterations):
-      # tirage de x
-      x = next_state_markov(x_t,proposition)
+    for _ in range(iterations):
+        x = next_state_markov(x_t, proposition)
+        pi_xt = distribution_cible(x_t)
+        pi_x = distribution_cible(x)
+        g_xt_x = proposition[x_t][x]
+        g_x_xt = proposition[x][x_t]
 
-      # a:= (PI(x)*g(x_t|x)) / (PI(x_t)*g(x|x_t))
-      pi_xt = distribution_cible(x_t)
-      pi_x = distribution_cible(x)
-      g_xt_x = proposition[x_t][x]
-      g_x_xt = proposition[x][x_t]
-      if pi_xt * g_xt_x == 0 : alpha = 1 # on évite la division par 0
-      else : alpha = min(1,(pi_x * g_x_xt)/(pi_xt * g_xt_x))
+        if pi_xt * g_xt_x == 0:
+            alpha = 1  # Évite la division par zéro
+        else:
+            alpha = min(1, (pi_x * g_x_xt) / (pi_xt * g_xt_x))
 
-      #on tire u de manière uniforme dans [0;1]
-      u = np.random.uniform(0,1)
+        u = np.random.uniform(0, 1)
 
-      # Si u <= a alors : x_(t+1) = x'
-      # Sinon : x_(t+1) = x_t
-      if u <= alpha : x_t = x
-      tirage.append(x_t)
+        if u <= alpha:
+            x_t = x
+        tirage.append(x_t)
 
-  return np.array(tirage)
+    return np.array(tirage)
 \end{verbatim}
 
-Et enfin la fonction \texttt{hasting\_metropolis} utilise les fonctions \texttt{markov\_chain\_from\_tirage} et \texttt{markov\_chain\_from\_tirage} pour générer une chaine de markov directement depuis l'algorithme d'Hasting-Metropolis
+Enfin, la fonction \texttt{hasting\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme :
 
 \begin{verbatim}
-def hasting_metropolis(x0:int,distribution_cible,proposition : np.array,iterations:int = 1000)->np.array:
-  tirage = hasting_metropolis_tirage(x0,distribution_cible,proposition,iterations = iterations)
-  return markov_chain_from_tirage(tirage,proposition.shape[0])
+def hasting_metropolis(x0: int, distribution_cible, 
+                       proposition: np.array, iterations: int = 1000) -> np.array:
+    tirage = hasting_metropolis_tirage(x0, distribution_cible, proposition, iterations)
+    return markov_chain_from_tirage(tirage, proposition.shape[0])
 \end{verbatim}
 
 \subsection{Sources}
