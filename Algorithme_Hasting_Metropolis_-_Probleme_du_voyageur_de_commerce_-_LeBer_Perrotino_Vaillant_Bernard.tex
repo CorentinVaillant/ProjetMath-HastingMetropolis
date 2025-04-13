@@ -39,6 +39,9 @@
 \usetikzlibrary{arrows.meta}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18} % Préciser la version de pgfplots afin qu'il soit compatible avec le type de cocument (ici "article").
+%package pour images
+\usepackage{graphicx}
+\graphicspath{ {./ressources/} }
 
 
 \sloppy % Pour que les URLs ne dépassent pas des marges.
@@ -858,10 +861,10 @@ def geo(p):
     return lambda k: p * ((1-p)**(k-1))
 \end{verbatim}
 
+\newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
-Il s’agit de l’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met}.  
-L’implémentation est relativement idiomatique.
+L’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
 
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état \( y \) (un entier), avec une probabilité donnée par \( g_x(y) \) :
 
@@ -917,7 +920,7 @@ def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array,
     return np.array(tirage)
 \end{verbatim}
 
-Enfin, la fonction \texttt{hasting\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme :
+Enfin, la fonction \texttt{hasting\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme:
 
 \begin{verbatim}
 def hasting_metropolis(x0: int, distribution_cible, 
@@ -926,12 +929,147 @@ def hasting_metropolis(x0: int, distribution_cible,
     return markov_chain_from_tirage(tirage, proposition.shape[0])
 \end{verbatim}
 
+\newpage
+\subsubsection{Application de ce code}
+
+Dans cette section vous trouverais des exemples d'application des différents algorithmes implémentés 
+
+\paragraph{Exemples Hastings-Metropolis}
+
+Voici les exemples d'application d'Hasting-Metropolis que nous avons effectuer, à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
+
+\paragraph{Application à une loi binomial:}
+
+\begin{verbatim}
+N = 5
+
+distribution_cible = binomial(N,0.2)
+
+#matrice de transition quelconque
+proposition = np.array([ ligne / ligne.sum()
+    for ligne in [np.random.rand(N) for _ in range(N)]
+])
+
+
+tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
+mk_c = markov_chain_from_tirage(tirage,N)
+\end{verbatim}
+
+résulat et graphe de la matrice de transition:
+
+\includegraphics[scale=0.25]{loi bin.png}
+\includegraphics[scale=0.25]{loi bin graph.png}
+
+\newpage
+\paragraph{Application à une loi de Poisson:}
+
+\begin{verbatim}
+N = 15
+
+distribution_cible = poisson(5)
+
+#matrice de transition uniforme de taille NxN
+proposition = np.full((N,N),1/N)
+
+tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+mk_c = markov_chain_from_tirage(tirage,N)
+\end{verbatim}
+
+résulats:
+
+\includegraphics[scale=0.5]{poisson.png}
+
+\newpage
+\paragraph{Application à une loi uniform:}
+
+\begin{verbatim}
+N = 15
+
+distribution_cible = lambda k : 1/(N-2) if 0<k and k<N else 0
+
+#matrice de transition aléatoire
+proposition = np.array([ ligne / ligne.sum()
+    for ligne in [np.random.rand(N) for _ in range(N)]
+])
+
+
+tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+mk_c = markov_chain_from_tirage(tirage,N)
+\end{verbatim}
+
+résulats:
+
+\includegraphics[scale=0.5]{uniforme.png}
+
+\newpage
+\paragraph{Application à une loi géométrique:}
+
+\begin{verbatim}
+N = 20
+
+distribution_cible = geo(0.33)
+
+#matrice de transition aléatoire
+proposition = np.array([ ligne / ligne.sum()
+    for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
+])
+
+tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+mk_c = markov_chain_from_tirage(tirage,N)
+\end{verbatim}
+
+résulats:
+
+\includegraphics[scale=0.5]{géometrique.png}
+
+\newpage
+\paragraph{Application à une loi quelconque:}
+
+\begin{verbatim}
+N = 30
+
+distribution = np.random.rand(N)
+distribution = distribution / distribution.sum()
+
+distribution_cible = lambda k : distribution[k] if k < N and 0<=k else 0
+
+#matrice de transition aléatoire
+proposition = np.array([ ligne / ligne.sum()
+    for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
+])
+
+tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+mk_c = markov_chain_from_tirage(tirage,N)
+\end{verbatim}
+
+résulats:
+
+\includegraphics[scale=0.5]{loi aléatoire.png}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
 \subsection{Sources}
 
 
 
-
-Documents textuels :
+Documents textuels:
 \begin{itemize}
 \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
 \item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
