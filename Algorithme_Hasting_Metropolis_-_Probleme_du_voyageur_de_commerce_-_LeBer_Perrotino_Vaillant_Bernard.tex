@@ -33,6 +33,7 @@
 \usepackage{amsthm}
 \usepackage{xcolor}
 \usepackage{tcolorbox}
+\tcbuselibrary{breakable}
 % Package permettant de générer des graphes :
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -232,7 +233,7 @@ De manière analogue, si l'espace des états est infini dénombrable (par exempl
 \[
 \forall i \in E, \quad \sum_{j \in E} P_{ij} = 1,
 \]
-reste valable. \\
+reste valable.
 
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
@@ -247,6 +248,7 @@ Une chaîne de Markov homogène peut toujours être représentée sous forme d'u
 
 Représenter graphiquement une chaîne de Markov homogène permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
 
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
 Considérons par exemple une chaîne de Markov ayant trois états $\alpha, \beta, \gamma$, ordonnés respectivement, et dont la matrice de transition est donnée par :
 
 \begin{center}
@@ -264,11 +266,7 @@ Dans cette configuration, la probabilité de transition de l'état $\alpha$ vers
 P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
 \]
 
-% Je viens de me rendre compte d'un sous-entendu terrible !
-% Dans mes sous-parties, à chaque fois que je parle d'un état i ou j, je parle en réalité des états d'INDICE i et j.
-% Sachant que l'on a utilisé cette écriture (voir phrase du dessus), pensez-vous vraiment que ce que j'ai écrit est faux ?
-% Envoyez un message sur le groupe Discord quand vous verrez ce message.
-
+\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
 Nous obtenons ainsi le graphe suivant :
 
 \begin{center}
@@ -298,6 +296,7 @@ Nous obtenons ainsi le graphe suivant :
 
 \end{tikzpicture}
 \end{center}
+\end{tcolorbox}
 
 \subsubsection{Matrice de transition en \texorpdfstring{$k$}{k}-pas} % Pour que "hyperref" supporte l'expression mathématique "$k$" dans la chaîne de caractère générant un des signets du PDF.
 \label{subsubsec: Matrice de transition en k-pas}
@@ -334,7 +333,8 @@ P^{n+m} = \underbrace{P \cdot \ldots \cdot P}_\textit{n fois} \cdot \underbrace{
 \]
 \end{tcolorbox}
 
-Par exemple, si nous reprenons la matrice $P$ donnée dans la sous-section~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
+Reprenons par exemple la matrice $P$ donnée dans la sous-section~\ref{subsubsec: Représentation sous forme de graphe orienté} ci-dessus, la matrice de transition en $5$ étapes, nommée $P^{5}$, représente l'ensemble des probabilités permettant de passer de chaque état $i$ à un état $j$ au bout d'exactement $5$ étapes :
 \begin{center}
 $
 P^{5} = \begin{bmatrix}
@@ -348,8 +348,9 @@ Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alp
 \[
 P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
+\end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas}]
+\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas} (Partie à supprimer)]
 Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$, $j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
 \[
 \mathbb{P}(X_1 = j \mid X_0 = i).
@@ -382,7 +383,7 @@ P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
 \]
 \end{tcolorbox}
 
-\subsection{Classes d'équivalence et de communication}
+\subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
@@ -458,7 +459,7 @@ Une classe de communication est donc un ensemble d'états accessibles les uns de
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
 Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\ % Tony, j'imagine que je ne m'en sortirais pas sans peuve ici, hein ? - Tom
 
-Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états.
+Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états, que l'on appelle \textbf{propriété de classe}.
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Qualificatif ouvert/fermé pour une classe de communication]
 Une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
@@ -474,13 +475,118 @@ Une classe de communication appartienent systématiquement à l'une des deux cat
 \end{itemize}
 \end{tcolorbox}
 
-L'intérêt de ces distinctions est de diviser les chaînes de Markov en sous-ensembles analytiquement indépendants, ce qui permet ensuite de tirer des conclusions sur les sous-ensembles présentant ces propriétés.
+L'intérêt de ces distinctions est de diviser les chaînes de Markov en sous-ensembles analytiquement indépendants, ce qui permet ensuite de tirer des conclusions sur les sous-ensembles présentant ces propriétés. \\
 
-\subsubsection{Exemples}
-Par exemple ; les propriétés asymptotiques d'une chaîne dépendent fortement des classes d'équivalence fermées et récurrentes. \\ % Je peux balancer cet "exemple" sans le justifier ? J'ai vraiment l'impression de tricher là. - Tom
-TODO \\
-% J'ai eu un problème de génération de graphe par rapport à mes exemples, je les rajouterais de nouveau plus tard, quand j'aurai réglé ce problème. - Tom
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
+Prenons par exemple la chaîne de Markov suivante, dont la représentation sous forme de graphe orienté est donnée ci-dessous :
 
+\begin{center}
+    \begin{tikzpicture}[
+        >={Latex[length=3mm, width=2mm]},
+        node distance=2cm,
+        state/.style={circle, draw, minimum size=0.7cm, font=\small},
+        every edge/.append style={draw, -latex, font=\small}
+    ]
+    
+    % -- Position des noeuds --
+    \node[state] (1) at (0,2)   {1};
+    \node[state] (2) at (2,2)   {2};
+    \node[state] (3) at (4,2)   {3};
+    \node[state] (4) at (6,2)   {4};
+    \node[state] (5) at (0,0)   {5};
+    \node[state] (6) at (2,0)   {6};
+    \node[state] (7) at (4,0)   {7};
+    
+    % -- Position des arcs --
+    % 1 -> 1 :
+    \draw[->] (1) edge[loop above, out=60, in=120, looseness=8]
+        node[above] {} (1);
+
+    % 4 -> 4 :
+    \draw[->] (4) edge[loop above, out=60, in=120, looseness=8]
+    node[above] {} (4);
+
+    % 7 -> 7 :
+    \draw[->] (7) edge[loop below, out=-120, in=-60, looseness=8]
+    node[below] {} (7);
+
+    % 1 -> 2 :
+    \draw[->] (1) edge[bend left=25]
+        node[left] {} (2);
+
+    % 2 -> 1 :
+    \draw[->] (2) edge[bend left=25]
+        node[left] {} (1);
+
+    % 3 -> 2 :
+    \draw[->] (3) edge[bend left=25]
+        node[left] {} (2);
+
+    % 3 -> 4 :
+    \draw[->] (3) edge[bend left=25]
+        node[left] {} (4);
+
+    % 4 -> 3 :
+    \draw[->] (4) edge[bend left=25]
+        node[left] {} (3);
+
+    % 1 -> 5 :
+    \draw[->] (1) edge[bend left=25]
+        node[left] {} (5);
+
+    % 5 -> 1 :
+    \draw[->] (5) edge[bend left=25]
+        node[left] {} (1);
+
+    % 2 -> 6 :
+    \draw[->] (2) edge[bend left=25]
+        node[left] {} (6);
+
+    % 3 -> 7 :
+    \draw[->] (3) edge[bend left=25]
+    node[left] {} (7);
+
+    % 5 -> 6 :
+    \draw[->] (5) edge[bend left=25]
+        node[left] {} (6);
+
+    % 6 -> 5 :
+    \draw[->] (6) edge[bend left=25]
+        node[left] {} (5);
+    
+    % -- Encadrement des classes (avec bord arrondis) --
+    % Classe 1 = {1, 2, 5, 6} :
+    \draw[rounded corners=5pt, thick, red!80!black] (-0.5, 2.5) rectangle (2.5, -0.5);
+
+    % Classe 2 = {3, 4} :
+    \draw[rounded corners=5pt, thick, red!80!black] (3.5, 2.5) rectangle (6.5, 1.5);
+
+    % Classe 3 = {7} :
+    \draw[rounded corners=5pt, thick, red!80!black] (3.5, 0.5) rectangle (4.5, -0.5);
+
+    \end{tikzpicture}
+\end{center}
+
+Dans cette chaîne de Markov, nous avons trois classes de communication :
+\begin{itemize}
+    \item La classe 1, formée par les états $\{1, 2, 5, 6\}$.
+    \begin{itemize}
+        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
+\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
+        \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
+    \end{itemize}
+    \item La classe 2, formée par les états $\{3, 4\}$.
+    \begin{itemize}
+        \item Cette classe est ouverte car il est possible de la quitter via $3 \to 2$ et $3 \to 7$.
+        \item Chaque état de la classe est alors transitoire car nous ne reviendrons pas aux états $i \in \{3, 4\}$ après un nombre infini de transitions.
+    \end{itemize}
+    \item Et la classe 3, formée par l'état $\{7\}$.
+    \begin{itemize}
+        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois que l'état $7$ est atteint. En effet, en partant de l'état $7$, nous n'avons que $7 \to 7$.
+        \item Chaque état de la classe est alors réccurent car une fois que l'état $7$ est atteint, la chaîne reste dans cet état avec probabilité 1.
+    \end{itemize}
+\end{itemize}
+\end{tcolorbox}
 
 %TODO \\
 % A partager avec le point précédent :
@@ -517,14 +623,11 @@ De plus dans notre cas, comme $\pi$ est une mesure de probabilité, elle respect
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène sur un espace d'états $E$ fini, de matrice de transition $P$. Alors $(X_n)_{n \in \mathbb{N}}$ admet au moins une probabilité invariante.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration, breakable]
 Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^T \pi^T = \pi^T$, c'est-à-dire que $\pi^T$ est un vecteur propre de $P^T$ associé à la valeur propre $1$.
 Or $P$ et sa transposée $P^T$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
 Donc 1 est vecteur propre de $P$ et donc de $P^T$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
 Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
-
-\end{tcolorbox}
-\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
 
 \[
 \pi(x) = |\mu(x)| = |\mu P_x| = \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
@@ -561,7 +664,7 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 
 \subsection{Comportement en temps long}
 
-Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène.
+Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème de convergence]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Soit P sa matrice de transition.\\
@@ -578,7 +681,7 @@ Ce qui est équivalent à :
 Donc la loi de \( X_n \) converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration]
+\begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration, breakable]
 Commençons par montrer l'unicité de la probabilité invariante.
 La transposée d'une probabilité invariante est un vecteur propre de $P^T$ associé à la valeur propre $1$.
 Comme les valeurs propres de $P$ et de $P^T$ sont les mêmes et ont même multiplicité, il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
@@ -616,15 +719,9 @@ Soit \( X \) une chaine de Markov homogène irréductible, alors pour toute mesu
 Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
 \end{tcolorbox}
   
-Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
+Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis. \\
 
-
-\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Backup (à supprimer)]
-Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe. % Corentin, tu signifies quoi par "fortement" ? - Tom
-Autrement dit, tous les couples $(\alpha, \beta)$ de sommets du graphe, avec $\alpha \neq \beta$, communiquent mutuellement ; $\alpha \leftrightarrow \beta$. \\
-
-Une chaîne de Markov est dite \textbf{récurrente} si tous ses états sont récurrents (voir sous-section ~\ref{subsubsec: Les différents types d'états}). \\ % A quoi sert cette définition ? Elle me semble un peu perdue. - Tom
-
+\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Récurrence Positive et Convergence Vers la Distribution Stationnaire (Partie à supprimer)]
 Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $E$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in E}$ telle que $\pi_\alpha > 0$.
 
 Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
