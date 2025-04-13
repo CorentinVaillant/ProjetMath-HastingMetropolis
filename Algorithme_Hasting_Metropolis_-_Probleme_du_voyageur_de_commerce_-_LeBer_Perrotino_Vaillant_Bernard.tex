@@ -112,7 +112,6 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 \newpage
-
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -183,6 +182,7 @@ Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
+\newpage
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -383,6 +383,7 @@ P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
 \]
 \end{tcolorbox}
 
+\newpage
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -611,9 +612,12 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 % - [X] Loi stationnaire/invariante
 % - ...
 
-\subsection{Loi stationnaire}
+\newpage
+\subsection{Mesures invariantes et théorème ergodique}
 
-La loi stationnaire peut permettre sous certaines conditions à décrire le comportement à long terme de la chaîne de Markov. \\
+\subsubsection{Mesures invariantes}
+
+La loi stationnaire peut permettre sous certaines conditions à décrire le comportement à long terme de la chaîne de Markov. \\ % ??? - Tom
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Mesure invariante/stationnaire]
 Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et ayant pour matrice de transition $P$. \\
@@ -679,9 +683,30 @@ Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, 
 Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les mesures invariantes sont proportionnelles entre elles.
 \end{tcolorbox}
 
+\subsubsection{Théorème ergodique}
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
+Soit $(X_n)_{n \ge 0}$ une chaîne de Markov sur un ensemble fini $E$, irréductible, de matrice de transition $P$. Soit $\pi$ l'unique probabilité invariante. \\
+
+Alors, pour toute fonction $f : E \to \mathbb{R}$, on a
+\[
+\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow[n \to \infty]{} \int_E f \, d\pi = \sum_{x \in E} \pi(x)\, f(x),
+\]
+avec probabilité 1. En particulier, en prenant $f = \mathbf{1}_{\{x\}}$, on obtient
+\[
+\frac{1}{n} \sum_{k=1}^{n} f \xrightarrow[n \to \infty]{} \mathbf{1}_{\{X_{k} = x\}} = \pi(x),
+\]
+avec probabilité 1.
+\end{tcolorbox}
+
+Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajectoire de la chaîne se rapproche empiriquement, lorsque ce temps $n$ est grand, de sa moyenne spatiale par rapport à la loi invariante. En particulier, ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d’occupation d’un état en temps long. \\
+
+Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
+
+\newpage
 \subsection{Comportement en temps long}
 
-Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\
+Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème de convergence]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Soit P sa matrice de transition.\\
