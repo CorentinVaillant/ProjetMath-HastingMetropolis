@@ -81,20 +81,13 @@ L'algorithme d'Hastings-Metropolis consiste en une méthode d'échantillonnage s
 C'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
 Cela illustre une dynamique fréquente dans les sciences, où le mérite est disproportionnellement attribué à une personne alors qu'il s'agit des efforts de toute une équipe. En particulier, Arianna Rosenbluth était considérée comme brillante par le monde scientifique. \\
 
-\url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
-
-\url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius} \\
-
 En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribution quelconque, et c'est cette version généralisée qui est connue sous le nom d'algorithme de Metropolis-Hastings. Cette extension a eu de nombreuses applications dans divers domaines scientifiques, comme en statistique bayésienne (espaces complexes multidimensionnels), en biologie computationnelle (analyse des séquences génétiques), en économie et en finance (modèles stochastiques MCMC en général), etc. \\
 
 Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile et NP-complet, ce qui signifie qu'il est extrêmement difficile de trouver une solution optimale en temps polynomial, et il est peu probable que des algorithmes en temps polynomial existent pour résoudre ce problème de manière exacte. \\
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
 Le problème consiste à déterminer le chemin le plus court passant par tous les points d'un graphe une seule fois chacun, en terminant par le point de départ (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
 
-% Insérer une image !
-\url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
-
-\url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+% Insérer une image ! % Pouquoi il est là ce commentaire ?
 
 \subsection{Pourquoi HM permet-il de résoudre le problème du voyageur de commerce ?}
 
@@ -350,38 +343,38 @@ P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas} (Partie à supprimer)]
-Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$, $j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
-\[
-\mathbb{P}(X_1 = j \mid X_0 = i).
-\]
-Où $X_t$ désigne l'état de la chaîne à l'instant $t$. \\
+%\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas} (Partie à supprimer)]
+%Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$, $j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
+%\[
+%\mathbb{P}(X_1 = j \mid X_0 = i).
+%\]
+%Où $X_t$ désigne l'état de la chaîne à l'instant $t$. \\
 
-Cependant, il peut être nécessaire de chercher à déterminer la probabilité de passer de l'état $i$ à l'état $j$ après exactement $k$ étapes. Pour cela, on utilise la matrice de transition en $k$-pas, notée $P^k$, pour laquelle chaque élément $P_{i,j}^{(k)}$ représente la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $k$ étapes. Plus formellement :
-\[
-P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
-\]
+%Cependant, il peut être nécessaire de chercher à déterminer la probabilité de passer de l'état $i$ à l'état $j$ après exactement $k$ étapes. Pour cela, on utilise la matrice de transition en $k$-pas, notée $P^k$, pour laquelle chaque élément $P_{i,j}^{(k)}$ représente la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $k$ étapes. Plus formellement :
+%\[
+%P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
+%\]
 
-La matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
-\[
-P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
-\]
+%La matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
+%\[
+%P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
+%\]
 
-Nous allons démontrer ce résultat en utilisant la propriété de markov ainsi que le produit matriciel.
-La relation ci-dessus repose sur la propriété fondamentale des chaînes de Markov ; pour chaque étape, la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents. En d'autres termes :
-\[
-\mathbb{P}(X_{k+1} = j \mid X_0 = i) = \sum_{n=1}^N \mathbb{P}(X_{k+1} = j \mid X_k = n) \cdot \mathbb{P}(X_k = n \mid X_0 = i).
-\]
+%Nous allons démontrer ce résultat en utilisant la propriété de markov ainsi que le produit matriciel.
+%La relation ci-dessus repose sur la propriété fondamentale des chaînes de Markov ; pour chaque étape, la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents. En d'autres termes :
+%\[
+%\mathbb{P}(X_{k+1} = j \mid X_0 = i) = \sum_{n=1}^N \mathbb{P}(X_{k+1} = j \mid X_k = n) \cdot \mathbb{P}(X_k = n \mid X_0 = i).
+%\]
 
-En termes matriciels, cette équation ce traduit donc par :
-\[
-P_{i,j}^{(k+1)} = \sum_{n=1}^N P_{i,n}^{(k)} \cdot P_{n,j}.
-\]
-Cela correspond précisément à la règle du produit matriciel, ce qui montre en conséquence que $P^{n+1} = P \cdot P^n$. Par récurrence, on en déduit donc que :
-\[
-P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
-\]
-\end{tcolorbox}
+%En termes matriciels, cette équation ce traduit donc par :
+%\[
+%P_{i,j}^{(k+1)} = \sum_{n=1}^N P_{i,n}^{(k)} \cdot P_{n,j}.
+%\]
+%Cela correspond précisément à la règle du produit matriciel, ce qui montre en conséquence que $P^{n+1} = P \cdot P^n$. Par récurrence, on en déduit donc que :
+%\[
+%P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
+%\]
+%\end{tcolorbox}
 
 \newpage
 \subsection{Classes d'équivalence}
@@ -763,19 +756,19 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis. \\
 
-\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Récurrence Positive et Convergence Vers la Distribution Stationnaire (Partie à supprimer)]
-Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $E$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in E}$ telle que $\pi_\alpha > 0$.
+%\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Récurrence Positive et Convergence Vers la Distribution Stationnaire (Partie à supprimer)]
+%Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $E$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in E}$ telle que $\pi_\alpha > 0$.
 
-Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
+%Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
 
-Une chaîne de Markov est dite \textbf{récurrente positive} si tous ses états sont récurrents positifs. \\
+%Une chaîne de Markov est dite \textbf{récurrente positive} si tous ses états sont récurrents positifs. \\
 
-Si une chaîne de Markov est irréductible et récurrente positive, alors sa matrice de transition $P$, élevée à une puissance $k$, converge lorsque $k \to +\infty$. Plus formellement :
-\[
-L = \lim_{k \to +\infty} P^k.
-\]
-Où la matrice limite $L$ est bien définie, et chaque ligne de cette matrice est égale à l'unique distribution stationnaire $\pi$ associée à la chaîne.
-\end{tcolorbox}
+%Si une chaîne de Markov est irréductible et récurrente positive, alors sa matrice de transition $P$, élevée à une puissance $k$, converge lorsque $k \to +\infty$. Plus formellement :
+%\[
+%L = \lim_{k \to +\infty} P^k.
+%\]
+%Où la matrice limite $L$ est bien définie, et chaque ligne de cette matrice est égale à l'unique distribution stationnaire $\pi$ associée à la chaîne.
+%\end{tcolorbox}
 
 \newpage
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
@@ -1189,6 +1182,10 @@ Documents textuels:
     \item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
     \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov}
     \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf} \\
+    \item \url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
+    \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius} \\
+    \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
+    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
 \end{itemize}
 
 Documents vidéos :
