@@ -48,7 +48,7 @@
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
 \title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
-\author{PEROTTINO Tony, VAILLANT Corentin,\\ LE BER Tom, BERNARD Léo}
+\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom, BERNARD Léo}
 
 % Enable SageTeX to run SageMath code right inside this LaTeX file.
 % http://doc.sagemath.org/html/en/tutorial/sagetex.html
@@ -342,39 +342,6 @@ Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alp
 P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
 \end{tcolorbox}
-
-%\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Ancienne version de la sous-section~\ref{subsubsec: Matrice de transition en k-pas} (Partie à supprimer)]
-%Dans une chaîne de markov, la matrice de transition en un pas, que nous avons noté $P$, décrit pour tout couple d'états $i$, $j \in \left\{ 1, 2 , \ldots, N \right\}$ la probabilité de passer du premier état au deuxième via la valeur de l'élément $P_{i,j}$. Chaque élément $P_{i,j}$ représente donc la probalitité de passer de l'état $i$ à l'état $j$ en une seule étape, ce qui se traduit mathématiquement par :
-%\[
-%\mathbb{P}(X_1 = j \mid X_0 = i).
-%\]
-%Où $X_t$ désigne l'état de la chaîne à l'instant $t$. \\
-
-%Cependant, il peut être nécessaire de chercher à déterminer la probabilité de passer de l'état $i$ à l'état $j$ après exactement $k$ étapes. Pour cela, on utilise la matrice de transition en $k$-pas, notée $P^k$, pour laquelle chaque élément $P_{i,j}^{(k)}$ représente la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $k$ étapes. Plus formellement :
-%\[
-%P_{i,j}^{(k)} = \mathbb{P}(X_k = j \mid X_0 = i).
-%\]
-
-%La matrice $P^k$ est obtenue en élevant la matrice de transition $P$ à la puissance $k$, ce qui revient à effectuer $k-1$ produits matriciels successifs :
-%\[
-%P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
-%\]
-
-%Nous allons démontrer ce résultat en utilisant la propriété de markov ainsi que le produit matriciel.
-%La relation ci-dessus repose sur la propriété fondamentale des chaînes de Markov ; pour chaque étape, la probabilité de transition d'un état $i$ à un état $j$ dépend uniquement du dernier pas réalisé, et non de tous les précédents. En d'autres termes :
-%\[
-%\mathbb{P}(X_{k+1} = j \mid X_0 = i) = \sum_{n=1}^N \mathbb{P}(X_{k+1} = j \mid X_k = n) \cdot \mathbb{P}(X_k = n \mid X_0 = i).
-%\]
-
-%En termes matriciels, cette équation ce traduit donc par :
-%\[
-%P_{i,j}^{(k+1)} = \sum_{n=1}^N P_{i,n}^{(k)} \cdot P_{n,j}.
-%\]
-%Cela correspond précisément à la règle du produit matriciel, ce qui montre en conséquence que $P^{n+1} = P \cdot P^n$. Par récurrence, on en déduit donc que :
-%\[
-%P^k = \underbrace{P \cdot P \cdot \ldots \cdot P}_\textit{k fois}.
-%\]
-%\end{tcolorbox}
 
 \newpage
 \subsection{Classes d'équivalence}
@@ -754,21 +721,7 @@ Soit $X$ une chaine de Markov homogène irréductible, alors pour toute mesure i
 Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
 \end{tcolorbox}
   
-Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis. \\
-
-%\begin{tcolorbox}[colback=white,colframe=black!80!black,title=Récurrence Positive et Convergence Vers la Distribution Stationnaire (Partie à supprimer)]
-%Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à $\mathbb{N}$ états contenus dans $E$ et une matrice de transition $P$ associée à cette chaîne. Un état $\alpha$ est alors dit \textbf{récurrent positif} s'il existe une mesure stationnaire $\pi = (\pi_i)_{i \in E}$ telle que $\pi_\alpha > 0$.
-
-%Cela signifie donc qu'en moyenne le temps entre deux visites consécutives de l'état $\alpha$ est fini. \\
-
-%Une chaîne de Markov est dite \textbf{récurrente positive} si tous ses états sont récurrents positifs. \\
-
-%Si une chaîne de Markov est irréductible et récurrente positive, alors sa matrice de transition $P$, élevée à une puissance $k$, converge lorsque $k \to +\infty$. Plus formellement :
-%\[
-%L = \lim_{k \to +\infty} P^k.
-%\]
-%Où la matrice limite $L$ est bien définie, et chaque ligne de cette matrice est égale à l'unique distribution stationnaire $\pi$ associée à la chaîne.
-%\end{tcolorbox}
+Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
 \newpage
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
