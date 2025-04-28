@@ -872,21 +872,23 @@ TODO \\
     \draw[red, thick] (A) -- (E);
 \end{tikzpicture}
 
-\subsection{Application dans le cas du voyageur de Commerce}
+\subsection{Application au cas du voyageur de commerce}
 
-Dans le cas du problème du voyageur de commerce (dit ``TSP'') l'algorithme nécessite une application adapté.  
-Notre espace d'état $E$ correspond aux permutations de nos points, par exemple, dans le cas de 3 points $\{x_1,x_2,x_3\}$, $
-E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}$, 
-ce qui nous demenderais de passer, avec notre implémentation actuelle, une matrice $6$ par $6$, et avec le nombre de ville augmentant, nous aurions besoins d'une matrice carrée de taille $n!$ avec n le nombre de points.  
+Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
+Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
+$
+E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}
+$, 
+ce qui, avec notre implémentation actuelle, nécessiterait de manipuler une matrice $6 \times 6$. Lorsque le nombre de villes augmente, nous aurions besoin d'une matrice carrée de taille $n!$, où $n$ est le nombre de points, ce qui devient rapidement irréaliste.
 
-Nous définissont donc des fonctions sur l'espace d'état $E$: \begin{itemize}
-    \item Une fonction de distance total sur les permutations des coordonées des villes $ D : E \to \mathbb{R} $
+Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin{itemize} \item Une fonction de distance totale sur les permutations des coordonnées des villes $ D : E \to \mathbb{R} $,
     \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
 
-    \item une distribution cible, avec $\beta \in \mathbb{R} $ un parramètre ajustable
+    \item Une distribution cible, avec $\beta \in \mathbb{R}$ un paramètre ajustable
     \[ \pi(p) = e^{-\beta \cdot D(p)} \]
 
-    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov, nous pourrons modéliser cela avec une fonction ``permutation( [$x_1, \ldots, x_n $])'' qui renverrais la même liste, avec seulement deux villes permutées.
+    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
+    Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
 \end{itemize}
 
 Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
@@ -896,8 +898,8 @@ Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
     \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
     \begin{itemize}
         \item On tire $p$ avec la variable aléatoire$S_{p_t}$, on peut utilisé la fonction ``permutation'' défini plus tôt.
-        \item On pose $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ (dans le cas $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$, il est plus probable que la fonction permutation soit implémentés de cette manière, sinon nous devons faire 
-        $\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
+        \item Calculer $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ si la transition est symétrique, c'est-à-dire $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$.
+        \item Sinon$\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
 
         \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
         \begin{itemize}
