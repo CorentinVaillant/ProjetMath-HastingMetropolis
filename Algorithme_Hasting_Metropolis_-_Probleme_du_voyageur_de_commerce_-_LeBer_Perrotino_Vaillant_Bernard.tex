@@ -751,7 +751,7 @@ TODO \\
 
 Voici une description de cet algorithme:
 
-\begin{enumerate}
+{\bf Hasting Metropolis} \begin{enumerate}
     \item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
     \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
     \begin{itemize}
@@ -881,14 +881,35 @@ ce qui nous demenderais de passer, avec notre implémentation actuelle, une matr
 
 Nous définissont donc des fonctions sur l'espace d'état $E$: \begin{itemize}
     \item Une fonction de distance total sur les permutations des coordonées des villes $ D : E \to \mathbb{R} $
-    \[ D(p) = \sum_{i = 1}^{n} \Vert p_i - p_{i+1}\Vert : \forall p = (p_1,p_2,\ldots , p_n) \in E, p_{n+1} = p_{1}\]
+    \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
 
     \item une distribution cible, avec $\beta \in \mathbb{R} $ un parramètre ajustable
-    \[ e^{-\beta \cdot D(e)} \]
+    \[ \pi(p) = e^{-\beta \cdot D(p)} \]
 
     \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov, nous pourrons modéliser cela avec une fonction ``permutation( [$x_1, \ldots, x_n $])'' qui renverrais la même liste, avec seulement deux villes permutées.
-
 \end{itemize}
+
+Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
+
+{\bf Hasting Metropolis TSP} \begin{enumerate}
+    \item On prend $p_0$, une permutation donnée
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
+    \begin{itemize}
+        \item On tire $p$ avec la variable aléatoire$S_{p_t}$, on peut utilisé la fonction ``permutation'' défini plus tôt.
+        \item On pose $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ (dans le cas $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$, il est plus probable que la fonction permutation soit implémentés de cette manière, sinon nous devons faire 
+        $\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
+
+        \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
+        \begin{itemize}
+            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq x$  
+            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq x$  
+        \end{itemize}
+    \end{itemize}
+    \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+\end{enumerate}
+
+On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$ 
+
 % On va sûrement modéliser HM avec Godot (si on est chauds) ou en Python 3 (on peut refaire l'algo de cette vidéo où les sources sont en description \url{https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/6231/Mireuta_Matei_2011_memoire.pdf}).
 % L'objectif ici est de parler de NOTRE implémentation surtout je pense, ça sera la majeure partie de l'oral.
 
