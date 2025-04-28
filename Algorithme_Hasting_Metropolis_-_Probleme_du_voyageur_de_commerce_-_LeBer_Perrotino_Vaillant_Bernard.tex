@@ -48,7 +48,7 @@
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
 \title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
-\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom, BERNARD Léo}
+\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom}
 
 % Enable SageTeX to run SageMath code right inside this LaTeX file.
 % http://doc.sagemath.org/html/en/tutorial/sagetex.html
@@ -874,12 +874,21 @@ TODO \\
 
 \subsection{Application dans le cas du voyageur de Commerce}
 
-Dans le cas du problème du voyageur de commerce (dit "TSP") l'algorithme nécessite une application adapté.  
+Dans le cas du problème du voyageur de commerce (dit ``TSP'') l'algorithme nécessite une application adapté.  
 Notre espace d'état $E$ correspond aux permutations de nos points, par exemple, dans le cas de 3 points $\{x_1,x_2,x_3\}$, $
 E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}$, 
 ce qui nous demenderais de passer, avec notre implémentation actuelle, une matrice $6$ par $6$, et avec le nombre de ville augmentant, nous aurions besoins d'une matrice carrée de taille $n!$ avec n le nombre de points.  
 
+Nous définissont donc des fonctions sur l'espace d'état $E$: \begin{itemize}
+    \item Une fonction de distance total sur les permutations des coordonées des villes $ D : E \to \mathbb{R} $
+    \[ D(p) = \sum_{i = 1}^{n} \Vert p_i - p_{i+1}\Vert : \forall p = (p_1,p_2,\ldots , p_n) \in E, p_{n+1} = p_{1}\]
 
+    \item une distribution cible, avec $\beta \in \mathbb{R} $ un parramètre ajustable
+    \[ e^{-\beta \cdot D(e)} \]
+
+    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov, nous pourrons modéliser cela avec une fonction ``permutation( [$x_1, \ldots, x_n $])'' qui renverrais la même liste, avec seulement deux villes permutées.
+
+\end{itemize}
 % On va sûrement modéliser HM avec Godot (si on est chauds) ou en Python 3 (on peut refaire l'algo de cette vidéo où les sources sont en description \url{https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/6231/Mireuta_Matei_2011_memoire.pdf}).
 % L'objectif ici est de parler de NOTRE implémentation surtout je pense, ça sera la majeure partie de l'oral.
 
