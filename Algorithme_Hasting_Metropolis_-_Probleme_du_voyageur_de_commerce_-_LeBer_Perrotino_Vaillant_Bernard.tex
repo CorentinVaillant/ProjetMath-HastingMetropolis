@@ -104,7 +104,7 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -175,7 +175,7 @@ Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -259,6 +259,7 @@ Dans cette configuration, la probabilité de transition de l'état $\alpha$ vers
 P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
 \]
 
+% TODO garder les "newpage" vraiment util
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
 Nous obtenons ainsi le graphe suivant :
 
@@ -343,7 +344,7 @@ P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 \]
 \end{tcolorbox}
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -425,6 +426,7 @@ Il nous suffit alors de vérifier les trois propriétés suivantes :
     \item \textbf{Réflexivité} : Pour tout état $i \in E$, $i \leftrightarrow i$. \\
         Pour tout état $i \in E$, il existe trivialement un chemin $i \to i$. En effet, en considérant le chemin de longueur zéro (via le fait que $P_{ii}^{(0)} = 1$ en définissant $P^{(0)}$ comme la matrice identité), on conclut directement que $i \leftrightarrow i$.
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de la démonstration.
+% TODO garder les "newpage" vraiment util
     \item \textbf{Symétrie} : Si $i \leftrightarrow j$, alors $j \leftrightarrow i$. \\
         Si $i \leftrightarrow j$, par définition il existe un chemin $i \to j$, (et inversement un chemin de $j \to i$). Ainsi, la relation est symétrique : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
     \item \textbf{Transitivité} : Si $i \leftrightarrow j$ et $j \leftrightarrow k$, alors $i \leftrightarrow k$. \\
@@ -551,6 +553,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
     \begin{itemize}
         \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
+% TODO garder les "newpage" vraiment util
         \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
     \end{itemize}
     \item La classe 2, formée par les états $\{3, 4\}$.
@@ -572,7 +575,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 % - [X] Loi stationnaire/invariante
 % - ...
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \subsection{Mesures invariantes et théorème ergodique}
 
 \subsubsection{Mesures invariantes}
@@ -663,7 +666,7 @@ Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajec
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \subsection{Comportement en temps long}
 
 Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
@@ -723,7 +726,7 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
@@ -920,7 +923,7 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 TODO \\
 % Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
 
-\newpage
+\newpage % TODO garder les "newpage" vraiment util
 \section{Conclusion}
 
 TODO \\
