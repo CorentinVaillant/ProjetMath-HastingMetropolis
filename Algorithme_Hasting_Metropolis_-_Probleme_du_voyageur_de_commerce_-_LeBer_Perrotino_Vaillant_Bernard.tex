@@ -372,7 +372,7 @@ P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
 Ce qui veut dire qu'il existe un chemin de probabilité strictement positive qui mène de i à j.
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transitoire]
-Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, ill est certain d'y retourner.
+Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner.
 Autrement dit, en effectuant un nombre infini de transitions, on retourne à $i$ une infinité de fois.
 
 Plus rigoureusement, cela signifie que :
@@ -605,9 +605,9 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène sur un espace d'
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration, breakable]
-Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^T \pi^T = \pi^T$, c'est-à-dire que $\pi^T$ est un vecteur propre de $P^T$ associé à la valeur propre $1$.
-Or $P$ et sa transposée $P^T$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
-Donc 1 est vecteur propre de $P$ et donc de $P^T$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
+Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^{\top} \pi^{\top} = \pi^{\top}$, c'est-à-dire que $\pi^{\top}$ est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
+Or $P$ et sa transposée $P^{\top}$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
+Donc 1 est vecteur propre de $P$ et donc de $P^{\top}$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
 Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
 
 \[
@@ -685,8 +685,8 @@ Donc la loi de $X_n$ converge vers $\pi$ indépendamment de l'état initial, on 
 
 \begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration, breakable]
 Commençons par montrer l'unicité de la probabilité invariante.
-La transposée d'une probabilité invariante est un vecteur propre de $P^T$ associé à la valeur propre $1$.
-Comme les valeurs propres de $P$ et de $P^T$ sont les mêmes et ont même multiplicité, il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
+La transposée d'une probabilité invariante est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
+Comme les valeurs propres de $P$ et de $P^{\top}$ sont les mêmes et ont même multiplicité, il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
 Soit $f$ un vecteur propre de $P$ pour la valeur propre $1$, i.e., $Pf = f$. Comme le vecteur $1$ est vecteur propre, il s'agit de montrer que $f$ est constante. \\
 
 Soit $x_i$ le point où $f$ atteint son maximum, i.e. $f(x_i) = \max\{f(x) \mid x \in E\}$. Soit $y$ un autre état. Comme $P$ est irréductible, $y$ communique avec $x_i$, donc il existe $n \geq 1$ tel que $P^n(x_i, y) > 0$. Comme $Pf = f$, on a aussi $P^n f = f$. Alors, d'une part,
