@@ -728,7 +728,7 @@ Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metro
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
 
-Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillon de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
+Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillons de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
 Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
 
 Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l’on souhaite estimer. \\
@@ -770,6 +770,36 @@ Voici une description de cet algorithme:
 
 TODO \\
 % Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+    \textbf{Définitions :} \\ 
+    On définit $Q$ comme la matrice de transition associée à la chaîne de Markov, où $Q(x, y)$ est la probabilité de passer de l'état $x$ à $y$.\\
+    On définit la probabilité d'acceptation rejet comme le facteur $\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)$.\\
+
+    \textbf{Objectif de la preuve :} On souhaite vérifier que la chaîne obtenue à partir de l'algorithme admet comme matrice de transition P, définie comme la matrice Q multipliée par la probabilité d'acceptation rejet.\\
+
+    Ainsi, un saut partant de $x$ est simulé en choisissant un candidat $y$ par la loi $Q(x, \cdot)$, puis on saute sur $y$ avec probabilité $\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)$, sinon on reste sur $x$.\\
+    % ^ A mettre dans l'intro plutôt
+
+    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effecter le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.\\
+
+    Soient $x, y \in E$, avec $x \neq y$.\\
+    $$
+    \mathbb{P}(X_{n+1} = y \mathbf{ et } U_{n+1} \leq TODO)
+    $$
+
+    TODO
+    TODO
+    TODO
+    TODO
+    TODO
+    TODO
+    TODO
+    TODO
+    TODO
+
+\end{tcolorbox}
+
 
 \subsection{Exemple d'application}
 
