@@ -1,4 +1,5 @@
 \documentclass{article}
+% \usepackage[a4paper, top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry} % Modification des tailles des marges (on en parlera après).
 
 % Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
 \usepackage{ifxetex}
@@ -91,7 +92,7 @@ Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling 
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
 Le problème consiste à déterminer le chemin le plus court passant par tous les points d'un graphe une seule fois chacun, en terminant par le point de départ (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
 
-% Insérer une image ! % Pouquoi il est là ce commentaire ?
+% Insérer une image !
 
 \subsection{Pourquoi HM permet-il de résoudre le problème du voyageur de commerce ?}
 
@@ -108,7 +109,7 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -179,7 +180,7 @@ Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -263,7 +264,7 @@ Dans cette configuration, la probabilité de transition de l'état $i$ vers l'é
 P_{i,j} = P_{1,2} = \mathbb{P}(X_{n+1} = j \mid X_n = i) = 0.4
 \]
 
-% TODO garder les "newpage" vraiment util
+% TODO
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
 Nous obtenons ainsi le graphe suivant :
 
@@ -348,7 +349,7 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \]
 \end{tcolorbox}
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -357,11 +358,15 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
-Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
+Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ et on note $i \to j$ si :
 \[
 \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
 \]
-Ce que l'on note $i \to j$. \\
+Autrement dit, il existe une suite finie d'états $k_1, \dots, k_{n-1} \in E$ tels que :
+\[
+P_{i,k_1} \cdot P_{k_1,k_2}\cdot ... \cdot P_{k_{n-1},j} > 0. \\
+\]
+Ce qui signifie qu'il existe un chemin de probabilité strictement positive qui mène de $i$ à $j$. \\
 
 On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$ et $j \rightarrow i$. On a ainsi :
 \[
@@ -370,18 +375,12 @@ On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$
 Ce que l'on note $i \leftrightarrow j$.
 \end{tcolorbox}
 
-En particulier, $i \to j$ si et seulement s'il existe une suite d'états $(i_0, i_1, \dots, i_n)$ avec $i_0 = i$ et $i_n = j$ telle que :
-\[
-P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
-\]
-Ce qui veut dire qu'il existe un chemin de probabilité strictement positive qui mène de i à j.
-
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transient]
 Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner en un nombre fini de pas. Un état non récurrent est dit \textbf{transient}. \\
 
 On pose :
 \[
-\tau_i = \inf\{\exists n \in \mathbb{N}^{*}, n \geq 1 \mid X_n = i\}
+\tau_i = \inf\{n \in \mathbb{N}^{*} \mid X_n = i\}
 \]
 On dit alors que $i$ est récurrent si :
 \[
@@ -428,17 +427,25 @@ Montrons que la relation $\leftrightarrow$ est une relation d'équivalence. \\
 
 Il nous suffit alors de vérifier les trois propriétés suivantes :
 \begin{enumerate}
-    \item \textbf{Réflexivité} : Pour tout état $i \in E$, $i \leftrightarrow i$. \\
-        Pour tout état $i \in E$, il existe trivialement un chemin $i \to i$. En effet, en considérant le chemin de longueur zéro (via le fait que $P_{ii}^{(0)} = 1$ en définissant $P^{(0)}$ comme la matrice identité), on conclut directement que $i \leftrightarrow i$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de la démonstration.
-% TODO garder les "newpage" vraiment util
-    \item \textbf{Symétrie} : Si $i \leftrightarrow j$, alors $j \leftrightarrow i$. \\
-        Si $i \leftrightarrow j$, par définition il existe un chemin $i \to j$, (et inversement un chemin de $j \to i$). Ainsi, la relation est symétrique : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
-    \item \textbf{Transitivité} : Si $i \leftrightarrow j$ et $j \leftrightarrow k$, alors $i \leftrightarrow k$. \\
-    Supposons que $i \leftrightarrow j$ et $j \leftrightarrow k$. En composant ces deux chemins, on obtient un chemin $i \to k$. De manière analogue, la composition des chemins $k \to j$ et $j \to i$ nous fournit un chemin $k \to i$. Ainsi, $i \leftrightarrow k$. \\
+    \item \textbf{Réflexive} : $\forall i \in E$, $i \leftrightarrow i$. \\
+        Soit $P$ la matrice de transition de la chaîne de Markov.
+        Comme $P^{(0)} = I_{|E|}$, en prenant le chemin de longeur zéro on a $P_{i,i}^{(0)} = 1 > 0$. \\
+        Donc trivialement $\forall i \in E$, $i \leftrightarrow i$.
+    \item \textbf{Symétrique} : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$. \\
+        Si $i \leftrightarrow j$, par définition les chemins $i \to j$ et $j \to i$ existent. \\
+        Donc par définition, $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
+\newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page de la démonstration) /!\
+    \item \textbf{Transitive} : $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
+        Comme $i \leftrightarrow j$ et $j \leftrightarrow k$, il existe $n_1$ et $n_2 \in \mathbb{N}$ tel que $P_{i,j}^{(n_1)} > 0$ et $P_{j,k}^{(n_2)} > 0$. Alors :
+        \[
+        P_{i,k}^{(n_1+n_2)} = \sum_{w \in E} P_{i,w}^{(n_1)} \cdot P_{w,k}^{(n_2)} \geq P_{i,j}^{(n_1)} \cdot P_{j,k}^{(n_2)} > 0
+        \]
+        Autrement dit, il existe un chemin $i \to k$ de longueur $n_1+n_2$. Par un raisonnement analogue, on en déduit qu'il existe également un chemin $k \to i$, de même longeur. \\
+        Donc $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
 \end{enumerate}
 
-Comme la relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité, elle est bien une relation d'équivalence sur $E$. Les classes d'équivalences ainsi obtenues sont allors appelées \textbf{classes de communication}.
+La relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité. C'est donc une relation d'équivalence sur $E$. \\
+Les classes d'équivalences ainsi obtenues sont alors appelées \textbf{classes de communication} de la chaîne de Markov.
 \end{tcolorbox}
 
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
@@ -551,7 +558,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
     \begin{itemize}
         \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
-% TODO garder les "newpage" vraiment util
+% TODO
         \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
     \end{itemize}
     \item La classe 2, formée par les états $\{3, 4\}$.
@@ -675,7 +682,7 @@ ceci donne une nouvelle interprétation de la mesure invariante comme la fréque
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Comportement en temps long}
 
 Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
@@ -735,7 +742,7 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
@@ -932,7 +939,7 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 TODO \\
 % Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Conclusion}
 
 TODO \\
