@@ -555,22 +555,29 @@ Prenons par exemple la chaîne de Markov suivante, dont la représentation sous 
 Dans cette chaîne de Markov, nous avons trois classes de communication :
 \begin{itemize}
     \item La classe 1, formée par les états $\{1, 2, 5, 6\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
-% TODO
-        \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est réccurente car chaque état la composant est récurrent. En effet, comme $\forall n \in \mathbb{N}, P_{1,1} > 0$ et que la récurrence est une propriété de classe, on a :
+                \[
+                \forall i \in \{1, 2, 5, 6\}, \exists n \in \mathbb{N}^{*}, \text{ tel que } P_{i,i}^{(n)} > 0.
+                \]
+            \item Autrement dit, pour chaque état $i \in \{1, 2, 5, 6\}$, il est certain de revenir à cet état après un nombre fini de transitions.
+        \end{itemize}
     \item La classe 2, formée par les états $\{3, 4\}$.
-    \begin{itemize}
-        \item Cette classe est ouverte car il est possible de la quitter via $3 \to 2$ et $3 \to 7$.
-        \item Chaque état de la classe est alors transient car nous ne reviendrons pas aux états $i \in \{3, 4\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est transciente car les chemins $3 \to 2$ ou $3 \to 7$ existent avec une probabilité strictement positive. Ce qui signifie qu'il existe un moment où on quittera l'état $3$ sans plus jamais y revenir. Autrement dit :
+                \[
+                \exists n \in \mathbb{N}^{*}, \text{ tel que } X_n \in \{2, 7\} \text{ et } \forall m \geq 0, \mathbb{P}(X_{n+m} \in \{3, 4\}) = 0.
+                \]
+            \item La transcience étant une propriété de classe, chaque état de la classe est alors transient. Ainsi, il existe un moment $n$ à partir duquel nous ne reviendrons plus dans $3$ ou $4$, même après un nombre infini de transitions.
+        \end{itemize}
     \item Et la classe 3, formée par l'état $\{7\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois que l'état $7$ est atteint. En effet, en partant de l'état $7$, nous n'avons que $7 \to 7$.
-        \item Chaque état de la classe est alors réccurent car une fois que l'état $7$ est atteint, la chaîne reste dans cet état avec probabilité 1.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est uniquement composée de l'état $7$. L'état $7$ est récurrent car en partant de cet état, on ne peut que y retourner. En effet, on a :
+                \[
+                P_{7,7} = 1 \quad \text{et} \quad \forall j \neq 7, \quad P_{7,j} = 0.
+                \]
+            \item L'état $7$ étant le seul état de cette classe, la classe est alors récurrente.
+        \end{itemize}
 \end{itemize}
 \end{tcolorbox}
 
