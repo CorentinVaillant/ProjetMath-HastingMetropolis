@@ -219,7 +219,7 @@ Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \
 Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
 \end{tcolorbox}
 
-Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l’ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l'ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -622,7 +622,7 @@ donc $\pi(x) \leq \pi P_x$, pour tout $x \in E$. De plus,
 \leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) \sum_{x \in E} P_{y,x} = \sum_{y \in E} \pi(y).
 \]
 
-Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c’est donc qu’ils sont égaux : on a
+Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c'est donc qu'ils sont égaux : on a
 \[
 \sum_{x \in E} (\pi P_x - \pi(x)) = 0,
 \]
@@ -666,7 +666,7 @@ On peut donc estimer $\mu(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
 
 Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajectoire de la chaîne se rapproche empiriquement,
 lorsque ce temps $n$ est grand, de sa moyenne spatiale par rapport à la loi invariante. En particulier, 
-ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d’occupation d’un état en temps long.
+ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d'occupation d'un état en temps long.
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
@@ -738,12 +738,12 @@ Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metro
 Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillon de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
 Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
 
-Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l’on souhaite estimer. \\
+Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l'on souhaite estimer. \\
 Il devient ainsi possible d'exploiter les propriétés des chaînes de Markov, notamment leur convergence vers une distribution stationnaire et leur propriété d'ergodicité, qui peuvent être plus utiles que la loi des grands nombres seule, utilisée dans les méthodes MC classiques. \\
 La principale différence entre les méthodes MC et MCMC réside dans la dépendance entre les points générés. Les méthodes MC choisissent aléatoirement des points de l'espace, réalisant ainsi un échantillonnage direct de la distribution cible, avec des échantillons indépendants les uns des autres. Leur seul point commun est d'appartenir à l'intervalle des valeurs possibles de la distribution de départ. En revanche, les méthodes MCMC reposent sur une marche aléatoire : elles génèrent chaque nouveau point à partir du précédent selon une règle de transition déterminée. Cela crée une chaîne de points corrélés, qui possède les propriétés des chaînes de Markov. \\
-Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espace, l’utilisation de MCMC sera généralement préférable, car elle permet d'obtenir, dans un temps raisonnable, des échantillons représentatifs de cette distribution. \\
+Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espace, l'utilisation de MCMC sera généralement préférable, car elle permet d'obtenir, dans un temps raisonnable, des échantillons représentatifs de cette distribution. \\
 
-On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l’échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
+On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l'échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
 
 \subsection{Definitions}
 
@@ -778,10 +778,10 @@ Voici une description de cet algorithme:
 TODO \\
 % Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
 
-\subsection{Exemples d'applications simples de HM}
+\subsection{Exemples d'applications simples de HM} %Nouveau titre plus clair, enlever ce commentaire après le merge
 
-Afin de comprendre le déroulé de l'algorithme, on peut prendre un graphe d'un début d'une simulation de HM. Attention, il s'agit d'un espace à états continus ce qui diffère en soi du reste du rapport, bien que les propriétés y restent équivalentes. Cet exemple est visuel et simple donc pertinent pour comprendre le déroulé de l'algorithme. \\
-
+Afin de comprendre le déroulement de l'algorithme, on peut s'appuyer sur un graphique illustrant le début d'une simulation de Metropolis-Hastings dans un espace d'états continu. Bien que cet exemple diffère du reste du rapport qui traite d'états discrets, les propriétés énumérées de l'algorithme restent les mêmes. \\
+Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement les étapes de l'algorithme, voici le schéma : \\
 
 \begin{tikzpicture}
     % Axes
@@ -831,8 +831,18 @@ Afin de comprendre le déroulé de l'algorithme, on peut prendre un graphe d'un 
 
 \end{tikzpicture}
 
+Dans cet exemple, la distribution cible $\pi(x)$ est représentée par la courbe grise, ici une distribution normale. L'axe des ordonnées indique les valeurs prises par cette densité, tandis que l'axe des abscisses correspond aux différents états que la chaîne de Markov peut atteindre au fil des itérations. \\
+Nous choisissons arbitrairement l'état $x_0$ comme départ et cherchons à créer un échantillon de taille 4. Cet état fait donc partie de l'échantillon. \\
+L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') \, g(x \mid x')}{\pi(x) \, g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
+Si $u \leqslant \alpha$ on accepte ce nouvel état, sinon on le rejette. \\
+Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également accepté. Un autre candidat $x'$ est ensuite rejeté, ce qui conduit à conserver $x_2$ pour l'itération suivante, et ainsi de suite. \\
+À noter que certains états peuvent être selectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$). \\
 
+Considérons maintenant un cas simple du TSP avec 5 villes $A, B, C, D$ et $E$, donc dans un système d'états finis par lequel on essaie d'obtenir le chemin de longueur minimale. \\
+La différence notable avec le précédent exemple est que l'on ne cherche plus à échantilloner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
+À l'issue de l'exécution, on obtient alors un échantillon de chemins optimisés les plus courts qui ont été sélectionné plus fréquemment. On peut ainsi approcher de manière probabiliste une solution optimale au problème du voyageur de commerce.
 
+Le schéma suivant représente la situation initiale $x$ :
 \begin{tikzpicture}
     % Titre du diagramme
     \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};
@@ -847,24 +857,9 @@ Afin de comprendre le déroulé de l'algorithme, on peut prendre un graphe d'un 
     % Trajets
     \draw[thick] (A) -- (C) -- (D) -- (E) -- (B) -- (A);
 \end{tikzpicture}
-
-\begin{tikzpicture}
-    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
-
-    \node (A) at (0,0) {A};
-    \node (B) at (2,1) {B};
-    \node (C) at (4,0) {C};
-    \node (E) at (3,-2) {E};
-    \node (D) at (1,-2) {D};
-
-    \draw[thick] (A) -- (B); 
-    \draw[thick] (E) -- (D) -- (C); 
-    \draw[green, thick, dashed] (A) -- (C);
-    \draw[green, thick, dashed] (B) -- (E);
-    \draw[blue, thick] (B) -- (C);
-    \draw[blue, thick] (A) -- (E);
-\end{tikzpicture}
-
+\\
+Voici un exemple de chemin refusé par HM, en noir et rouge, les pointillés représentant les différences avec l'état d'origine :
+\\
 \begin{tikzpicture}
     \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition rejetée par HM}};
 
@@ -880,6 +875,25 @@ Afin de comprendre le déroulé de l'algorithme, on peut prendre un graphe d'un 
     \draw[orange, thick, dashed] (D) -- (E);
     \draw[red, thick] (D) -- (B);
     \draw[red, thick] (A) -- (E);
+\end{tikzpicture}
+\\
+Et un exemple de chemin accepté par HM, en noir et bleu :
+\\
+\begin{tikzpicture}
+    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
+
+    \node (A) at (0,0) {A};
+    \node (B) at (2,1) {B};
+    \node (C) at (4,0) {C};
+    \node (E) at (3,-2) {E};
+    \node (D) at (1,-2) {D};
+
+    \draw[thick] (A) -- (B); 
+    \draw[thick] (E) -- (D) -- (C); 
+    \draw[green, thick, dashed] (A) -- (C);
+    \draw[green, thick, dashed] (B) -- (E);
+    \draw[blue, thick] (B) -- (C);
+    \draw[blue, thick] (A) -- (E);
 \end{tikzpicture}
 
 \subsection{Application au cas du voyageur de commerce}
@@ -940,7 +954,7 @@ TODO \\
 
 \subsection{Code source}
 
-Cette section contient des implémentations des algorithmes abordés. Le code source complet est disponible à l’adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
+Cette section contient des implémentations des algorithmes abordés. Le code source complet est disponible à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
 
 \subsubsection{Code utilitaires}
 
@@ -966,7 +980,7 @@ def geo(p):
 \newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
-L’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
+L'implémentation de l'algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
 
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
@@ -994,7 +1008,7 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
     return np.array(result)
 \end{python}
 
-La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
+La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
 
 \begin{python}
 def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
