@@ -941,10 +941,17 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 % On va sûrement modéliser HM avec Godot (si on est chauds) ou en Python 3 (on peut refaire l'algo de cette vidéo où les sources sont en description \url{https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/6231/Mireuta_Matei_2011_memoire.pdf}).
 % L'objectif ici est de parler de NOTRE implémentation surtout je pense, ça sera la majeure partie de l'oral.
 
-\subsection{Comparaison avec d'autres méthodes d'échantillonnage}
+\subsection{Comparaison avec d'autres méthodes de Monte Carlo}
 
-TODO \\
-% Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
+Il existe d'autres méthodes de Monte Carlo qui, selon les cas, peuvent s’avérer plus ou moins pertinentes que la méthode de Hastings-Metropolis. En voici une liste non exhaustive, accompagnée d’une brève explication pour chacune :
+
+\begin{enumerate}
+    \item \textbf{L'échantillonnage de Gibbs} : Comme la méthode de Hastings-Metropolis, cette approche consiste à construire une chaîne de Markov dont la distribution stationnaire est une distribution cible $\pi$. 
+    L’échantillonnage de Gibbs met à jour chaque composante d'un vecteur aléatoire de manière séquentielle, conditionnellement aux autres. On génère ainsi aléatoirement $N$ vecteurs de dimension $n$ suivant la distribution $\pi$.
+    Cette méthode est particulièrement efficace dans le cas où la distribution conditionnelles $\pi(x \mid \cdot )$ est facile à échantillonner.
+
+    \item 
+\end{enumerate}
 
 \newpage % TODO
 \section{Conclusion}
