@@ -789,7 +789,7 @@ Voici une description de cet algorithme:
             \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x$  
         \end{itemize}
     \end{itemize}
-    \item La séquence $\{x_0,x_1, ... ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+    \item La séquence $\{x_0,x_1, \ldots ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
 \end{enumerate}
 
 \subsection{Preuve de l'algorithme}
@@ -943,15 +943,19 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 
 \subsection{Comparaison avec d'autres méthodes de Monte Carlo}
 
-Il existe d'autres méthodes de Monte Carlo qui, selon les cas, peuvent s’avérer plus ou moins pertinentes que la méthode de Hastings-Metropolis. En voici une liste non exhaustive, accompagnée d’une brève explication pour chacune :
+Il existe plusieurs autres méthodes de Monte Carlo qui peuvent, selon le contexte, s’avérer plus ou moins pertinentes que l’algorithme de Hastings-Metropolis. En voici une liste non exhaustive, accompagnée d’une brève présentation :
 
 \begin{enumerate}
-    \item \textbf{L'échantillonnage de Gibbs} : Comme la méthode de Hastings-Metropolis, cette approche consiste à construire une chaîne de Markov dont la distribution stationnaire est une distribution cible $\pi$. 
-    L’échantillonnage de Gibbs met à jour chaque composante d'un vecteur aléatoire de manière séquentielle, conditionnellement aux autres. On génère ainsi aléatoirement $N$ vecteurs de dimension $n$ suivant la distribution $\pi$.
-    Cette méthode est particulièrement efficace dans le cas où la distribution conditionnelles $\pi(x \mid \cdot )$ est facile à échantillonner.
+\item \textbf{L'échantillonnage de Gibbs} : Comme l’algorithme de Hastings-Metropolis, 
+cette méthode repose sur la construction d’une chaîne de Markov ayant pour distribution stationnaire une distribution cible $\pi$. 
+L’échantillonnage de Gibbs consiste à mettre à jour séquentiellement chaque composante d’un vecteur aléatoire, conditionnellement aux autres composantes. 
+Cette méthode est particulièrement efficace lorsque les distributions conditionnelles $\pi(x_i \mid \cdot)$ sont facilement échantillonnables.
 
-    \item 
+\item \textbf{Le Monte Carlo Hamiltonien (HMC)} : Inspirée de la mécanique Hamiltonienne et dérivée de l’algorithme de Hastings-Metropolis, cette méthode exploite les gradients de la distribution cible pour guider la dynamique d’échantillonnage. Elle permet de générer des échantillons efficaces dans des espaces de grande dimension, en particulier lorsqu’on souhaite estimer des intégrales par rapport à une distribution cible, par exemple pour le calcul d’espérances.
 \end{enumerate}
+
+Bien entendu, d’autres méthodes existent (comme les algorithmes de recuit simulé ou les approches par échantillonnage adaptatif), 
+mais elles sont généralement plus complexes à mettre en œuvre ou spécifiques à certains types de problèmes.
 
 \newpage % TODO
 \section{Conclusion}
