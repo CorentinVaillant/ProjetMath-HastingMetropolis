@@ -41,7 +41,7 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{arrows.meta}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % Préciser la version de pgfplots afin qu'il soit compatible avec le type de cocument (ici "article").
+\pgfplotsset{compat=1.18} % Préciser la version de pgfplots afin qu'il soit compatible avec le type de document (ici "article").
 %package pour images
 \usepackage{graphicx}
 \graphicspath{ {./ressources/} }
@@ -89,12 +89,12 @@ Le problème consiste à déterminer le chemin le plus court passant par tous le
 
 Le principe mathématique derrière HM repose sur la construction dynamique d'une chaîne de Markov, qui n'est pas connue au préalable mais se développe au fil des itérations. À mesure que l'algorithme progresse, le comportement de cette chaîne converge vers la distribution cible, permettant d'obtenir un échantillon fiable de solutions par rapport aux états de la distribution. \\
 Quant au problème du voyageur de commerce, il peut être représenté par un graphe orienté ayant un sommet pour chaque ville et une arête pour chaque temps de trajet. Nous verrons par la suite qu'une chaîne de Markov peut être associée à un graphe orienté, c'est-à-dire que le problème du voyageur de commerce est résoluble par HM. \\
-Par résoluble, il est important de préciser qu'il s'agit d'une résolution appoximative parce que le TSP est NP-difficile comme mentionné précédemment.
+Par résoluble, il est important de préciser qu'il s'agit d'une résolution approximative parce que le TSP est NP-difficile comme mentionné précédemment.
 En conséquence, l'objectif de HM n'est pas d'apporter la réponse exacte au problème, mais une approximation fiable de la solution, ce qui peut sembler contre-intuitif. Cette approximation est la caractéristique principale des méthodes MCMC que nous aborderons dans leur partie dédiée. \\
 
 Il convient de souligner que, dans le cas du TSP, c'est à la version d'optimisation que l'on s'intéresse, par opposition au problème décisionnel, qui, lui, est NP-complet. La différence entre ces deux formulations repose sur leur objectif : dans le TSP décisionnel, on pose une question du type "Existe-t-il un chemin de coût inférieur ou égal à une valeur donnée ?", à laquelle il s'agit de répondre par oui ou non.
 Alors que le TSP d'optimisation cherche à partir de la situation initiale la meilleure solution : donc optimiser le chemin au fil des itérations. C'est cette version du problème pour laquelle l'approche par échantillonnage stochastique est envisageable.
-Précisons toutefois que HM n'est habituellement pas la méthode que l'on utilise pour le TSP en pratique. Usuellement, le nombre de ville étant grand (suffisemment pour que la solution par brute force ne soit pas trouvable) mais pas absurde (une centaine par exemple), on préfère utiliser des versions déterministes optimisées comme l'algorithme de Held-Karp de complexité $O(2^n \times n^2)$, ou dans le cas de situation avec encore plus de villes, des méthodes similaires à HM plus adaptées comme l'échantillonage de Gibbs.
+Précisons toutefois que HM n'est habituellement pas la méthode que l'on utilise pour le TSP en pratique. Usuellement, le nombre de ville étant grand (suffisamment pour que la solution par brute force ne soit pas trouvable) mais pas absurde (une centaine par exemple), on préfère utiliser des versions déterministes optimisées comme l'algorithme de Held-Karp de complexité $O(2^n \times n^2)$, ou dans le cas de situation avec encore plus de villes, des méthodes similaires à HM plus adaptées comme l'échantillonnage de Gibbs.
 
 En somme, il est important de comprendre que HM est un outil adapté à la résolution de problèmes dont l'espace des solutions est trop vaste pour être exploré exhaustivement dans un temps raisonnable. C'est donc par l'approximation de la solution optimale, à travers des échantillons, que cette méthode permet de trouver une solution satisfaisante.
 Cette nuance est essentielle, car elle met en lumière la sophistication de HM en tant qu'outil d'approximation pour des problèmes complexes.
@@ -121,7 +121,7 @@ Il existe deux types de modélisation temporelle :
 \end{enumerate}
 \end{tcolorbox}
 
-Dans ce rapport nous nous interesserons uniquement au temps discret, pour pouvoir modéliser le problème du voyageur de commerce.
+Dans ce rapport nous nous intéresserons uniquement au temps discret, pour pouvoir modéliser le problème du voyageur de commerce.
 De plus, cette distinction joue un rôle fondamental dans la classification et l'analyse des \textbf{processus stochastiques} et n'implique pas les mêmes théorèmes. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Processus Stochastique]
@@ -142,7 +142,7 @@ Soit $E$ un ensemble fini ou dénombrable.
 
 Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs dans l'espace d'états $E$. \\
 
-$(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulement si :
+$(X_n)_{n \in \mathbb{N}}$ est appelée \textbf{chaîne de Markov} si et seulement si :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
     \item Sa loi de probabilité initiale $X_0$ est bien définie.
     \item Elle respecte la \textbf{propriété de Markov}, telle que :
@@ -162,13 +162,13 @@ Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l
 Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
-Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
+Un chaîne de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 \[
   \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i].
 \]
 \end{tcolorbox}
 
-En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
+En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaîne de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
 \newpage % TODO
@@ -215,7 +215,7 @@ Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \
 Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
 \end{tcolorbox}
 
-Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l'ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+Dans le cadre des chaînes de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l'ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -316,7 +316,7 @@ P_{i,j}^{(n+m)} = \sum_{k \in E} P_{i,k}^{(n)} \cdot P_{k,j}^{(m)}.
 
 Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. \\
 
-On reconnait alors l'expression de l'associativité du produit matriciel tel que :
+On reconnaît alors l'expression de l'associativité du produit matriciel tel que :
 \[
 P^{n+m} = \underbrace{P \cdot \ldots \cdot P}_\textit{n fois} \cdot \underbrace{P \cdot \ldots \cdot P}_\textit{m fois} = P^{n}P^{m}.
 \]
@@ -333,7 +333,7 @@ P^{5} = \begin{bmatrix}
 \end{bmatrix}
 $
 \end{center}
-Toujours en reprennant notre exemple, la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $5$ étapes est donc de :
+Toujours en reprenant notre exemple, la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $5$ étapes est donc de :
 \[
 P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \]
@@ -382,7 +382,7 @@ Et on dit que $i$ est transient si :
 \]
 \end{tcolorbox}
 
-Ces propriétées impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions. \\
+Ces propriétés impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant/évanescent]
 Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
@@ -401,15 +401,15 @@ Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il 
 \end{tcolorbox}
 
 % Est-ce qu'il faudrait ajouter le dernier type d'état suivant ? Il est super pratique dans notre cas mais ces notions ne sont pas encore introduites à ce niveau... - Tom
-% Un dernier type d'état que nous étudierons est le type ergotique.
+% Un dernier type d'état que nous étudierons est le type ergodique.
 % Un état $i$ est dit \textbf{ergodique} si, en plus d'être récurrent, il est apériodique et appartient à une classe de communication contenant tous les autres états de la chaîne.
 % Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
-% TODO A AJOUTER APRES
+% TODO A AJOUTER après
 
 \subsubsection{Classes de communication}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Classe de communication]
-Soit deux états communicants $i$ et $j$. Selon la définition précédente, on a que $\leftrightarrow$ est une relation d'équivalence. De plus dans le contexte des chaines de Markov, ces classes d'équivalences sont appelées \textbf{classes de communications}.
+Soit deux états communicants $i$ et $j$. Selon la définition précédente, on a que $\leftrightarrow$ est une relation d'équivalence. De plus dans le contexte des chaînes de Markov, ces classes d'équivalences sont appelées \textbf{classes de communications}.
 Une classe de communication est donc un ensemble d'états accessibles les uns depuis les autres.
 \end{tcolorbox}
 
@@ -420,7 +420,7 @@ Il nous suffit alors de vérifier les trois propriétés suivantes :
 \begin{enumerate}
     \item \textbf{Réflexive} : $\forall i \in E$, $i \leftrightarrow i$. \\
         Soit $P$ la matrice de transition de la chaîne de Markov.
-        Comme $P^{(0)} = I_{|E|}$, en prenant le chemin de longeur zéro on a $P_{i,i}^{(0)} = 1 > 0$. \\
+        Comme $P^{(0)} = I_{|E|}$, en prenant le chemin de longueur zéro on a $P_{i,i}^{(0)} = 1 > 0$. \\
         Donc trivialement $\forall i \in E$, $i \leftrightarrow i$.
     \item \textbf{Symétrique} : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$. \\
         Si $i \leftrightarrow j$, par définition les chemins $i \to j$ et $j \to i$ existent. \\
@@ -431,7 +431,7 @@ Il nous suffit alors de vérifier les trois propriétés suivantes :
         \[
         P_{i,k}^{(n_1+n_2)} = \sum_{w \in E} P_{i,w}^{(n_1)} \cdot P_{w,k}^{(n_2)} \geq P_{i,j}^{(n_1)} \cdot P_{j,k}^{(n_2)} > 0
         \]
-        Autrement dit, il existe un chemin $i \to k$ de longueur $n_1+n_2$. Par un raisonnement analogue, on en déduit qu'il existe également un chemin $k \to i$, de même longeur. \\
+        Autrement dit, il existe un chemin $i \to k$ de longueur $n_1+n_2$. Par un raisonnement analogue, on en déduit qu'il existe également un chemin $k \to i$, de même longueur. \\
         Donc $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
 \end{enumerate}
 
@@ -547,7 +547,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 \begin{itemize}
     \item La classe 1, formée par les états $\{1, 2, 5, 6\}$.
         \begin{itemize}
-            \item Cette classe est réccurente car chaque état la composant est récurrent. En effet, comme $\forall n \in \mathbb{N}, P_{1,1} > 0$ et que la récurrence est une propriété de classe, on a :
+            \item Cette classe est récurrente car chaque état la composant est récurrent. En effet, comme $\forall n \in \mathbb{N}, P_{1,1} > 0$ et que la récurrence est une propriété de classe, on a :
                 \[
                 \forall i \in \{1, 2, 5, 6\}, \exists n \in \mathbb{N}^{*}, \text{ tel que } P_{i,i}^{(n)} > 0.
                 \]
@@ -574,7 +574,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 
 %TODO \\
 % A partager avec le point précédent :
-% - [?] Convergences des chaines de Markov
+% - [?] Convergences des chaînes de Markov
 % - [X] Loi stationnaire/invariante
 % - ...
 
@@ -781,7 +781,7 @@ On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes
 
 \subsubsection{Algorithme d'échantillonnage}
 
-Un algorithme d'échantillonnage est un algorithme nous permettant d'obtenir un échantillonage, à partir d'une certaine probabilité sur la population.
+Un algorithme d'échantillonnage est un algorithme nous permettant d'obtenir un échantillonnage, à partir d'une certaine probabilité sur la population.
 La plus part du temps, le but de ce genre d'algorithmes est de donnée un échantillonnage à partir d'une loi dure à échantillonner.
 \subsubsection{Hasting Metropolis}
 
@@ -795,7 +795,7 @@ Voici une description de cet algorithme:
 
 {\bf Hasting Metropolis} \begin{enumerate}
     \item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
-    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N-1$ inclus (notre nombre d'itérations voulu)
     \begin{itemize}
         \item On tire $x$ avec $g_{x_t}(x)$  
         \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (notons que si nous ne possédons qu'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
@@ -810,7 +810,7 @@ Voici une description de cet algorithme:
 
 \subsection{Preuve de l'algorithme}
 
-% Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
+% Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaînes de Markov pour appuyer la preuve.
 
 \textbf{Définitions :} \\ 
 On définit $Q$ comme la matrice de transition associée à la chaîne de Markov, où $Q(x, y)$ est la probabilité de passer de l'état $x$ à $y$.\\
@@ -826,7 +826,7 @@ On définit la probabilité d'acceptation rejet comme le facteur $\min\big(1, \f
     % ^ A mettre dans l'intro plutôt
     \vspace{1em}
 
-    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effecter le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.
+    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effectuer le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.
     \vspace{1em}
 
     Soient $x, y \in E$, avec $x \neq y$.\\
@@ -882,6 +882,7 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
 Afin de comprendre le déroulement de l'algorithme, on peut s'appuyer sur un graphique illustrant le début d'une simulation de Metropolis-Hastings dans un espace d'états continu. Bien que cet exemple diffère du reste du rapport qui traite d'états discrets, les propriétés énumérées de l'algorithme restent les mêmes. \\
 Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement les étapes de l'algorithme, voici le schéma : \\
 
+\begin{center}
 \begin{tikzpicture}
     % Axes
     \draw[->,black,thick] (-1,0) -- (7,0) node[right] {$x$}; % Axe des abscisses en noir
@@ -927,21 +928,22 @@ Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement 
     \draw[red,dashed,thick] (1,-1.6) -- (1.5,-1.6) node[right] {Transitions rejetées};
     \filldraw[blue] (1,-2) circle (1pt) node[right] {Échantillons acceptés};
     \filldraw[red] (1,-2.4) circle (1pt) node[right] {Échantillons rejetés};
-
 \end{tikzpicture}
+\end{center}
 
 Dans cet exemple, la distribution cible $\pi(x)$ est représentée par la courbe grise, ici une distribution normale. L'axe des ordonnées indique les valeurs prises par cette densité, tandis que l'axe des abscisses correspond aux différents états que la chaîne de Markov peut atteindre au fil des itérations. \\
 Nous choisissons arbitrairement l'état $x_0$ comme départ et cherchons à créer un échantillon de taille 4. Cet état fait donc partie de l'échantillon. \\
 L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') \, g(x \mid x')}{\pi(x) \, g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
 Si $u \leqslant \alpha$ on accepte ce nouvel état, sinon on le rejette. \\
 Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également accepté. Un autre candidat $x'$ est ensuite rejeté, ce qui conduit à conserver $x_2$ pour l'itération suivante, et ainsi de suite. \\
-À noter que certains états peuvent être selectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$). \\
+À noter que certains états peuvent être sélectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$). \\
 
 Considérons maintenant un cas simple du TSP avec 5 villes $A, B, C, D$ et $E$, donc dans un système d'états finis par lequel on essaie d'obtenir le chemin de longueur minimale. \\
-La différence notable avec le précédent exemple est que l'on ne cherche plus à échantilloner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
+La différence notable avec le précédent exemple est que l'on ne cherche plus à échantillonner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
 À l'issue de l'exécution, on obtient alors un échantillon de chemins optimisés les plus courts qui ont été sélectionné plus fréquemment. On peut ainsi approcher de manière probabiliste une solution optimale au problème du voyageur de commerce.
 
 Le schéma suivant représente la situation initiale $x$ :
+\begin{center}
 \begin{tikzpicture}
     % Titre du diagramme
     \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};
@@ -956,9 +958,10 @@ Le schéma suivant représente la situation initiale $x$ :
     % Trajets
     \draw[thick] (A) -- (C) -- (D) -- (E) -- (B) -- (A);
 \end{tikzpicture}
-\\
+\end{center}
+
 Voici un exemple de chemin refusé par HM, en noir et rouge, les pointillés représentant les différences avec l'état d'origine :
-\\
+\begin{center}
 \begin{tikzpicture}
     \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition rejetée par HM}};
 
@@ -975,9 +978,10 @@ Voici un exemple de chemin refusé par HM, en noir et rouge, les pointillés rep
     \draw[red, thick] (D) -- (B);
     \draw[red, thick] (A) -- (E);
 \end{tikzpicture}
-\\
+\end{center}
+
 Et un exemple de chemin accepté par HM, en noir et bleu :
-\\
+\begin{center}
 \begin{tikzpicture}
     \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
 
@@ -994,6 +998,7 @@ Et un exemple de chemin accepté par HM, en noir et bleu :
     \draw[blue, thick] (B) -- (C);
     \draw[blue, thick] (A) -- (E);
 \end{tikzpicture}
+\end{center}
 
 \subsection{Application au cas du voyageur de commerce}
 
@@ -1037,8 +1042,8 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 
 \subsection{Autres cas d'application}
 
-Cette algorithme est aussi appliqué pour d'autre problèmes,
-il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthése d'image basé sur la physique.
+Cette algorithme est aussi appliqué pour d'autres problèmes,
+il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique.
 Ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
 
 \subsection{Comparaison avec d'autres méthodes de Monte Carlo}
@@ -1078,7 +1083,6 @@ Cette section contient des implémentations des algorithmes abordés. Le code so
 \subsubsection{Code utilitaires}
 
 Voici le code source de `utilis.py` qui contient des fonctions utiles au reste du projet. Seul le code des utilitaires mathématiques est présenté ici — les fonctions utilitaires liées aux graphiques sont disponibles directement dans le dépôt.
-
 \begin{python}
 import numpy as np
 import networkx as nx
@@ -1095,7 +1099,6 @@ def binomial(n, p):
 def geo(p):
     return lambda k: p * ((1-p)**(k-1))
 \end{python}
-
 \newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
@@ -1127,6 +1130,7 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
     return np.array(result)
 \end{python}
 
+\newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page du bloc de code) /!\
 La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
 renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
 
@@ -1143,7 +1147,7 @@ def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array,
         g_x_xt = proposition[x][x_t]
 
         if pi_xt * g_xt_x == 0:
-            alpha = 1  # Evite la division par zero
+            alpha = 1 # Evite la division par zero
         else:
             alpha = min(1, (pi_x * g_x_xt) / (pi_xt * g_xt_x))
 
@@ -1175,15 +1179,14 @@ Dans cette section vous trouverais des exemples d'application des différents al
 Voici les exemples d'application d'Hasting-Metropolis que nous avons effectuer,
 à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
 
-\paragraph{Application à une loi binomial:}
-
-
+\paragraph{Application à une loi binomiale :}
+\begin{center}
 \begin{python}
 N = 5
 
 distribution_cible = binomial(N,0.2)
 
-#matrice de transition quelconque
+# Matrice de transition quelconque
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.random.rand(N) for _ in range(N)]
 ])
@@ -1192,40 +1195,40 @@ proposition = np.array([ ligne / ligne.sum()
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
-
-résulat et graphe de la matrice de transition:
+\end{center}
+Résultat et graphe de la matrice de transition :
 
 \includegraphics[scale=0.25]{loi bin.png}
 \includegraphics[scale=0.25]{loi bin graph.png}
 
 \newpage
-\paragraph{Application à une loi de Poisson:}
-
+\paragraph{Application à une loi de Poisson :}
+\begin{center}
 \begin{python}
 N = 15
 
 distribution_cible = poisson(5)
 
-#matrice de transition uniforme de taille NxN
+# Matrice de transition uniforme de taille N*N
 proposition = np.full((N,N),1/N)
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
-
-résulats:
+\end{center}
+Résultats :
 
 \includegraphics[scale=0.5]{poisson.png}
 
 \newpage
-\paragraph{Application à une loi uniform:}
-
+\paragraph{Application à une loi uniforme :}
+\begin{center}
 \begin{python}
 N = 15
 
 distribution_cible = lambda k : 1/(N-2) if 0<k and k<N else 0
 
-#matrice de transition aleatoire
+# Matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.random.rand(N) for _ in range(N)]
 ])
@@ -1234,20 +1237,20 @@ proposition = np.array([ ligne / ligne.sum()
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
-
-résulats:
+\end{center}
+Résultats :
 
 \includegraphics[scale=0.5]{uniforme.png}
 
 \newpage
-\paragraph{Application à une loi géométrique:}
-
+\paragraph{Application à une loi géométrique :}
+\begin{center}
 \begin{python}
 N = 20
 
 distribution_cible = geo(0.33)
 
-# matrice de transition aleatoire
+# Matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
@@ -1255,14 +1258,14 @@ proposition = np.array([ ligne / ligne.sum()
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
-
-résulats:
+\end{center}
+Résultats :
 
 \includegraphics[scale=0.5]{géometrique.png}
 
 \newpage
-\paragraph{Application à une loi quelconque:}
-
+\paragraph{Application à une loi quelconque :}
+\begin{center}
 \begin{python}
 N = 30
 
@@ -1271,7 +1274,7 @@ distribution = distribution / distribution.sum()
 
 distribution_cible = lambda k : distribution[k] if k < N and 0<=k else 0
 
-#matrice de transition aleatoire
+# Matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
@@ -1279,19 +1282,16 @@ proposition = np.array([ ligne / ligne.sum()
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
-
-résulats:
+\end{center}
+Résultats :
 
 \includegraphics[scale=0.5]{loi aléatoire.png}
 
 
 \newpage
-
 \subsection{Sources}
 
-
-
-Documents textuels:
+\subsubsection{Documents textuels :}
 \begin{itemize}
     \item Physical Based Rendering, from the theory to implementation Matt Pharr, Wenzel Jakob, Gre
     \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
@@ -1311,7 +1311,7 @@ Documents textuels:
     \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
 \end{itemize}
 
-Documents vidéos :
+\subsubsection{Documents vidéos :}
 \begin{itemize}
     \item \url{https://www.youtube.com/watch?v=yCv2N7wGDCw}
     \item \url{https://www.youtube.com/watch?v=MxI78mpq_44}
