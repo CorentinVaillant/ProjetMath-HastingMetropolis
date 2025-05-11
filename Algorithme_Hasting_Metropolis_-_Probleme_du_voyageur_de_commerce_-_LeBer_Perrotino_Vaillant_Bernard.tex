@@ -107,16 +107,10 @@ Cette nuance est très importante, car elle révèle en quoi HM est un outil sop
 
 Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abord comprendre le fonctionnement des chaînes de Markov et en expliciter les définitions fondamentales, puis leur comportement sur le temps long, pour pouvoir ensuite construire la preuve mathématique derrière HM et déterminer les raisons de son fonctionnement. Nous étudierons à la fois cette preuve et ferons un détour par les méthodes MCMC (Monte-Carlo), dont HM est issu. Nous finirons par conclure ce rapport avec une implémentation personnelle de HM pour illustrer nos propos.
 
-
-
-\newpage % TODO
+\newpage
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
-
-% TODO = Parler des définitions et surtout placer le contexte, j'entends par là :
-% - [X] En mathématiques, une chaîne de Markov est un processus de Markov à temps discret, ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des états antérieurs (le système n'a pas de « mémoire »).
-% - [X] Dixit Wikipedia "\url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}", j'entends par là définir "temps discret/continu", "processus stochastique", etc.
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Temps Discret et Temps Continu]
 Soit $T$ un ensemble d'indices numérotées représentant le temps. \\
@@ -1185,10 +1179,6 @@ résulats:
 \includegraphics[scale=0.5]{loi aléatoire.png}
 
 
-
-
-
-
 \newpage
 
 \subsection{Sources}
@@ -1208,7 +1198,7 @@ Documents textuels:
     \item \url{https://perso.univ-rennes1.fr/jean-christophe.breton/agreg/AGREG/COURS/ch-mark2.pdf}
     \item \url{https://fr.wikipedia.org/wiki/Processus_stochastique}
     \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov}
-    \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf} \\
+    \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf}
     \item \url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
     \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius} \\
     \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
