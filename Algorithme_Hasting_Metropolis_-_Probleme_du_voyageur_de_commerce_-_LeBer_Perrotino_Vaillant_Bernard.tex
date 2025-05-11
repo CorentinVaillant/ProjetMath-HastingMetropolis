@@ -754,7 +754,7 @@ Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metro
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
 
-Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillon de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
+Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillons de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
 Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
 
 Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l’on souhaite estimer. \\
@@ -794,8 +794,72 @@ Voici une description de cet algorithme:
 
 \subsection{Preuve de l'algorithme}
 
-TODO \\
 % Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
+
+\textbf{Définitions :} \\ 
+On définit $Q$ comme la matrice de transition associée à la chaîne de Markov, où $Q(x, y)$ est la probabilité de passer de l'état $x$ à $y$.\\
+On définit la probabilité d'acceptation rejet comme le facteur $\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)$.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+    \vspace{1em}
+
+    \textbf{Objectif de la preuve :} On souhaite vérifier que la chaîne obtenue à partir de l'algorithme admet comme matrice de transition P, définie comme la matrice Q multipliée par la probabilité d'acceptation rejet.
+    \vspace{1em}
+
+    Un saut partant de $x$ est simulé en choisissant un candidat $y$ par la loi $Q(x, \cdot)$, puis on saute sur $y$ avec probabilité d'acceptation rejet $\alpha$, sinon on reste sur $x$.
+    % ^ A mettre dans l'intro plutôt
+    \vspace{1em}
+
+    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effecter le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.
+    \vspace{1em}
+
+    Soient $x, y \in E$, avec $x \neq y$.\\
+    \begin{align*}
+        &\mathbb{P}(X_{n+1} = y | X_n = x) \\
+        &= \mathbb{P}\big( Y_{n+1} = y
+        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(Y_{n+1}) Q(Y_{n+1}, X_n)}{\pi(X_n) Q(X_n, Y_{n+1})} \big| X_n = x \big) \\
+        &\text{On remplace $Y_{n+1}$ par y, et $X_n$ par $x$ :}\\
+        &= \mathbb{P}\big( Y_{n+1} = y
+        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big| X_n = x \big)\\
+        &\text{Puis, par l'indépendance de $U_i$ avec $X_i$ et $Y_i$} :\\
+        &= \min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)Q(x, y)
+    \end{align*}
+\end{tcolorbox}
+
+Ensuite, montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$.
+
+On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff Q(y, x) > 0$.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+    Montrons que la mesure $\pi$ est réversible pour $P$ :
+    Pour tout couple $(x, y) \in E^2$, et $\mu$ une probabilité quelconque :
+    $$
+        \mu(x)P(x, y) = \mu(y) P(y, x)
+    $$
+
+    Vérifions qu’une mesure réversible est invariante. 
+    \begin{align*}
+        \mu P(y) &= \sum_{x \in E}{\mu(x) P(x, y)}\\
+        &= \sum_{x \in E}{\mu(y) P(y, x)}\\
+        &= \mu(y) \sum_{x \in E}{P(y, x)}\\
+        &= \mu(y)
+    \end{align*}
+
+    Vérifions maintenant cette propriété.
+
+    Si $x = y$ : La propriété est vraie.
+
+    Si $x \neq y$ :
+    si $Q(x, y) = Q(y, x) = 0$, alors on a $\pi(x)P(x, y) = \pi(y)P(y, x) = 0$, et
+
+    \begin{align*}
+        \pi(x)P(x, y) &= \pi(x)Q(x, y)\min\Big(1, \frac{\pi(y)Q(y, x)}{\pi(x)Q(x, y)}\Big)\\
+        &= \min(\pi(x)Q(x, y), \pi(y)Q(y, x))\\
+        &= \pi(y)Q(y, x )\min\Big(\pi(x)Q(x, y)\pi(y)Q(y, x), 1)\\
+        &= \pi(y)P(y, x)\\
+    \end{align*}
+    si $Q(x, y)$ et $Q(y, x)$ sont non nuls.
+\end{tcolorbox}
 
 \subsection{Exemple d'application}
 
