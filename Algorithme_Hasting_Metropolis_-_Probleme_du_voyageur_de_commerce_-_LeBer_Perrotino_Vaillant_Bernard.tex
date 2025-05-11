@@ -151,7 +151,7 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
 \forall n \geq 0, \quad \forall x_0, x_1, \dots, x_{n+1} \in E,
 \]
 \[
-\mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
+\mathbb{P}(X_{n+1} = x_{n+1} \mid X_0 = x_0, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
 \]
 \end{tcolorbox}
 
@@ -159,7 +159,7 @@ Une chaîne de Markov est un processus de Markov à temps discret ou à temps co
 
 Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état présent $X_n$ vers l'état futur $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
 
-Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques.
+Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
 Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
@@ -187,31 +187,30 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans 
 
 Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à un autre, définie comme :
 \[
-\forall n \geq 0,\; \forall i,j \in E,\quad P_{ij} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
+\forall n \in \mathbb{N}, \quad \forall i,j \in E, \quad P_{i,j} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
 \]
 
-La \textbf{matrice de transition} $P$ regroupe ces probabilités tel que chaque élément $P_{ij}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
+La \textbf{matrice de transition} $P$ regroupe ces probabilités tel que chaque élément $P_{i,j}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
 Lorsque l'ensemble des états $E$ est discret, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
 \[
-P = \begin{bmatrix}
-P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
-P_{21} & P_{22} & \cdots & P_{2N}\\[1mm]
-\vdots & \vdots & \ddots & \vdots\\[1mm]
-P_{N1} & P_{N2} & \cdots & P_{NN}
-\end{bmatrix}
+    P = \begin{bmatrix}
+        P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
+        P_{21} & P_{22} & \cdots & P_{2N}\\[1mm]
+        \vdots & \vdots & \ddots & \vdots\\[1mm]
+        P_{N1} & P_{N2} & \cdots & P_{NN}
+    \end{bmatrix}
 \]
-
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Matrice stochastique par lignes/colonnes]
 Une matrice \textbf{stochastique par lignes} (appelée aussi \textbf{stochastique à droite}) est une matrice dont la somme des probabilités de ses lignes vaut 1 chacune et toutes ses probabilités sont positives :
 \[
-\forall i, \quad \sum_{j=1}^{N} P_{ij} = 1 \quad \text{et} \quad 0 \leq P_{ij} \leq 1.
+\forall i, \quad \sum_{j=1}^{N} P_{i,j} = 1 \quad \text{et} \quad 0 \leq P_{i,j} \leq 1.
 \]
 
 Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \textbf{stochastique à gauche}) lorsque :
 \[
-\forall j, \quad \sum_{i=1}^{N} P_{ij} = 1 \quad \text{et} \quad 0 \leq P_{ij} \leq 1.
+\forall j, \quad \sum_{i=1}^{N} P_{i,j} = 1 \quad \text{et} \quad 0 \leq P_{i,j} \leq 1.
 \]
 Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
 \end{tcolorbox}
@@ -220,7 +219,7 @@ Dans le cadre des chaines de Markov homogènes, toutes les matrices de transitio
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
-\forall i \in E, \quad \sum_{j \in E} P_{ij} = 1,
+\forall i \in E, \quad \sum_{j \in E} P_{i,j} = 1
 \]
 reste valable.
 
@@ -230,8 +229,8 @@ reste valable.
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Graphe Orienté d'une Chaîne de Markov]
 Une chaîne de Markov homogène peut toujours être représentée sous forme d'un graphe orienté $ G = (V, A) $, où :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
-    \item $ V $ est l'ensemble des sommets, correspondant aux états de l'espace d'états $ E $.
-    \item $ A $ est l'ensemble des arcs, où chaque arc possède une pondération correspondant à la probabilité de transition $P_{i,j}$. Un arc de $i$ vers $j$ est représenté que si $P_{i,j} > 0$.
+    \item $V$ est l'ensemble des sommets, correspondant à l'ensemble des états de l'espace d'états $E$.
+    \item $A$ est l'ensemble des arcs, où chaque arc possède une pondération correspondant à la probabilité de transition $P_{i,j}$. Un arc de $i$ vers $j$ est représenté que si $P_{i,j} > 0$.
 \end{enumerate}
 \end{tcolorbox}
 
@@ -346,12 +345,12 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
 
-Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
+Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long. \\
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
 Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ et on note $i \to j$ si :
 \[
-\exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
+\exists n \in \mathbb{N}^{*}, \quad P_{i,j}^{(n)} > 0.
 \]
 Autrement dit, il existe une suite finie d'états $k_1, \dots, k_{n-1} \in E$ tels que :
 \[
@@ -361,7 +360,7 @@ Ce qui signifie qu'il existe un chemin de probabilité strictement positive qui 
 
 On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$ et $j \rightarrow i$. On a ainsi :
 \[
-\exists n \geq 0, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \geq 0, \quad P_{j,i}^{(m)} > 0.
+\exists n \in \mathbb{N}^{*}, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad \exists m \in \mathbb{N}^{*}, \quad P_{j,i}^{(m)} > 0.
 \]
 Ce que l'on note $i \leftrightarrow j$.
 \end{tcolorbox}
@@ -382,7 +381,8 @@ Et on dit que $i$ est transient si :
 \mathbb{P}_i(\tau_i < \infty) = \mathbb{P}(\tau_i < \infty \mid X_0 = i) < 1
 \]
 \end{tcolorbox}
-Ces propriétées impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions.
+
+Ces propriétées impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant/évanescent]
 Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
@@ -395,7 +395,7 @@ A l'inverse, tout état ne respectant pas cette condition est appelé état \tex
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique/apériodique]
 Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$. La période $d(i)$ est définie comme :
 \[
-d(i) = \text{PGCD}\{n \geq 1 \mid P_{i,i}^{(n)} > 0\}.
+d(i) = \text{PGCD}\{n \in \mathbb{N}^{*} \mid P_{i,i}^{(n)} > 0\}.
 \]
 Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité.
 \end{tcolorbox}
@@ -612,31 +612,42 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène sur un espace d'
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration, breakable]
 
-Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^{\top} \pi^{\top} = \pi^{\top}$, c'est-à-dire que $\pi^{\top}$ est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
-Or $P$ et sa transposée $P^{\top}$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
-Donc 1 est vecteur propre de $P$ et donc de $P^{\top}$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
-Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. On a, pour tout $x \in E$,
+Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore si $P^{\top} \pi^{\top} = \pi^{\top}$. Ce qui signifie que $\pi^{\top}$ est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$. \\
 
+Or $P$ et sa transposée $P^{\top}$ ont même valeurs propres (car elles ont le même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbbm{1} = \mathbbm{1}$, où $\mathbbm{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$. \\
+
+Donc 1 est vecteur propre de $P$, et donc de $P^{\top}$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$.
+
+Soit $\pi$ le vecteur ligne tel que $\forall x \in E$, $\pi(x) = |\mu(x)|$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
+
+Comme les coefficients de $\pi$ sont positifs, il suffira alors de diviser $\pi$ par la somme de ses coefficients pour obtenir une probabilité invariante. \\
+
+On a :
 \[
-\pi(x) = |\mu(x)| = |\mu P_x| = \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
+\forall x \in E, \quad \pi(x) = |\mu(x)| = |\mu P_x| = \left| \sum_{y \in E} \mu(y) P_{y,x} \right|
 \]
 \[
-\leq \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) P_{y,x} = \pi P_x,
+\leq \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) P_{y,x} = \pi P_x.
 \]
+Donc, $\forall x \in E$, $\pi(x) \leq \pi P_x$. \\
 
-donc $\pi(x) \leq \pi P_x$, pour tout $x \in E$. De plus,
+De plus :
 \[
-\sum_{x \in E} \pi(x) = \sum_{x \in E} |\mu(x)| = \sum_{x \in E} \left| \sum_{y \in E} \mu(y) P_{y,x} \right|,
+\sum_{x \in E} \pi(x) = \sum_{x \in E} |\mu(x)| = \sum_{x \in E} \left| \sum_{y \in E} \mu(y) P_{y,x} \right|
 \]
 \[
 \leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) \sum_{x \in E} P_{y,x} = \sum_{y \in E} \pi(y).
 \]
+Donc, $\forall x \in E$, $\pi(x) \leq \pi P_x$, et tous les vecteurs ont même somme car ils sont égaux. \\
 
-Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c'est donc qu'ils sont égaux : on a
+On a donc :
 \[
-\sum_{x \in E} (\pi P_x - \pi(x)) = 0,
+\sum_{x \in E} (\pi P_x - \pi(x)) = 0.
 \]
-et comme $\pi P_x - \pi(x) \geq 0$ pour tout $x \in E$, on a $\pi P_x = \pi(x)$. Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
+
+Et comme pour tout $x \in E$, $\pi P_x - \pi(x) \geq 0$ on a $\pi P_x = \pi(x)$.
+
+Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
 \end{tcolorbox}
   
 
@@ -654,23 +665,23 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
 
-Soit $E$ fini et $(X_n)$ une chaîne de Markov irréductible, pour toute fonction $f$, et toute loi initial $\nu_0$ 
+Soit $E$ fini et $(X_n)$ une chaîne de Markov irréductible.
+Alors, pour toute fonction $f$, et toute loi initial $\nu_0$, on a :
 \[
-    \forall k > 0 : \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) \,d{\mu(x)}    
+    \forall k > 0, \quad \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) \,d{\mu(x)},
 \]
-
 avec $\mu$ la probabilité invariante.
 
 \end{tcolorbox}
 
 On peut donc estimer $\mu(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
 \[
-    \mathbbm{1}_{A} : B \to \{0,1\}, \text{   } A \subseteq B
+    \mathbbm{1}_{A} : B \to \{0,1\}, A \subseteq B
 \]
 \[
     \mathbbm{1}_{A}(x) = \begin{cases}
-        1,& \text{si } x \in A \\
-        0,& \text{sinon} 
+        1 \text{ si } x \in A \\
+        0 \text{ sinon} 
     \end{cases}
 \]
 
@@ -701,32 +712,43 @@ Donc la loi de $X_n$ converge vers $\pi$ indépendamment de l'état initial, on 
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white, colframe=green!80!black, title=Démonstration, breakable]
-Commençons par montrer l'unicité de la probabilité invariante.
-La transposée d'une probabilité invariante est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
-Comme les valeurs propres de $P$ et de $P^{\top}$ sont les mêmes et ont même multiplicité, il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
-Soit $f$ un vecteur propre de $P$ pour la valeur propre $1$, i.e., $Pf = f$. Comme le vecteur $1$ est vecteur propre, il s'agit de montrer que $f$ est constante. \\
+Commençons par montrer l'unicité de la probabilité invariante. \\
 
-Soit $x_i$ le point où $f$ atteint son maximum, i.e. $f(x_i) = \max\{f(x) \mid x \in E\}$. Soit $y$ un autre état. Comme $P$ est irréductible, $y$ communique avec $x_i$, donc il existe $n \geq 1$ tel que $P^n(x_i, y) > 0$. Comme $Pf = f$, on a aussi $P^n f = f$. Alors, d'une part,
+La transposée d'une probabilité invariante est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
+Comme les valeurs propres de $P$ et de $P^{\top}$ sont les mêmes et ont même multiplicité (car elles ont le même polynôme caractéristique), il suffit donc de montrer que l'espace propre associé à $P$ pour la valeur propre $1$ est de dimension $1$. \\
+
+Soit $f$ un vecteur propre de $P$ pour la valeur propre $1$, autrement dit que $Pf = f$. Comme le vecteur $1$ est vecteur propre, il s'agit de montrer que $f$ est constante. \\
+
+Soit $x_i$ le point où $f$ atteint son maximum, autrement dit $f(x_i) = \max\{f(x) \mid x \in E\}$. Soit $y$ un autre état.
+
+Comme $P$ est irréductible, $y$ communique avec $x_i$, donc $\exists n \in \mathbb{N}^{*}$ tel que $P^n(x_i, y) > 0$. De plus, comme $Pf = f$, on a également que $P^n f = f$. \\
+
+On a alors d'une part :
 \[
-f(x_i) = P^n f(x_i) = \sum_{y \in E} f(y) P^n(x_i, y),
+f(x_i) = P^n f(x_i) = \sum_{y \in E} f(y) P^n(x_i, y).
 \]
-et d'autre part,
+Et d'autre part,
 \[
-f(x_i) = \sum_{y \in E} f(x_i) P^n(x_i, y),
+f(x_i) = \sum_{y \in E} f(x_i) P^n(x_i, y).
 \]
-donc on a
+
+Donc on a :
 \[
-\sum_{y \in E} P^n(x_i, y) \left(f(x_i) - f(y)\right) = 0,
+\sum_{y \in E} P^n(x_i, y) \left(f(x_i) - f(y)\right) = 0.
 \]
-qui est une somme de termes positifs. Ainsi, comme $P^n(x_i, y) > 0$, on a $f(y) = f(x_i)$, et donc, $f$ est constante, et la chaîne admet une unique probabilité invariante, notée $\pi_j$.
+Qui est une somme de termes positifs. \\
+
+Ainsi, comme $P^n(x_i, y) > 0$, on a $f(y) = f(x_i)$, $f$ est donc constante et la chaîne admet une unique probabilité invariante, notée $\pi$.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Valeur de convergence]
-Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. Soit Alors, pour toute mesure initiale $\lambda$ et pour tout état $j$ :
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. \\
+
+Alors, pour toute mesure initiale $\lambda$ et $\forall j \in E$ :
 \[
-\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j,
+\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j.
 \]
-où $\pi$ est l'unique probabilité invariante.
+Où $\pi$ est l'unique probabilité invariante.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Convergence des méthodes de Monte-Carlo]
