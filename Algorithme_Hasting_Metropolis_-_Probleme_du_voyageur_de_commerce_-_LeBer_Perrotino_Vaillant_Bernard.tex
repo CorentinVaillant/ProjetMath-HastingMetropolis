@@ -48,19 +48,10 @@
 
 \usepackage{pythonhighlight}
 
-
-
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
 \title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
 \author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom}
-
-% Enable SageTeX to run SageMath code right inside this LaTeX file.
-% http://doc.sagemath.org/html/en/tutorial/sagetex.html
-% \usepackage{sagetex}
-
-% Enable PythonTeX to run Python – https://ctan.org/pkg/pythontex
-% \usepackage{pythontex}
 
 \begin{document}
 \maketitle
@@ -82,31 +73,35 @@ Afin de comprendre en profondeur ce sujet, il est nécessaire de s'en faire une 
 
 \subsection{Informations générales et description historique}
 
-L'algorithme d'Hastings-Metropolis consiste en une méthode d'échantillonnage stochastique permettant, à partir d'une distribution de probabilité donnée, de pouvoir décrire son comportement et d'obtenir des statistiques dessus. Cet algorithme prend sa valeur quand la distribution est difficile à analyser (systèmes multidimensionnels, par exemple). Cette méthode est marquante, car elle a été conceptualisée tôt dans l'histoire de l'informatique et a mis des décennies avant d'être prouvée et expliquée entièrement. \\
-C'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
+L'algorithme d'Hastings-Metropolis (noté "HM" dans ce rapport) consiste en une méthode d'échantillonnage stochastique permettant, à partir d'une distribution de probabilité donnée, de pouvoir décrire son comportement et d'obtenir des statistiques dessus. Cet algorithme prend sa valeur quand la distribution est difficile à analyser (systèmes multidimensionnels, par exemple) et permet de résoudre de nouveaux problèmes avec une complexité temporelle décente. \\
+Cette méthode est marquante, car elle a été conceptualisée tôt dans l'histoire de l'informatique et a mis des décennies avant d'être prouvée et expliquée entièrement. \\
+
+Historiquement, c'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
 Cela illustre une dynamique fréquente dans les sciences, où le mérite est disproportionnellement attribué à une personne alors qu'il s'agit des efforts de toute une équipe. En particulier, Arianna Rosenbluth était considérée comme brillante par le monde scientifique. \\
 
 En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribution quelconque, et c'est cette version généralisée qui est connue sous le nom d'algorithme de Metropolis-Hastings. Cette extension a eu de nombreuses applications dans divers domaines scientifiques, comme en statistique bayésienne (espaces complexes multidimensionnels), en biologie computationnelle (analyse des séquences génétiques), en économie et en finance (modèles stochastiques MCMC en général), etc. \\
 
-Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile et NP-complet, ce qui signifie qu'il est extrêmement difficile de trouver une solution optimale en temps polynomial, et il est peu probable que des algorithmes en temps polynomial existent pour résoudre ce problème de manière exacte. \\
+Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile, ce qui signifie qu'il n'existe actuellement aucune méthode connue capable de le résoudre de manière optimale en temps polynomial pour toutes les tailles d'instances, et qu'il est au moins aussi difficile que les problèmes de NP. 
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
 Le problème consiste à déterminer le chemin le plus court passant par tous les points d'un graphe une seule fois chacun, en terminant par le point de départ (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
 
-% Insérer une image !
-
 \subsection{Pourquoi HM permet-il de résoudre le problème du voyageur de commerce ?}
 
-Le principe mathématique derrière HM repose sur la construction dynamique d'une chaîne de Markov, qui n'est pas connue au préalable mais se développe au fil des itérations. À mesure que l'algorithme progresse, le comportement de cette chaîne converge vers la distribution cible, permettant d'obtenir un échantillon fiable par rapport aux états de la distribution. \\
+Le principe mathématique derrière HM repose sur la construction dynamique d'une chaîne de Markov, qui n'est pas connue au préalable mais se développe au fil des itérations. À mesure que l'algorithme progresse, le comportement de cette chaîne converge vers la distribution cible, permettant d'obtenir un échantillon fiable de solutions par rapport aux états de la distribution. \\
 Quant au problème du voyageur de commerce, il peut être représenté par un graphe orienté ayant un sommet pour chaque ville et une arête pour chaque temps de trajet. Nous verrons par la suite qu'une chaîne de Markov peut être associée à un graphe orienté, c'est-à-dire que le problème du voyageur de commerce est résoluble par HM. \\
+Par résoluble, il est important de préciser qu'il s'agit d'une résolution appoximative parce que le TSP est NP-difficile comme mentionné précédemment.
+En conséquence, l'objectif de HM n'est pas d'apporter la réponse exacte au problème, mais une approximation fiable de la solution, ce qui peut sembler contre-intuitif. Cette approximation est la caractéristique principale des méthodes MCMC que nous aborderons dans leur partie dédiée. \\
 
-De plus, nous avons précisé au préalable que le voyageur de commerce était NP-difficile et NP-complet. En conséquence, l'objectif de HM n'est pas d'apporter la réponse exacte au problème, mais une approximation fidèle de la solution, ce qui peut sembler contre-intuitif. Cette approximation est la caractéristique principale des méthodes MCMC que nous aborderons dans leur partie dédiée. \\
-Plus généralement, il faut donc comprendre que HM est un outil adapté à la résolution de problèmes ayant un trop grand nombre de possibilités pour être explorées toutes dans un temps raisonnable. C'est pour cela que la résolution de ces problèmes se fait par l'approximation de la bonne solution (en étudiant donc des échantillons de toutes les possibilités). \\
-Cette nuance est très importante, car elle révèle en quoi HM est un outil sophistiqué. \\ 
+Il convient de souligner que, dans le cas du TSP, c'est à la version d'optimisation que l'on s'intéresse, par opposition au problème décisionnel, qui, lui, est NP-complet. La différence entre ces deux formulations repose sur leur objectif : dans le TSP décisionnel, on pose une question du type "Existe-t-il un chemin de coût inférieur ou égal à une valeur donnée ?", à laquelle il s'agit de répondre par oui ou non.
+Alors que le TSP d'optimisation cherche à partir de la situation initiale la meilleure solution : donc optimiser le chemin au fil des itérations. C'est cette version du problème pour laquelle l'approche par échantillonnage stochastique est envisageable.
+Précisons toutefois que HM n'est habituellement pas la méthode que l'on utilise pour le TSP en pratique. Usuellement, le nombre de ville étant grand (suffisemment pour que la solution par brute force ne soit pas trouvable) mais pas absurde (une centaine par exemple), on préfère utiliser des versions déterministes optimisées comme l'algorithme de Held-Karp de complexité $O(2^n \times n^2)$, ou dans le cas de situation avec encore plus de villes, des méthodes similaires à HM plus adaptées comme l'échantillonage de Gibbs.
+
+En somme, il est important de comprendre que HM est un outil adapté à la résolution de problèmes dont l'espace des solutions est trop vaste pour être exploré exhaustivement dans un temps raisonnable. C'est donc par l'approximation de la solution optimale, à travers des échantillons, que cette méthode permet de trouver une solution satisfaisante.
+Cette nuance est essentielle, car elle met en lumière la sophistication de HM en tant qu'outil d'approximation pour des problèmes complexes.
 
 \subsection{Objectif de ce rapport}
 
-Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abord comprendre le fonctionnement des chaînes de Markov et en expliciter les définitions fondamentales, puis leur comportement sur le temps long, pour pouvoir ensuite construire la preuve mathématique derrière HM et déterminer les raisons de son fonctionnement. Nous étudierons à la fois cette preuve et ferons un détour par les méthodes MCMC (Monte-Carlo), dont HM est issu. Nous finirons par conclure ce rapport avec une implémentation personnelle de HM pour illustrer nos propos.
-
+L'objectif de ce rapport étant d'apporter une solution fiable au TSP grâce à HM, nous prouverons alors le fonctionnement dde ce dernier grâce à la théorie mathématique des chaînes de Markov. Nous en expliciterons les définitions et propriétés fondamentales dans un premier temps, qui permettront de prouver l'algorithme d'HM dans un second temps. Nous présenterons alors à la fin du rapport une implémentation personnelle de l'algorithme.
 
 
 \newpage % TODO
@@ -225,7 +220,7 @@ Respectivement, une matrice est \textbf{stochastique par colonnes} (dite aussi \
 Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochastique par lignes et par colonnes.
 \end{tcolorbox}
 
-Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l’ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
+Dans le cadre des chaines de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l'ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
 De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
 \[
@@ -641,7 +636,7 @@ donc $\pi(x) \leq \pi P_x$, pour tout $x \in E$. De plus,
 \leq \sum_{x \in E} \sum_{y \in E} |\mu(y)| P_{y,x} = \sum_{y \in E} \pi(y) \sum_{x \in E} P_{y,x} = \sum_{y \in E} \pi(y).
 \]
 
-Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c’est donc qu’ils sont égaux : on a
+Finalement, $\pi(x) \leq \pi P_x$ pour tout $x \in E$, et les vecteurs ont même somme, c'est donc qu'ils sont égaux : on a
 \[
 \sum_{x \in E} (\pi P_x - \pi(x)) = 0,
 \]
@@ -685,7 +680,7 @@ On peut donc estimer $\mu(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
 
 Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajectoire de la chaîne se rapproche empiriquement,
 lorsque ce temps $n$ est grand, de sa moyenne spatiale par rapport à la loi invariante. En particulier, 
-ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d’occupation d’un état en temps long.
+ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d'occupation d'un état en temps long.
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
@@ -757,12 +752,12 @@ Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metro
 Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillons de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
 Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
 
-Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l’on souhaite estimer. \\
+Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l'on souhaite estimer. \\
 Il devient ainsi possible d'exploiter les propriétés des chaînes de Markov, notamment leur convergence vers une distribution stationnaire et leur propriété d'ergodicité, qui peuvent être plus utiles que la loi des grands nombres seule, utilisée dans les méthodes MC classiques. \\
 La principale différence entre les méthodes MC et MCMC réside dans la dépendance entre les points générés. Les méthodes MC choisissent aléatoirement des points de l'espace, réalisant ainsi un échantillonnage direct de la distribution cible, avec des échantillons indépendants les uns des autres. Leur seul point commun est d'appartenir à l'intervalle des valeurs possibles de la distribution de départ. En revanche, les méthodes MCMC reposent sur une marche aléatoire : elles génèrent chaque nouveau point à partir du précédent selon une règle de transition déterminée. Cela crée une chaîne de points corrélés, qui possède les propriétés des chaînes de Markov. \\
-Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espace, l’utilisation de MCMC sera généralement préférable, car elle permet d'obtenir, dans un temps raisonnable, des échantillons représentatifs de cette distribution. \\
+Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espace, l'utilisation de MCMC sera généralement préférable, car elle permet d'obtenir, dans un temps raisonnable, des échantillons représentatifs de cette distribution. \\
 
-On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l’échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
+On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l'échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
 
 \subsection{Definitions}
 
@@ -861,7 +856,10 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
     si $Q(x, y)$ et $Q(y, x)$ sont non nuls.
 \end{tcolorbox}
 
-\subsection{Exemple d'application}
+\subsection{Exemples d'applications simples de HM} %Nouveau titre plus clair, enlever ce commentaire après le merge
+
+Afin de comprendre le déroulement de l'algorithme, on peut s'appuyer sur un graphique illustrant le début d'une simulation de Metropolis-Hastings dans un espace d'états continu. Bien que cet exemple diffère du reste du rapport qui traite d'états discrets, les propriétés énumérées de l'algorithme restent les mêmes. \\
+Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement les étapes de l'algorithme, voici le schéma : \\
 
 \begin{tikzpicture}
     % Axes
@@ -911,8 +909,18 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
 
 \end{tikzpicture}
 
+Dans cet exemple, la distribution cible $\pi(x)$ est représentée par la courbe grise, ici une distribution normale. L'axe des ordonnées indique les valeurs prises par cette densité, tandis que l'axe des abscisses correspond aux différents états que la chaîne de Markov peut atteindre au fil des itérations. \\
+Nous choisissons arbitrairement l'état $x_0$ comme départ et cherchons à créer un échantillon de taille 4. Cet état fait donc partie de l'échantillon. \\
+L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') \, g(x \mid x')}{\pi(x) \, g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
+Si $u \leqslant \alpha$ on accepte ce nouvel état, sinon on le rejette. \\
+Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également accepté. Un autre candidat $x'$ est ensuite rejeté, ce qui conduit à conserver $x_2$ pour l'itération suivante, et ainsi de suite. \\
+À noter que certains états peuvent être selectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$). \\
 
+Considérons maintenant un cas simple du TSP avec 5 villes $A, B, C, D$ et $E$, donc dans un système d'états finis par lequel on essaie d'obtenir le chemin de longueur minimale. \\
+La différence notable avec le précédent exemple est que l'on ne cherche plus à échantilloner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
+À l'issue de l'exécution, on obtient alors un échantillon de chemins optimisés les plus courts qui ont été sélectionné plus fréquemment. On peut ainsi approcher de manière probabiliste une solution optimale au problème du voyageur de commerce.
 
+Le schéma suivant représente la situation initiale $x$ :
 \begin{tikzpicture}
     % Titre du diagramme
     \node[anchor=south] at (2,1.5) {\textbf{Diagramme initial à optimiser}};
@@ -927,24 +935,9 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
     % Trajets
     \draw[thick] (A) -- (C) -- (D) -- (E) -- (B) -- (A);
 \end{tikzpicture}
-
-\begin{tikzpicture}
-    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
-
-    \node (A) at (0,0) {A};
-    \node (B) at (2,1) {B};
-    \node (C) at (4,0) {C};
-    \node (E) at (3,-2) {E};
-    \node (D) at (1,-2) {D};
-
-    \draw[thick] (A) -- (B); 
-    \draw[thick] (E) -- (D) -- (C); 
-    \draw[green, thick, dashed] (A) -- (C);
-    \draw[green, thick, dashed] (B) -- (E);
-    \draw[blue, thick] (B) -- (C);
-    \draw[blue, thick] (A) -- (E);
-\end{tikzpicture}
-
+\\
+Voici un exemple de chemin refusé par HM, en noir et rouge, les pointillés représentant les différences avec l'état d'origine :
+\\
 \begin{tikzpicture}
     \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition rejetée par HM}};
 
@@ -960,6 +953,25 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
     \draw[orange, thick, dashed] (D) -- (E);
     \draw[red, thick] (D) -- (B);
     \draw[red, thick] (A) -- (E);
+\end{tikzpicture}
+\\
+Et un exemple de chemin accepté par HM, en noir et bleu :
+\\
+\begin{tikzpicture}
+    \node[anchor=south] at (2,1.5) {\textbf{Exemple de proposition retenue par HM}};
+
+    \node (A) at (0,0) {A};
+    \node (B) at (2,1) {B};
+    \node (C) at (4,0) {C};
+    \node (E) at (3,-2) {E};
+    \node (D) at (1,-2) {D};
+
+    \draw[thick] (A) -- (B); 
+    \draw[thick] (E) -- (D) -- (C); 
+    \draw[green, thick, dashed] (A) -- (C);
+    \draw[green, thick, dashed] (B) -- (E);
+    \draw[blue, thick] (B) -- (C);
+    \draw[blue, thick] (A) -- (E);
 \end{tikzpicture}
 
 \subsection{Application au cas du voyageur de commerce}
@@ -1013,14 +1025,20 @@ TODO \\
 \newpage % TODO
 \section{Conclusion}
 
-TODO \\
+En conclusion de ce rapport, nous avons exploré l'algorithme de Hastings-Metropolis et la théorie mathématique des chaînes de Markov qu'il utilise pour générer des échantillons fiables,
+permettant ainsi de résoudre rapidement plusieurs types de problèmes, tels que celui du voyageur de commerce. \\
+
+La force des approches probabilistes, fondées sur un parcours astucieux des distributions imposées, réside dans leur capacité à résoudre des problèmes là où les algorithmes déterministes échouent.
+Plus qu'une simple solution, Hastings-Metropolis marque un tournant fondamental en 1970 : sa stratégie probabiliste, capable de simplifier des situations complexes en ensembles plus abordables et pertinents, a révolutionné l'approche de nombreux problèmes dans des domaines variés. \\
+
+Encore largement utilisé aujourd'hui, son modèle a donné lieu à de nombreuses variantes optimisant ses fonctionnalités en fonction des besoins spécifiques, tout en restant une référence incontournable. \\
 
 \newpage
 \section{Annexe}
 
 \subsection{Code source}
 
-Cette section contient des implémentations des algorithmes abordés. Le code source complet est disponible à l’adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
+Cette section contient des implémentations des algorithmes abordés. Le code source complet est disponible à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
 
 \subsubsection{Code utilitaires}
 
@@ -1046,7 +1064,7 @@ def geo(p):
 \newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
-L’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
+L'implémentation de l'algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
 
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
@@ -1074,7 +1092,7 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
     return np.array(result)
 \end{python}
 
-La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
+La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
 
 \begin{python}
 def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
