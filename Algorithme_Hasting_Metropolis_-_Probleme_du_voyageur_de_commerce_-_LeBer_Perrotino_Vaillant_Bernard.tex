@@ -1,4 +1,5 @@
 \documentclass{article}
+% \usepackage[a4paper, top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry} % Modification des tailles des marges (on en parlera après).
 
 % Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
 \usepackage{ifxetex}
@@ -31,6 +32,7 @@
 \usepackage[explicit]{titlesec}
 \usepackage{framed}
 \usepackage{amsthm}
+\usepackage{bbm}
 \usepackage{xcolor}
 \usepackage{tcolorbox}
 \tcbuselibrary{breakable}
@@ -44,11 +46,14 @@
 \usepackage{graphicx}
 \graphicspath{ {./ressources/} }
 
+\usepackage{pythonhighlight}
+
+
 
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
 \title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
-\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom, BERNARD Léo}
+\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom}
 
 % Enable SageTeX to run SageMath code right inside this LaTeX file.
 % http://doc.sagemath.org/html/en/tutorial/sagetex.html
@@ -87,7 +92,7 @@ Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling 
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
 Le problème consiste à déterminer le chemin le plus court passant par tous les points d'un graphe une seule fois chacun, en terminant par le point de départ (recherche d'un cycle hamiltonien le plus court). Les distances peuvent être dites symétriques ou asymétriques, c'est-à-dire que la distance entre eux varie en fonction de la direction du déplacement. On peut illustrer ce problème grâce à un voyageur de commerce devant vendre ses produits dans chacune des villes en un minimum de temps. Ce problème peut donc être naturellement représenté par un graphe.\\
 
-% Insérer une image ! % Pouquoi il est là ce commentaire ?
+% Insérer une image !
 
 \subsection{Pourquoi HM permet-il de résoudre le problème du voyageur de commerce ?}
 
@@ -104,7 +109,7 @@ Il est donc compréhensible que, pour prouver HM, nous allons devoir tout d'abor
 
 
 
-\newpage
+\newpage % TODO
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -152,7 +157,7 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
     \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
-\forall n \geq 0, \quad \exists x_1, x_2, \dots, x_{n+1} \in E,
+\forall n \geq 0, \quad \forall x_0, x_1, \dots, x_{n+1} \in E,
 \]
 \[
 \mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
@@ -175,7 +180,7 @@ Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
-\newpage
+\newpage % TODO
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -242,7 +247,7 @@ Une chaîne de Markov homogène peut toujours être représentée sous forme d'u
 Représenter graphiquement une chaîne de Markov homogène permet de clarifier visuellement les différentes dynamiques de transitions entre chaque état du système et de comprendre la structure du processus stochastique. \\
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
-Considérons par exemple une chaîne de Markov ayant trois états $\alpha, \beta, \gamma$, ordonnés respectivement, et dont la matrice de transition est donnée par :
+Considérons par exemple une chaîne de Markov ayant trois états $i, j, k$, ordonnés respectivement, et dont la matrice de transition est donnée par :
 
 \begin{center}
 $
@@ -254,11 +259,12 @@ P = \begin{bmatrix}
 $
 \end{center}
 
-Dans cette configuration, la probabilité de transition de l'état $\alpha$ vers l'état $ \beta $ est donnée par :
+Dans cette configuration, la probabilité de transition de l'état $i$ vers l'état $j$ est donnée par :
 \[
-P_{\alpha,\beta} = P_{1,2} = \mathbb{P}(X_{n+1} = \beta \mid X_n = \alpha) = 0.4.
+P_{i,j} = P_{1,2} = \mathbb{P}(X_{n+1} = j \mid X_n = i) = 0.4
 \]
 
+% TODO
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
 Nous obtenons ainsi le graphe suivant :
 
@@ -271,9 +277,9 @@ Nous obtenons ainsi le graphe suivant :
 ]
 
 % Nodes :
-\node[state] (A) at (0, 0) {$\alpha$};
-\node[state] (B) at (2, 3) {$\beta$};
-\node[state] (C) at (4, 0) {$\gamma$};
+\node[state] (A) at (0, 0) {$i$};
+\node[state] (B) at (2, 3) {$j$};
+\node[state] (C) at (4, 0) {$k$};
 
 % Edges :
 \draw[->] (A) edge[loop left, out=150, in=210, looseness=8] node[left] {0.1} (A);
@@ -337,13 +343,13 @@ P^{5} = \begin{bmatrix}
 \end{bmatrix}
 $
 \end{center}
-Toujours en reprennant notre exemple, la probabilité de passer de l'état $\alpha$ à l'état $\beta$ au bout d'exactement $5$ étapes est donc de :
+Toujours en reprennant notre exemple, la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $5$ étapes est donc de :
 \[
-P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
+P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \]
 \end{tcolorbox}
 
-\newpage
+\newpage % TODO
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -352,11 +358,15 @@ P_{\alpha,\beta}^{(5)} = \mathcal{P}_\alpha(\beta)^{5} = 24,385\%
 Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
-Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
+Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ et on note $i \to j$ si :
 \[
 \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
 \]
-Ce que l'on note $i \to j$. \\
+Autrement dit, il existe une suite finie d'états $k_1, \dots, k_{n-1} \in E$ tels que :
+\[
+P_{i,k_1} \cdot P_{k_1,k_2}\cdot ... \cdot P_{k_{n-1},j} > 0. \\
+\]
+Ce qui signifie qu'il existe un chemin de probabilité strictement positive qui mène de $i$ à $j$. \\
 
 On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$ et $j \rightarrow i$. On a ainsi :
 \[
@@ -365,28 +375,23 @@ On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$
 Ce que l'on note $i \leftrightarrow j$.
 \end{tcolorbox}
 
-En particulier, $i \to j$ si et seulement s'il existe une suite d'états $(i_0, i_1, \dots, i_n)$ avec $i_0 = i$ et $i_n = j$ telle que :
-\[
-P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
-\]
-Ce qui veut dire qu'il existe un chemin de probabilité strictement positive qui mène de i à j.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transient]
+Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner en un nombre fini de pas. Un état non récurrent est dit \textbf{transient}. \\
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transitoire]
-Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner.
-Autrement dit, en effectuant un nombre infini de transitions, on retourne à $i$ une infinité de fois.
-
-Plus rigoureusement, cela signifie que :
+On pose :
 \[
-\mathbb{P}_i(\text{Num}_i(X) = \infty) = 1,
+\tau_i = \inf\{n \in \mathbb{N}^{*} \mid X_n = i\}
 \]
-où  
+On dit alors que $i$ est récurrent si :
 \[
-\text{Num}_i(X) = |\{n \geq 0 \mid X_n = i\}|
+\mathbb{P}_i(\tau_i < \infty) = \mathbb{P}(\tau_i < \infty \mid X_0 = i) = 1
 \]
-représente le nombre total de visites de l'état $i$, y compris la première.
-
-Un état qui n'est pas récurrent est dit \textbf{transient} ou \textbf{transitoire}.
+Et on dit que $i$ est transient si :
+\[
+\mathbb{P}_i(\tau_i < \infty) = \mathbb{P}(\tau_i < \infty \mid X_0 = i) < 1
+\]
 \end{tcolorbox}
+Ces propriétées impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions.
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant/évanescent]
 Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
@@ -422,39 +427,41 @@ Montrons que la relation $\leftrightarrow$ est une relation d'équivalence. \\
 
 Il nous suffit alors de vérifier les trois propriétés suivantes :
 \begin{enumerate}
-    \item \textbf{Réflexivité} : Pour tout état $i \in E$, $i \leftrightarrow i$. \\
-        Pour tout état $i \in E$, il existe trivialement un chemin $i \to i$. En effet, en considérant le chemin de longueur zéro (via le fait que $P_{ii}^{(0)} = 1$ en définissant $P^{(0)}$ comme la matrice identité), on conclut directement que $i \leftrightarrow i$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de la démonstration.
-    \item \textbf{Symétrie} : Si $i \leftrightarrow j$, alors $j \leftrightarrow i$. \\
-        Si $i \leftrightarrow j$, par définition il existe un chemin $i \to j$, (et inversement un chemin de $j \to i$). Ainsi, la relation est symétrique : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
-    \item \textbf{Transitivité} : Si $i \leftrightarrow j$ et $j \leftrightarrow k$, alors $i \leftrightarrow k$. \\
-    Supposons que $i \leftrightarrow j$ et $j \leftrightarrow k$. En composant ces deux chemins, on obtient un chemin $i \to k$. De manière analogue, la composition des chemins $k \to j$ et $j \to i$ nous fournit un chemin $k \to i$. Ainsi, $i \leftrightarrow k$. \\
+    \item \textbf{Réflexive} : $\forall i \in E$, $i \leftrightarrow i$. \\
+        Soit $P$ la matrice de transition de la chaîne de Markov.
+        Comme $P^{(0)} = I_{|E|}$, en prenant le chemin de longeur zéro on a $P_{i,i}^{(0)} = 1 > 0$. \\
+        Donc trivialement $\forall i \in E$, $i \leftrightarrow i$.
+    \item \textbf{Symétrique} : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$. \\
+        Si $i \leftrightarrow j$, par définition les chemins $i \to j$ et $j \to i$ existent. \\
+        Donc par définition, $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
+\newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page de la démonstration) /!\
+    \item \textbf{Transitive} : $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
+        Comme $i \leftrightarrow j$ et $j \leftrightarrow k$, il existe $n_1$ et $n_2 \in \mathbb{N}$ tel que $P_{i,j}^{(n_1)} > 0$ et $P_{j,k}^{(n_2)} > 0$. Alors :
+        \[
+        P_{i,k}^{(n_1+n_2)} = \sum_{w \in E} P_{i,w}^{(n_1)} \cdot P_{w,k}^{(n_2)} \geq P_{i,j}^{(n_1)} \cdot P_{j,k}^{(n_2)} > 0
+        \]
+        Autrement dit, il existe un chemin $i \to k$ de longueur $n_1+n_2$. Par un raisonnement analogue, on en déduit qu'il existe également un chemin $k \to i$, de même longeur. \\
+        Donc $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
 \end{enumerate}
 
-Comme la relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité, elle est bien une relation d'équivalence sur $E$. Les classes d'équivalences ainsi obtenues sont allors appelées \textbf{classes de communication}.
+La relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité. C'est donc une relation d'équivalence sur $E$. \\
+Les classes d'équivalences ainsi obtenues sont alors appelées \textbf{classes de communication} de la chaîne de Markov.
 \end{tcolorbox}
 
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
 Autrement dit, la relation d'équivalence $\leftrightarrow$ partitionne l'ensemble des états d'une chaîne de Markov en classes de communication disjointes. \\
 
-Les classes de communcation peuvent parfois partager les propriétés énoncées dans la partie \ref{subsubsec: Les différents types d'états} dont les définitions s'élargissent alors à la classe entière (et donc aux sous-ensemble d'états de cette classe). Il existe alors une propriété structurelle commune entre les états, que l'on appelle \textbf{propriété de classe}. \\
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Propriétés de classe]
+On appelle \textbf{propriété de classe} une propriété structurelle commune à tous les états d'une même classe de communication. \\
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Qualificatif ouvert/fermé pour une classe de communication]
-Une classe de communication appartienent systématiquement à l'une des deux catégories suivantes :
-\begin{itemize}
-    \item \textbf{Fermée} : Une fois qu'un état de cette classe est atteint, il est impossible de quitter cette classe. Formellement, pour une classe $C$, cela signifie que :
-        \[
-        \forall i \in C, \quad \forall j \notin C, \quad \forall n \geq 1, \quad P_{i,j}^{(n)} = 0.
-        \]
-    \item \textbf{Ouverte} : L'opposée de fermée ; il existe au moins un état de la classe qui permet de sortir de celle-ci. Plus formellement, cela signifie que :
-        \[
-        \exists i \in C, \quad \exists j \notin C, \quad \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
-        \]
-\end{itemize}
+Les propriétés de récurrence ou transience d'un état, énoncées dans la partie \ref{subsubsec: Les différents types d'états} sont des propriétés de classe. \\
+
+Cela signifie donc qu'au sein d'une même classe de communication, tous les états sont soit récurrents, soit transients. On parle alors de classes de récurrence ou de transience.
 \end{tcolorbox}
 
 L'intérêt de ces distinctions est de diviser les chaînes de Markov en sous-ensembles analytiquement indépendants, ce qui permet ensuite de tirer des conclusions sur les sous-ensembles présentant ces propriétés. \\
 
+\newpage
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
 Prenons par exemple la chaîne de Markov suivante, dont la représentation sous forme de graphe orienté est donnée ci-dessous :
 
@@ -548,21 +555,29 @@ Prenons par exemple la chaîne de Markov suivante, dont la représentation sous 
 Dans cette chaîne de Markov, nous avons trois classes de communication :
 \begin{itemize}
     \item La classe 1, formée par les états $\{1, 2, 5, 6\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
-        \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est réccurente car chaque état la composant est récurrent. En effet, comme $\forall n \in \mathbb{N}, P_{1,1} > 0$ et que la récurrence est une propriété de classe, on a :
+                \[
+                \forall i \in \{1, 2, 5, 6\}, \exists n \in \mathbb{N}^{*}, \text{ tel que } P_{i,i}^{(n)} > 0.
+                \]
+            \item Autrement dit, pour chaque état $i \in \{1, 2, 5, 6\}$, il est certain de revenir à cet état après un nombre fini de transitions.
+        \end{itemize}
     \item La classe 2, formée par les états $\{3, 4\}$.
-    \begin{itemize}
-        \item Cette classe est ouverte car il est possible de la quitter via $3 \to 2$ et $3 \to 7$.
-        \item Chaque état de la classe est alors transitoire car nous ne reviendrons pas aux états $i \in \{3, 4\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est transciente car les chemins $3 \to 2$ ou $3 \to 7$ existent avec une probabilité strictement positive. Ce qui signifie qu'il existe un moment où on quittera l'état $3$ sans plus jamais y revenir. Autrement dit :
+                \[
+                \exists n \in \mathbb{N}^{*}, \text{ tel que } X_n \in \{2, 7\} \text{ et } \forall m \geq 0, \mathbb{P}(X_{n+m} \in \{3, 4\}) = 0.
+                \]
+            \item La transcience étant une propriété de classe, chaque état de la classe est alors transient. Ainsi, il existe un moment $n$ à partir duquel nous ne reviendrons plus dans $3$ ou $4$, même après un nombre infini de transitions.
+        \end{itemize}
     \item Et la classe 3, formée par l'état $\{7\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois que l'état $7$ est atteint. En effet, en partant de l'état $7$, nous n'avons que $7 \to 7$.
-        \item Chaque état de la classe est alors réccurent car une fois que l'état $7$ est atteint, la chaîne reste dans cet état avec probabilité 1.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est uniquement composée de l'état $7$. L'état $7$ est récurrent car en partant de cet état, on ne peut que y retourner. En effet, on a :
+                \[
+                P_{7,7} = 1 \quad \text{et} \quad \forall j \neq 7, \quad P_{7,j} = 0.
+                \]
+            \item L'état $7$ étant le seul état de cette classe, la classe est alors récurrente.
+        \end{itemize}
 \end{itemize}
 \end{tcolorbox}
 
@@ -573,16 +588,16 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 % - ...
 
 \newpage
-\subsection{Mesures invariantes et théorème ergodique}
+\subsection{Probabilité invariantes et théorème ergodique}
 
-\subsubsection{Mesures invariantes}
+\subsubsection{probabilité invariantes}
 
 La loi stationnaire peut permettre sous certaines conditions à décrire le comportement à long terme de la chaîne de Markov. \\ % ??? - Tom
 
-\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Mesure invariante/stationnaire]
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Probabilité invariantes/stationnaire]
 Soit une chaîne de Markov $(X_n)_{n \in \mathbb{N}}$ à espace d'état $E$, et ayant pour matrice de transition $P$. \\
 
-Une mesure $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariante (ou stationnaire) si elle satisfait la relation $\pi P = \pi$. \\
+Une probabilité $\pi = (\pi_i)_{i \in E}$ sur l'espace d'état $E$ est dite invariante (ou stationnaire) si elle satisfait la relation $\pi P = \pi$. \\
 
 C'est-à-dire
 \[
@@ -595,7 +610,7 @@ Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\t
 \pi P = \pi \iff P^{\top} \pi^{\top} = \pi^{\top}.
 \]
 
-De plus dans notre cas, comme $\pi$ est une mesure de probabilité, elle respecte les conditions suivantes :
+De plus dans notre cas, comme $\pi$ est une probabilité, elle respecte les conditions suivantes :
 \[
 \forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
 \]
@@ -605,6 +620,7 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène sur un espace d'
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration, breakable]
+
 Par définition, $\pi$ est invariante si $\pi P = \pi$, ou encore $P^{\top} \pi^{\top} = \pi^{\top}$, c'est-à-dire que $\pi^{\top}$ est un vecteur propre de $P^{\top}$ associé à la valeur propre $1$.
 Or $P$ et sa transposée $P^{\top}$ ont même valeurs propres (car même polynôme caractéristique), et comme $P$ est une matrice stochastique, on a $P \mathbf{1} = \mathbf{1}$, où $\mathbf{1}$ désigne le vecteur de $\mathbb{R}^{|E|}$ dont tous les coefficients sont égaux à $1$.
 Donc 1 est vecteur propre de $P$ et donc de $P^{\top}$, donc il existe un vecteur ligne $\mu$ non nul tel que $\mu P = \mu$. Soit $\pi$ le vecteur ligne tel que $\pi(x) = |\mu(x)|$, pour tout $x \in E$, et montrons que $\pi$ est encore vecteur propre à gauche de $P$.
@@ -639,31 +655,41 @@ Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est a
 Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement : $i \leftrightarrow j$.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Mesures invariantes d'une chaîne de Markov irréductible]
-Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les mesures invariantes sont proportionnelles entre elles.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Probabilité invariantes d'une chaîne de Markov irréductible]
+Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les probabilité invariantes sont proportionnelles entre elles.
 \end{tcolorbox}
 
 \subsubsection{Théorème ergodique}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
-Soit $(X_n)_{n \ge 0}$ une chaîne de Markov sur un ensemble fini $E$, irréductible, de matrice de transition $P$. Soit $\pi$ l'unique probabilité invariante. \\
 
-Alors, pour toute fonction $f : E \to \mathbb{R}$, on a
+Soit $E$ fini et $(X_n)$ une chaîne de Markov irréductible, pour toute fonction $f$, et toute loi initial $\nu_0$ 
 \[
-\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow[n \to \infty]{} \int_E f \, d\pi = \sum_{x \in E} \pi(x)\, f(x),
+    \forall k > 0 : \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) \,d{\mu(x)}    
 \]
-avec probabilité 1. En particulier, en prenant $f = \mathbf{1}_{\{x\}}$, on obtient
-\[
-\frac{1}{n} \sum_{k=1}^{n} f \xrightarrow[n \to \infty]{} \mathbf{1}_{\{X_{k} = x\}} = \pi(x),
-\]
-avec probabilité 1.
+
+avec $\mu$ la probabilité invariante.
+
 \end{tcolorbox}
 
-Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajectoire de la chaîne se rapproche empiriquement, lorsque ce temps $n$ est grand, de sa moyenne spatiale par rapport à la loi invariante. En particulier, ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d’occupation d’un état en temps long. \\
+On peut donc estimer $\mu(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
+\[
+    \mathbbm{1}_{A} : B \to \{0,1\}, \text{   } A \subseteq B
+\]
+\[
+    \mathbbm{1}_{A}(x) = \begin{cases}
+        1,& \text{si } x \in A \\
+        0,& \text{sinon} 
+    \end{cases}
+\]
+
+Le théorème ergodique nous dit donc que la moyenne de $f$ le long de la trajectoire de la chaîne se rapproche empiriquement,
+lorsque ce temps $n$ est grand, de sa moyenne spatiale par rapport à la loi invariante. En particulier, 
+ceci donne une nouvelle interprétation de la mesure invariante comme la fréquence du temps d’occupation d’un état en temps long.
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
-\newpage
+\newpage % TODO
 \subsection{Comportement en temps long}
 
 Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
@@ -675,7 +701,7 @@ Alors, il existe une unique mesure invariante $\pi$, et pour tout état initial 
 \lim_{n \to \infty} P^n_{i,j} = \pi_j.
 \]
 
-Ce qui est équivalent à :
+Ce qui implique :
 \[
 \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j.
 \]
@@ -723,7 +749,7 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
-\newpage
+\newpage % TODO
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
@@ -751,7 +777,7 @@ TODO \\
 
 Voici une description de cet algorithme:
 
-\begin{enumerate}
+{\bf Hasting Metropolis} \begin{enumerate}
     \item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
     \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
     \begin{itemize}
@@ -936,6 +962,45 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
     \draw[red, thick] (A) -- (E);
 \end{tikzpicture}
 
+\subsection{Application au cas du voyageur de commerce}
+
+Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
+Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
+$
+E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}
+$, 
+ce qui, avec notre implémentation actuelle, nécessiterait de manipuler une matrice $6 \times 6$. Lorsque le nombre de villes augmente, nous aurions besoin d'une matrice carrée de taille $n!$, où $n$ est le nombre de points, ce qui devient rapidement irréaliste.
+
+Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin{itemize} \item Une fonction de distance totale sur les permutations des coordonnées des villes $ D : E \to \mathbb{R} $,
+    \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
+
+    \item Une distribution cible, avec $\beta \in \mathbb{R}$ un paramètre ajustable
+    \[ \pi(p) = e^{-\beta \cdot D(p)} \]
+
+    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
+    Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
+\end{itemize}
+
+Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
+
+{\bf Hasting Metropolis TSP} \begin{enumerate}
+    \item On prend $p_0$, une permutation donnée
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
+    \begin{itemize}
+        \item On tire $p$ avec la variable aléatoire$S_{p_t}$, on peut utilisé la fonction ``permutation'' défini plus tôt.
+        \item Calculer $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ si la transition est symétrique, c'est-à-dire $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$.
+        \item Sinon $\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
+
+        \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
+        \begin{itemize}
+            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq x$  
+            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq x$  
+        \end{itemize}
+    \end{itemize}
+    \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+\end{enumerate}
+
+On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$ 
 
 % On va sûrement modéliser HM avec Godot (si on est chauds) ou en Python 3 (on peut refaire l'algo de cette vidéo où les sources sont en description \url{https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/6231/Mireuta_Matei_2011_memoire.pdf}).
 % L'objectif ici est de parler de NOTRE implémentation surtout je pense, ça sera la majeure partie de l'oral.
@@ -945,7 +1010,7 @@ On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff 
 TODO \\
 % Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
 
-\newpage
+\newpage % TODO
 \section{Conclusion}
 
 TODO \\
@@ -961,7 +1026,7 @@ Cette section contient des implémentations des algorithmes abordés. Le code so
 
 Voici le code source de `utilis.py` qui contient des fonctions utiles au reste du projet. Seul le code des utilitaires mathématiques est présenté ici — les fonctions utilitaires liées aux graphiques sont disponibles directement dans le dépôt.
 
-\begin{verbatim}
+\begin{python}
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -976,7 +1041,7 @@ def binomial(n, p):
 
 def geo(p):
     return lambda k: p * ((1-p)**(k-1))
-\end{verbatim}
+\end{python}
 
 \newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
@@ -985,14 +1050,14 @@ L’implémentation de l’algorithme de Hastings-Metropolis, comme décrit en \
 
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
-\begin{verbatim}
+\begin{python}
 def next_state_markov(x: int, transitions: np.array) -> int:
     return np.random.choice(len(transitions), p=transitions[x])
-\end{verbatim}
+\end{python}
 
 La fonction \texttt{markov\_chain\_from\_tirage(tirage, nb\_etats)} transforme un tirage en une matrice de transition, représentant une chaîne de Markov :
 
-\begin{verbatim}
+\begin{python}
 def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
     sommes = np.full((nb_etats, nb_etats), 0)
     derniere_etat = tirage[0]
@@ -1007,11 +1072,11 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
             for j in range(nb_etats)
         ])
     return np.array(result)
-\end{verbatim}
+\end{python}
 
 La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
 
-\begin{verbatim}
+\begin{python}
 def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
     x_t = x0
     tirage = [x_t]
@@ -1024,7 +1089,7 @@ def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array,
         g_x_xt = proposition[x][x_t]
 
         if pi_xt * g_xt_x == 0:
-            alpha = 1  # Évite la division par zéro
+            alpha = 1  # Evite la division par zero
         else:
             alpha = min(1, (pi_x * g_x_xt) / (pi_xt * g_xt_x))
 
@@ -1035,29 +1100,31 @@ def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array,
         tirage.append(x_t)
 
     return np.array(tirage)
-\end{verbatim}
+\end{python}
 
 Enfin, la fonction \texttt{hasting\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme:
 
-\begin{verbatim}
+\begin{python}
 def hasting_metropolis(x0: int, distribution_cible, 
                        proposition: np.array, iterations: int = 1000) -> np.array:
     tirage = hasting_metropolis_tirage(x0, distribution_cible, proposition, iterations)
     return markov_chain_from_tirage(tirage, proposition.shape[0])
-\end{verbatim}
+\end{python}
 
 \newpage
-\subsubsection{Application de ce code}
+\subsubsection{Applications du code d'Hasting Metropolis}
 
 Dans cette section vous trouverais des exemples d'application des différents algorithmes implémentés 
 
 \paragraph{Exemples Hastings-Metropolis}
 
-Voici les exemples d'application d'Hasting-Metropolis que nous avons effectuer, à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
+Voici les exemples d'application d'Hasting-Metropolis que nous avons effectuer,
+à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
 
 \paragraph{Application à une loi binomial:}
 
-\begin{verbatim}
+
+\begin{python}
 N = 5
 
 distribution_cible = binomial(N,0.2)
@@ -1070,7 +1137,7 @@ proposition = np.array([ ligne / ligne.sum()
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
 mk_c = markov_chain_from_tirage(tirage,N)
-\end{verbatim}
+\end{python}
 
 résulat et graphe de la matrice de transition:
 
@@ -1080,7 +1147,7 @@ résulat et graphe de la matrice de transition:
 \newpage
 \paragraph{Application à une loi de Poisson:}
 
-\begin{verbatim}
+\begin{python}
 N = 15
 
 distribution_cible = poisson(5)
@@ -1090,7 +1157,7 @@ proposition = np.full((N,N),1/N)
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
-\end{verbatim}
+\end{python}
 
 résulats:
 
@@ -1099,12 +1166,12 @@ résulats:
 \newpage
 \paragraph{Application à une loi uniform:}
 
-\begin{verbatim}
+\begin{python}
 N = 15
 
 distribution_cible = lambda k : 1/(N-2) if 0<k and k<N else 0
 
-#matrice de transition aléatoire
+#matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.random.rand(N) for _ in range(N)]
 ])
@@ -1112,7 +1179,7 @@ proposition = np.array([ ligne / ligne.sum()
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
-\end{verbatim}
+\end{python}
 
 résulats:
 
@@ -1121,19 +1188,19 @@ résulats:
 \newpage
 \paragraph{Application à une loi géométrique:}
 
-\begin{verbatim}
+\begin{python}
 N = 20
 
 distribution_cible = geo(0.33)
 
-#matrice de transition aléatoire
+# matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
-\end{verbatim}
+\end{python}
 
 résulats:
 
@@ -1142,7 +1209,7 @@ résulats:
 \newpage
 \paragraph{Application à une loi quelconque:}
 
-\begin{verbatim}
+\begin{python}
 N = 30
 
 distribution = np.random.rand(N)
@@ -1150,30 +1217,18 @@ distribution = distribution / distribution.sum()
 
 distribution_cible = lambda k : distribution[k] if k < N and 0<=k else 0
 
-#matrice de transition aléatoire
+#matrice de transition aleatoire
 proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
 
 tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
-\end{verbatim}
+\end{python}
 
 résulats:
 
 \includegraphics[scale=0.5]{loi aléatoire.png}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

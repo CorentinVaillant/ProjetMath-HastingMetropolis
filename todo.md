@@ -1,5 +1,5 @@
 # Todo
 
-[ ] @tominien  /  @KibyPoyo : finir les maths (thm ergodique)  
-[ ] @Yolwoocle : preuve hasting-metro  
-[ ] @CorentinVaillant  : Application au voyageur de commerce, rajouter   code annexe + exemple notebook.  
+[ ] @tominien : ré organisation partie III, 
+[ ] @KibyPoyo : relecture intro + refacto + exemples
+[ ] @CorentinVaillant  : démo HM exemple application HM (info graph)
