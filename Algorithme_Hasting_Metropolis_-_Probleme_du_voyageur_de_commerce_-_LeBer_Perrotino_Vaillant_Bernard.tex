@@ -1,4 +1,5 @@
 \documentclass{article}
+% \usepackage[a4paper, top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry} % Modification des tailles des marges (on en parlera après).
 
 % Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
 \usepackage{ifxetex}
@@ -103,7 +104,7 @@ Cette nuance est essentielle, car elle met en lumière la sophistication de HM e
 L'objectif de ce rapport étant d'apporter une solution fiable au TSP grâce à HM, nous prouverons alors le fonctionnement dde ce dernier grâce à la théorie mathématique des chaînes de Markov. Nous en expliciterons les définitions et propriétés fondamentales dans un premier temps, qui permettront de prouver l'algorithme d'HM dans un second temps. Nous présenterons alors à la fin du rapport une implémentation personnelle de l'algorithme.
 
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -151,7 +152,7 @@ $(X_n)_{n \in \mathbb{N}}$ est appellée \textbf{chaîne de Markov} si et seulem
     \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
-\forall n \geq 0, \quad \exists x_1, x_2, \dots, x_{n+1} \in E,
+\forall n \geq 0, \quad \forall x_0, x_1, \dots, x_{n+1} \in E,
 \]
 \[
 \mathbb{P}(X_{n+1} = x_{n+1} \mid X_1 = x_1, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
@@ -174,7 +175,7 @@ Un chaine de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaine de Markov). \\
 Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Propriétés fondamentales}
 
 % TODO
@@ -258,7 +259,7 @@ Dans cette configuration, la probabilité de transition de l'état $i$ vers l'é
 P_{i,j} = P_{1,2} = \mathbb{P}(X_{n+1} = j \mid X_n = i) = 0.4
 \]
 
-% TODO garder les "newpage" vraiment util
+% TODO
 \newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
 Nous obtenons ainsi le graphe suivant :
 
@@ -343,7 +344,7 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \]
 \end{tcolorbox}
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -352,11 +353,15 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long.
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
-Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ si :
+Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ et on note $i \to j$ si :
 \[
 \exists n \geq 1, \quad P_{i,j}^{(n)} > 0.
 \]
-Ce que l'on note $i \to j$. \\
+Autrement dit, il existe une suite finie d'états $k_1, \dots, k_{n-1} \in E$ tels que :
+\[
+P_{i,k_1} \cdot P_{k_1,k_2}\cdot ... \cdot P_{k_{n-1},j} > 0. \\
+\]
+Ce qui signifie qu'il existe un chemin de probabilité strictement positive qui mène de $i$ à $j$. \\
 
 On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$ et $j \rightarrow i$. On a ainsi :
 \[
@@ -365,18 +370,12 @@ On dit que les deux états $i$ et $j$ \textbf{communiquent} si $i \rightarrow j$
 Ce que l'on note $i \leftrightarrow j$.
 \end{tcolorbox}
 
-En particulier, $i \to j$ si et seulement s'il existe une suite d'états $(i_0, i_1, \dots, i_n)$ avec $i_0 = i$ et $i_n = j$ telle que :
-\[
-P(X_n = j, \dots, X_1 = i_1 \mid X_0 = i) = P(i_{n-1}, j) \cdots P(i, i_1) > 0.
-\]
-Ce qui veut dire qu'il existe un chemin de probabilité strictement positive qui mène de i à j.
-
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transient]
 Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner en un nombre fini de pas. Un état non récurrent est dit \textbf{transient}. \\
 
 On pose :
 \[
-\tau_i = \inf\{\exists n \in \mathbb{N}^{*}, n \geq 1 \mid X_n = i\}
+\tau_i = \inf\{n \in \mathbb{N}^{*} \mid X_n = i\}
 \]
 On dit alors que $i$ est récurrent si :
 \[
@@ -423,17 +422,25 @@ Montrons que la relation $\leftrightarrow$ est une relation d'équivalence. \\
 
 Il nous suffit alors de vérifier les trois propriétés suivantes :
 \begin{enumerate}
-    \item \textbf{Réflexivité} : Pour tout état $i \in E$, $i \leftrightarrow i$. \\
-        Pour tout état $i \in E$, il existe trivialement un chemin $i \to i$. En effet, en considérant le chemin de longueur zéro (via le fait que $P_{ii}^{(0)} = 1$ en définissant $P^{(0)}$ comme la matrice identité), on conclut directement que $i \leftrightarrow i$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de la démonstration.
-% TODO garder les "newpage" vraiment util
-    \item \textbf{Symétrie} : Si $i \leftrightarrow j$, alors $j \leftrightarrow i$. \\
-        Si $i \leftrightarrow j$, par définition il existe un chemin $i \to j$, (et inversement un chemin de $j \to i$). Ainsi, la relation est symétrique : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
-    \item \textbf{Transitivité} : Si $i \leftrightarrow j$ et $j \leftrightarrow k$, alors $i \leftrightarrow k$. \\
-    Supposons que $i \leftrightarrow j$ et $j \leftrightarrow k$. En composant ces deux chemins, on obtient un chemin $i \to k$. De manière analogue, la composition des chemins $k \to j$ et $j \to i$ nous fournit un chemin $k \to i$. Ainsi, $i \leftrightarrow k$. \\
+    \item \textbf{Réflexive} : $\forall i \in E$, $i \leftrightarrow i$. \\
+        Soit $P$ la matrice de transition de la chaîne de Markov.
+        Comme $P^{(0)} = I_{|E|}$, en prenant le chemin de longeur zéro on a $P_{i,i}^{(0)} = 1 > 0$. \\
+        Donc trivialement $\forall i \in E$, $i \leftrightarrow i$.
+    \item \textbf{Symétrique} : $i \leftrightarrow j \Rightarrow j \leftrightarrow i$. \\
+        Si $i \leftrightarrow j$, par définition les chemins $i \to j$ et $j \to i$ existent. \\
+        Donc par définition, $i \leftrightarrow j \Rightarrow j \leftrightarrow i$.
+\newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page de la démonstration) /!\
+    \item \textbf{Transitive} : $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
+        Comme $i \leftrightarrow j$ et $j \leftrightarrow k$, il existe $n_1$ et $n_2 \in \mathbb{N}$ tel que $P_{i,j}^{(n_1)} > 0$ et $P_{j,k}^{(n_2)} > 0$. Alors :
+        \[
+        P_{i,k}^{(n_1+n_2)} = \sum_{w \in E} P_{i,w}^{(n_1)} \cdot P_{w,k}^{(n_2)} \geq P_{i,j}^{(n_1)} \cdot P_{j,k}^{(n_2)} > 0
+        \]
+        Autrement dit, il existe un chemin $i \to k$ de longueur $n_1+n_2$. Par un raisonnement analogue, on en déduit qu'il existe également un chemin $k \to i$, de même longeur. \\
+        Donc $i \leftrightarrow j$ et $j \leftrightarrow k \Rightarrow i \leftrightarrow k$. \\
 \end{enumerate}
 
-Comme la relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité, elle est bien une relation d'équivalence sur $E$. Les classes d'équivalences ainsi obtenues sont allors appelées \textbf{classes de communication}.
+La relation $\leftrightarrow$ satisfait les propriétés de réflexivité, de symétrie et de transitivité. C'est donc une relation d'équivalence sur $E$. \\
+Les classes d'équivalences ainsi obtenues sont alors appelées \textbf{classes de communication} de la chaîne de Markov.
 \end{tcolorbox}
 
 L'ensemble des classes de communication, engendrées par $\leftrightarrow$, d'une chaîne de Markov sont \textbf{disjointes} et forment une \textbf{partition} de l'ensemble des états de cette chaîne.
@@ -543,22 +550,29 @@ Prenons par exemple la chaîne de Markov suivante, dont la représentation sous 
 Dans cette chaîne de Markov, nous avons trois classes de communication :
 \begin{itemize}
     \item La classe 1, formée par les états $\{1, 2, 5, 6\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois qu'un état de celle-ci est atteint. En effet, il n'existe pas d'état $j$ tel que $P_{i,j} > 0$ pour $i \in \{1, 2, 5, 6\}$ et $j \notin \{3, 4, 7\}$.
-\newpage % /!\ TEMPORAIRE /!\ - Pour une bonne mise en page de l'exemple.
-% TODO garder les "newpage" vraiment util
-        \item Chaque état de la classe est alors récurrent car il est certain de revenir à un des états $i \in \{1, 2, 5, 6\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est réccurente car chaque état la composant est récurrent. En effet, comme $\forall n \in \mathbb{N}, P_{1,1} > 0$ et que la récurrence est une propriété de classe, on a :
+                \[
+                \forall i \in \{1, 2, 5, 6\}, \exists n \in \mathbb{N}^{*}, \text{ tel que } P_{i,i}^{(n)} > 0.
+                \]
+            \item Autrement dit, pour chaque état $i \in \{1, 2, 5, 6\}$, il est certain de revenir à cet état après un nombre fini de transitions.
+        \end{itemize}
     \item La classe 2, formée par les états $\{3, 4\}$.
-    \begin{itemize}
-        \item Cette classe est ouverte car il est possible de la quitter via $3 \to 2$ et $3 \to 7$.
-        \item Chaque état de la classe est alors transient car nous ne reviendrons pas aux états $i \in \{3, 4\}$ après un nombre infini de transitions.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est transciente car les chemins $3 \to 2$ ou $3 \to 7$ existent avec une probabilité strictement positive. Ce qui signifie qu'il existe un moment où on quittera l'état $3$ sans plus jamais y revenir. Autrement dit :
+                \[
+                \exists n \in \mathbb{N}^{*}, \text{ tel que } X_n \in \{2, 7\} \text{ et } \forall m \geq 0, \mathbb{P}(X_{n+m} \in \{3, 4\}) = 0.
+                \]
+            \item La transcience étant une propriété de classe, chaque état de la classe est alors transient. Ainsi, il existe un moment $n$ à partir duquel nous ne reviendrons plus dans $3$ ou $4$, même après un nombre infini de transitions.
+        \end{itemize}
     \item Et la classe 3, formée par l'état $\{7\}$.
-    \begin{itemize}
-        \item Cette classe est fermée car il n'est pas possible de quitter cette classe une fois que l'état $7$ est atteint. En effet, en partant de l'état $7$, nous n'avons que $7 \to 7$.
-        \item Chaque état de la classe est alors réccurent car une fois que l'état $7$ est atteint, la chaîne reste dans cet état avec probabilité 1.
-    \end{itemize}
+        \begin{itemize}
+            \item Cette classe est uniquement composée de l'état $7$. L'état $7$ est récurrent car en partant de cet état, on ne peut que y retourner. En effet, on a :
+                \[
+                P_{7,7} = 1 \quad \text{et} \quad \forall j \neq 7, \quad P_{7,j} = 0.
+                \]
+            \item L'état $7$ étant le seul état de cette classe, la classe est alors récurrente.
+        \end{itemize}
 \end{itemize}
 \end{tcolorbox}
 
@@ -670,7 +684,7 @@ ceci donne une nouvelle interprétation de la mesure invariante comme la fréque
 
 Le théorème ergodique peut également être perçu comme une sorte de loi des grands nombres pour les chaînes de Markov.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \subsection{Comportement en temps long}
 
 Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
@@ -730,12 +744,12 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
   
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
 
-Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillon de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
+Les méthodes MC dites de Monte-Carlo ont pour but d'approcher de manière empirique des valeurs par un processus aléatoire répété un nombre suffisant de fois. Elles interviennent quand une résolution déterministe est trop difficile à obtenir, comme pour calculer des intégrales ou générer des échantillons de distributions statistiques. Les méthodes MC sont très fiables malgré l'aléatoire utilisé, pourvu que l'algorithme ait les bonnes optimisations telles que le nombre de répétitions, la précision exigée, la vitesse de convergence vers les valeurs cherchée, etc. \\
 Les méthodes MC sont utilisées dans beaucoup de domaines des sciences (comme la physique, la chimie, la biologie, les mathématiques statistiques, l'intelligence artificielle, la finance et la cryptographie). \\
 
 Les méthodes MCMC (Monte-Carlo par chaînes de Markov) sont une sous-famille des algorithmes MC qui construisent, dans leur fonctionnement, une chaîne de Markov dont la distribution stationnaire est celle que l'on souhaite estimer. \\
@@ -775,8 +789,72 @@ Voici une description de cet algorithme:
 
 \subsection{Preuve de l'algorithme}
 
-TODO \\
 % Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaines de Markov pour appuyer la preuve.
+
+\textbf{Définitions :} \\ 
+On définit $Q$ comme la matrice de transition associée à la chaîne de Markov, où $Q(x, y)$ est la probabilité de passer de l'état $x$ à $y$.\\
+On définit la probabilité d'acceptation rejet comme le facteur $\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)$.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+    \vspace{1em}
+
+    \textbf{Objectif de la preuve :} On souhaite vérifier que la chaîne obtenue à partir de l'algorithme admet comme matrice de transition P, définie comme la matrice Q multipliée par la probabilité d'acceptation rejet.
+    \vspace{1em}
+
+    Un saut partant de $x$ est simulé en choisissant un candidat $y$ par la loi $Q(x, \cdot)$, puis on saute sur $y$ avec probabilité d'acceptation rejet $\alpha$, sinon on reste sur $x$.
+    % ^ A mettre dans l'intro plutôt
+    \vspace{1em}
+
+    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effecter le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.
+    \vspace{1em}
+
+    Soient $x, y \in E$, avec $x \neq y$.\\
+    \begin{align*}
+        &\mathbb{P}(X_{n+1} = y | X_n = x) \\
+        &= \mathbb{P}\big( Y_{n+1} = y
+        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(Y_{n+1}) Q(Y_{n+1}, X_n)}{\pi(X_n) Q(X_n, Y_{n+1})} \big| X_n = x \big) \\
+        &\text{On remplace $Y_{n+1}$ par y, et $X_n$ par $x$ :}\\
+        &= \mathbb{P}\big( Y_{n+1} = y
+        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big| X_n = x \big)\\
+        &\text{Puis, par l'indépendance de $U_i$ avec $X_i$ et $Y_i$} :\\
+        &= \min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)Q(x, y)
+    \end{align*}
+\end{tcolorbox}
+
+Ensuite, montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$.
+
+On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff Q(y, x) > 0$.
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
+    Montrons que la mesure $\pi$ est réversible pour $P$ :
+    Pour tout couple $(x, y) \in E^2$, et $\mu$ une probabilité quelconque :
+    $$
+        \mu(x)P(x, y) = \mu(y) P(y, x)
+    $$
+
+    Vérifions qu’une mesure réversible est invariante. 
+    \begin{align*}
+        \mu P(y) &= \sum_{x \in E}{\mu(x) P(x, y)}\\
+        &= \sum_{x \in E}{\mu(y) P(y, x)}\\
+        &= \mu(y) \sum_{x \in E}{P(y, x)}\\
+        &= \mu(y)
+    \end{align*}
+
+    Vérifions maintenant cette propriété.
+
+    Si $x = y$ : La propriété est vraie.
+
+    Si $x \neq y$ :
+    si $Q(x, y) = Q(y, x) = 0$, alors on a $\pi(x)P(x, y) = \pi(y)P(y, x) = 0$, et
+
+    \begin{align*}
+        \pi(x)P(x, y) &= \pi(x)Q(x, y)\min\Big(1, \frac{\pi(y)Q(y, x)}{\pi(x)Q(x, y)}\Big)\\
+        &= \min(\pi(x)Q(x, y), \pi(y)Q(y, x))\\
+        &= \pi(y)Q(y, x )\min\Big(\pi(x)Q(x, y)\pi(y)Q(y, x), 1)\\
+        &= \pi(y)P(y, x)\\
+    \end{align*}
+    si $Q(x, y)$ et $Q(y, x)$ sont non nuls.
+\end{tcolorbox}
 
 \subsection{Exemples d'applications simples de HM} %Nouveau titre plus clair, enlever ce commentaire après le merge
 
@@ -944,7 +1022,7 @@ On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résu
 TODO \\
 % Je sais pas trop où placer cette partie, voire peut-être l'enlever mais je trouve intéressant et pertinent de comparer les méthodes déchantillonnage, peut-être le placer dans la parties des méthodes MCMC si besoin. Pour moi la logique voudrait qu'on aie cette partie après avoir montré notre algo mais à voir.
 
-\newpage % TODO garder les "newpage" vraiment util
+\newpage % TODO
 \section{Conclusion}
 
 En conclusion de ce rapport, nous avons exploré l'algorithme de Hastings-Metropolis et la théorie mathématique des chaînes de Markov qu'il utilise pour générer des échantillons fiables,
