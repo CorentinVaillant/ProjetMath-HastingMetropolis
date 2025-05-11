@@ -750,7 +750,7 @@ Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
 Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
 
 \newpage % TODO
-\section{Fonctionnement de l'Algorithme de Hasting-Metropolis}
+\section{Fonctionnement de l'algorithme de Hasting-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
 
@@ -764,13 +764,16 @@ Ainsi, lorsque la distribution est concentrée sur une certaine partie de l'espa
 
 On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes comme le Blocked Gibbs Sampling ou l'Adaptive Gibbs Sampling), qui prennent leur intérêt lorsque les variables de la distribution sont conditionnelles. Il existe aussi l’échantillonnage par tranches, qui échantillonne progressivement la distribution par "tranches" de valeurs, ou bien des optimisations de HM, telles que la méthode hamiltonienne de Monte-Carlo, qui calcule le gradient pour faciliter la marche du programme et rejeter moins de valeurs, tout en gagnant en performances. \\
 
-\subsection{Definitions}
+\subsection{Définitions}
 
-TODO \\
-% Pour les defs je pensais par exemples à celles :
-% - De l'échantillonnage (en maths)
-% - Espace dense de probabilité (je crois c'est ça), c'est le P(x) qu'on retrouve dans les démos
-% - ...
+\subsubsection{Algorithme d'échantillonnage}
+
+Un algorithme d'échantillonnage est un algorithme nous permettant d'obtenir un échantillonage, à partir d'une certaine probabilité sur la population.
+La plus part du temps, le but de ce genre d'algorithmes est de donnée un échantillonnage à partir d'une loi dure à échantillonner.
+\subsubsection{Hasting Metropolis}
+
+L’algorithme de Hastings-Metropolis est une méthode d’échantillonnage MCMC qui produit une chaîne de Markov ayant pour distribution stationnaire une loi cible $\pi$. 
+Il repose sur une règle d’acceptation/rejet de propositions successives, selon une probabilité $\alpha$ calculée à chaque étape.
 
 \label{description-algo-hast-met}
 \subsection{Description des étapes de l'algorithme}
@@ -786,7 +789,7 @@ Voici une description de cet algorithme:
         \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
         \begin{itemize}
             \item Si $u \leqslant \alpha$ alors : $x_{t+1} \coloneqq x$  
-            \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x$  
+            \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x_t$  
         \end{itemize}
     \end{itemize}
     \item La séquence $\{x_0,x_1, \ldots ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
@@ -910,9 +913,9 @@ ce qui, avec notre implémentation actuelle, nécessiterait de manipuler une mat
 Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin{itemize} \item Une fonction de distance totale sur les permutations des coordonnées des villes $ D : E \to \mathbb{R} $,
     \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
 
-    \item Une distribution cible, avec $\beta \in \mathbb{R}$ un paramètre ajustable
+    \item Une distribution cible, avec $\beta \in ]0,+\infty[$ un paramètre ajustable, plus $\beta$ est grand, plus la distribution sera concentrée sur les plus petite distances totales, dans notre cas, plus il sera grand, plus l'algorithme aura une convergence proche de notre distance minimal, mais en contrepartie, le nombre d'itérations nécessaires pour avoir une convergence résonnable sera grand.
     \[ \pi(p) = e^{-\beta \cdot D(p)} \]
-
+    
     \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
     Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
 \end{itemize}
@@ -929,8 +932,8 @@ Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
 
         \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
         \begin{itemize}
-            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq x$  
-            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq x$  
+            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq p$  
+            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq p_t$  
         \end{itemize}
     \end{itemize}
     \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
@@ -1021,7 +1024,8 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
     return np.array(result)
 \end{python}
 
-La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
+La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
+renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
 
 \begin{python}
 def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
@@ -1190,6 +1194,7 @@ résulats:
 
 Documents textuels:
 \begin{itemize}
+    \item Physical Based Rendering, from the theory to implementation Matt Pharr, Wenzel Jakob, Gre
     \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
     \item \url{https://dms.umontreal.ca/~bedard/BergeronL_rapport_final.pdf}
     \item \url{https://www.math.univ-paris13.fr/~tournier/fichiers/agreg/2014/cours_markov.pdf}
