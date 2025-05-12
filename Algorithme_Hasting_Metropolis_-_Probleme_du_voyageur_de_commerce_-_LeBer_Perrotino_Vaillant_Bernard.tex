@@ -960,10 +960,10 @@ Vérifions qu'une mesure réversible est invariante :
 
 Vérifions maintenant cette propriété.
 \begin{itemize}
-    \item Si $x = y$ : la propriété est vraie.
-    \item Si $x \neq y$ :
+    \item Si $x = y$ : la propriété est vraie (par réflexivité).
+    \item Si $x \neq y$, on distingue deux sous-cas :
         \begin{itemize}
-            \item Si $Q(x, y) = Q(y, x) = 0$, alors :
+            \item Si $Q(x, y) = Q(y, x) = 0$, alors on a trivialement :
             \[
                 \pi(x)P(x, y) = \pi(y)P(y, x) = 0.
             \]
@@ -1157,7 +1157,7 @@ Et un exemple de chemin accepté par HM, en noir et bleu :
 % Il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique, ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
 % \end{tcolorbox}
 
-\subsection{Brêves descriptions d'autres méthodes MCMC permettant de résoudre le TSP}
+\subsection{Brèves descriptions d'autres méthodes MCMC permettant de résoudre le TSP}
 
 Il existe plusieurs autres méthodes de MCMC qui peuvent en fonction du contexte, s'avérer plus pertinentes que l'algorithme de Hastings-Metropolis.
 En voici une liste non exhaustive, accompagnée d'une brève présentation. \\
