@@ -1,5 +1,5 @@
 \documentclass{article}
-% \usepackage[a4paper, top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry} % Modification des tailles des marges (on en parlera après).
+\usepackage[a4paper, top=4cm, bottom=4cm, left=35mm, right=35mm]{geometry} % Modification des tailles des marges (on en parlera après).
 
 % Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
 \usepackage{ifxetex}
@@ -103,8 +103,6 @@ Cette nuance est essentielle, car elle met en lumière la sophistication de HM e
 
 L'objectif de ce rapport étant d'apporter une solution fiable au TSP grâce à HM, nous prouverons alors le fonctionnement dde ce dernier grâce à la théorie mathématique des chaînes de Markov. Nous en expliciterons les définitions et propriétés fondamentales dans un premier temps, qui permettront de prouver l'algorithme d'HM dans un second temps. Nous présenterons alors à la fin du rapport une implémentation personnelle de l'algorithme.
 
-
-\newpage % TODO
 \section{Chaînes de Markov à états finis}
 
 \subsection{Définitions fondamentales}
@@ -216,11 +214,10 @@ Une matrice est dite \textbf{bistochastique} lorsqu'elle est à la fois stochast
 
 Dans le cadre des chaînes de Markov homogènes, toutes les matrices de transition $P$ sont stochastiques par lignes car les probabilités de transition depuis chaque état sont normalisées (chaque ligne représentant le vecteur des probabilités de transition depuis un état donné vers l'ensemble des autres états). C'est-à-dire que la somme des probabilités pour passer d'un état à un autre vaut 1. \\
 
-De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition
+De manière analogue, si l'espace des états est infini dénombrable (par exemple $E = \{1, 2, 3, \dots\}$), on indexe les états de la même façon et la condition suivante reste valable :
 \[
-\forall i \in E, \quad \sum_{j \in E} P_{i,j} = 1
+\forall i \in E, \quad \sum_{j \in E} P_{i,j} = 1.
 \]
-reste valable.
 
 \subsubsection{Représentation sous forme de Graphe Orienté}
 \label{subsubsec: Représentation sous forme de graphe orienté}
@@ -338,7 +335,6 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \]
 \end{tcolorbox}
 
-\newpage % TODO
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -985,7 +981,7 @@ Vérifions maintenant cette propriété.
 
 \subsection{Application au cas du voyageur de commerce}
 
-\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Application au TSP, breakable]
 Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
 Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
 $
@@ -1426,7 +1422,7 @@ Résultats :
     \item \url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
     \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius}
     \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
-    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} \\ % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of} \url{-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} \\ % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
 \end{itemize}
 
 \subsubsection{Documents vidéos :}
