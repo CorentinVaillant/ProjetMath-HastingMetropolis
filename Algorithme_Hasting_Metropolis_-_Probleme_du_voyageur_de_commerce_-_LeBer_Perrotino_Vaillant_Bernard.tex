@@ -162,14 +162,14 @@ Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l
 Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
-Une chaîne de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
+Une chaîne de Markov est dite homogène quand $\forall n \in \mathbb{N}$, $\forall i,j \in E$ :
 \[
   \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i].
 \]
 \end{tcolorbox}
 
 En somme, une chaîne de Markov homogène ne dépend pas des états précédents (propriété de Markov) et garantit que son comportement reste inchangé au fil du temps, c'est-à-dire que les probabilités de transition restent constantes quelque doit $t \in T$ (homogénéité de la chaîne de Markov). \\
-Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes.
+Dans ce rapport, toutes les chaînes de Markov seront considérées comme homogènes. \\
 
 \newpage % TODO
 \subsection{Propriétés fondamentales}
@@ -183,15 +183,14 @@ Dans ce rapport, toutes les chaînes de Markov seront considérées comme homog�
 \subsubsection{Matrice de Transition}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Matrice de Transition]
-Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à temps discret à valeurs dans un espace d'états $E$, fini ou dénombrable. \\
 
-Soit la famille de nombres réels $(X_n)_{n \in \mathbb{N}}$ permettant de passer d'un état à un autre, définie comme :
+$(X_n)_{n \in \mathbb{N}}$ est entièrement caractérisée par sa \textbf{matrice de transition} $P = (P_{i,j})_{i,j \in E}$, où chaque terme représente la probabilité de passer de l'état $i$ à l'état $j$ en une étape :
 \[
 \forall n \in \mathbb{N}, \quad \forall i,j \in E, \quad P_{i,j} = \mathbb{P}(X_{n+1} = j \mid X_n = i).
 \]
 
-La \textbf{matrice de transition} $P$ regroupe ces probabilités tel que chaque élément $P_{i,j}$ représente la probabilité de passer de l'état $i$ à l'état $j$ en une seule étape.
-Lorsque l'ensemble des états $E$ est discret, par exemple $E = \{1, 2, \dots, N\}$, la matrice s'exprime sous la forme suivante :
+Lorsque l'ensemble des états $E$ est fini, par exemple $E = \{1, 2, \dots, N\}$, la matrice $P$ s'écrit sous la forme :
 \[
     P = \begin{bmatrix}
         P_{11} & P_{12} & \cdots & P_{1N}\\[1mm]
@@ -374,22 +373,12 @@ On pose :
 \]
 On dit alors que $i$ est récurrent si :
 \[
-\mathbb{P}_i(\tau_i < \infty) = \mathbb{P}(\tau_i < \infty \mid X_0 = i) = 1
+\mathbb{P}_i(\tau_i < +\infty) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i) = 1
 \]
 Et on dit que $i$ est transient si :
 \[
-\mathbb{P}_i(\tau_i < \infty) = \mathbb{P}(\tau_i < \infty \mid X_0 = i) < 1
+\mathbb{P}_i(\tau_i < +\infty) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i) < 1
 \]
-\end{tcolorbox}
-
-Ces propriétés impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions. \\
-
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État absorbant/évanescent]
-Un état $i$ est appelé \textbf{absorbant} si, une fois atteint, la chaîne reste dans cet état avec probabilité 1. Formellement, cet état satisfait :
-\[
-P_{i,i} = 1 \quad \text{et} \quad \forall j \neq i, \quad P_{i,j} = 0.
-\]
-A l'inverse, tout état ne respectant pas cette condition est appelé état \textbf{non-absorbant} ou encore état \textbf{évanescent}.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique/apériodique]
@@ -405,6 +394,57 @@ Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il 
 % Un état $i$ est dit \textbf{ergodique} si, en plus d'être récurrent, il est apériodique et appartient à une classe de communication contenant tous les autres états de la chaîne.
 % Les états ergodiques permettent à la chaîne de converger vers une distribution stationnaire.
 % TODO A AJOUTER après
+
+\subsubsection{Estimation du nombre de visites d'un état}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Formule du nombre de visite d'un état]
+Soit $i \in E$. On défini $N_i$ le nombre de visites de l'état $i$ par :
+\[
+N_i = \sum_{n \in \mathbb{N}^{*}} \text{1}_{\{X_n = i\}}.
+\]
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple (Application de $N_i$ à l'espérance)]
+Soit $i, j \in E$. On a alors :
+\[
+\mathbb{E}(N_j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} \text{1} \cdot \mathbb{P}(X_n = j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} P_{i,j}^{(n)}.
+\]
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Formule de récurrence conditionnelle (admise)]
+Soit $i, j \in E$. $\forall n \in \mathbb{N}$, on a alors :
+\[
+\mathbb{P}(N_j \geq n+1 \mid X_0 = i) = \mathbb{P}(\tau_j < +\infty \mid X_0 = i)\mathbb{P}(N_j \geq n \mid X_0 = j).
+\]
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Propriétés équivalentes des états récurrents/transients]
+Les conditions suivantes sont équivalentes :
+\begin{itemize}
+    \item L'état $i$ est récurrent.
+    \item $\mathbb{P}(N_i = +\infty \mid X_0 = i) = 1$.
+    \item $\sum_{n \in \mathbb{N}^{*}} P_{i,i}^{(n)} = +\infty$. \\
+\end{itemize}
+
+Les conditions suivantes sont équivalentes :
+\begin{itemize}
+    \item L'état $i$ est transient.
+    \item $\mathbb{P}(N_i = +\infty \mid X_0 = i) = 0$.
+    \vspace{1em} \\
+        Selon la propriété précédente, on en déduit que :
+        \[
+        \mathbb{P}(N_i \geq n+1 \mid X_0 = i) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i)\mathbb{P}(N_i \geq n \mid X_0 = i)
+        \]
+        Donc, si $X_0 = i$, $N_i$ suit une loi géométrique de paramètre $p = \mathbb{P}(\tau_i < +\infty \mid X_0 = i)$. \\
+        Autrement dit :
+        \[
+        \mathbb{P}(N_i \geq n \mid X_0 = i) = \big(\mathbb{P}(\tau_i < +\infty \mid X_0 = i)\big)^{n}
+        \]
+    \item $\sum_{n \in \mathbb{N}^{*}} P_{i,i}^{(n)} < +\infty$.
+\end{itemize}
+\end{tcolorbox}
+
+Ces propriétés impliquent que si l'état $i$ est récurrent (respectivement transient), on y retournera un nombre infini (respectivement fini) de fois pour une infinité de transitions.
 
 \subsubsection{Classes de communication}
 
@@ -452,7 +492,18 @@ Cela signifie donc qu'au sein d'une même classe de communication, tous les éta
 
 L'intérêt de ces distinctions est de diviser les chaînes de Markov en sous-ensembles analytiquement indépendants, ce qui permet ensuite de tirer des conclusions sur les sous-ensembles présentant ces propriétés. \\
 
-\newpage
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaîne de Markov irréductible]
+Une chaîne de Markov est dite \textbf{irréductible} si elle ne contient qu'une seul classe d'équivalence. Cela revient à étudier le graphe qui lui est associé, étant alors fortement connexe. \\
+
+Autrement dit :
+\[
+\forall i, j \in E, \quad \exists n, m \in \mathbb{N}^{*}, \quad P_{i,j}^{(n)} > 0 \quad \text{et} \quad P_{j,i}^{(m)} > 0.
+\]
+
+Ce qui signifie que pour tous les couples d'états $(i, j)$ de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement. On a donc $i \leftrightarrow j$.
+\end{tcolorbox}
+
+\newpage % TODO
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
 Prenons par exemple la chaîne de Markov suivante, dont la représentation sous forme de graphe orienté est donnée ci-dessous :
 
@@ -581,7 +632,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
 \newpage
 \subsection{Probabilité invariantes et théorème ergodique}
 
-\subsubsection{probabilité invariantes}
+\subsubsection{Probabilité invariante}
 
 La loi stationnaire peut permettre sous certaines conditions à décrire le comportement à long terme de la chaîne de Markov. \\ % ??? - Tom
 
@@ -649,15 +700,44 @@ Et comme pour tout $x \in E$, $\pi P_x - \pi(x) \geq 0$ on a $\pi P_x = \pi(x)$.
 
 Ainsi, $\pi$ renormalisé par la somme de ses coefficients est bien une probabilité invariante.
 \end{tcolorbox}
-  
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaîne de Markov irréductible]
-Une chaîne de Markov est dite \textbf{irréductible} si le graphe qui lui est associé est fortement connexe.
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title={Invariance aux puissances de la matrice}]
+Soit $(X_n)_{n\in\mathbb{N}}$ une chaîne de Markov homogène sur un espace d'états $E$, de matrice de transition $P$, et soit $\pi$ une probabilité invariante (on a alors $\pi P = \pi$). \\
 
-Autrement dit, pour tous les couples $(i, j)$ d'états de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement : $i \leftrightarrow j$.
+Alors, $\forall n \in \mathbb{N}^{*}$, on a également :
+\[
+\pi P^n = \pi.
+\]
+Autrement dit, la loi invariante reste inchangée peu importe le nombre de transitions.
 \end{tcolorbox}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Probabilité invariantes d'une chaîne de Markov irréductible]
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration,breakable]
+On fixe $n \in \mathbb{N}^{*}$. Nous allons maintenant montrer que $\pi P^n = \pi$. \\
+
+Pour tout $i \in E$ :
+\[
+(\pi P^n)_i = \sum_{j \in E}\pi_j(P^n)_{j,i}
+\]
+Or, par la décomposition des puissances,
+\[
+(P^n)_{j,i} = \sum_{k \in E}(P^{n-1})_{j,k} P_{k,i}.
+\]
+Donc :
+\[
+(\pi P^n)_i = \sum_{j \in E}\pi_j \cdot \sum_{k \in E}(P^{n-1})_{j,k} P_{k,i} = \sum_{k \in E}\Bigl[\sum_{j \in E}\pi_j (P^{n-1})_{j,k}\Bigr]P_{k,i}.
+\]
+Or, par hypothèse d'invariance pour la puissance $n-1$, on a :
+\[
+\sum_{j \in E}\pi_j(P^{n-1})_{j,k} = (\pi P^{n-1})_k = \pi_k
+\]
+Ainsi :
+\[
+(\pi P^n)_i = \sum_{k \in E}\pi_kP_{k,i} = \pi_i.
+\]
+Ce qui montre bien que $\pi P^n = \pi$ pour tout $n \in \mathbb{N}^{*}$.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Probabilité invariante d'une chaîne de Markov irréductible]
 Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les probabilité invariantes sont proportionnelles entre elles.
 \end{tcolorbox}
 
@@ -668,7 +748,7 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 Soit $E$ fini et $(X_n)$ une chaîne de Markov irréductible.
 Alors, pour toute fonction $f$, et toute loi initial $\nu_0$, on a :
 \[
-    \forall k > 0, \quad \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) \,d{\mu(x)},
+\forall k > 0, \quad \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) d{\mu(x)},
 \]
 avec $\mu$ la probabilité invariante.
 
@@ -754,7 +834,7 @@ Où $\pi$ est l'unique probabilité invariante.
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Convergence des méthodes de Monte-Carlo]
 Soit $X$ une chaine de Markov homogène irréductible, alors pour toute mesure initiale $\lambda$ et pour toute fonction mesurable bornée $f$, on a :
 \[
-\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f \, d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda.
+\frac{1}{n} \sum_{k=1}^{n} f(X_k) \xrightarrow{n \to \infty} \int f d\pi \quad \text{p.s. sous} \ \mathbb{P}_\lambda.
 \]
 
 Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
@@ -903,6 +983,50 @@ Vérifions maintenant cette propriété.
 \end{itemize}
 \end{tcolorbox}
 
+\subsection{Application au cas du voyageur de commerce}
+
+\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
+Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
+Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
+$
+E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}
+$, 
+ce qui, avec notre implémentation actuelle, nécessiterait de manipuler une matrice $6 \times 6$. Lorsque le nombre de villes augmente, nous aurions besoin d'une matrice carrée de taille $n!$, où $n$ est le nombre de points, ce qui devient rapidement irréaliste.
+
+Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin{itemize} \item Une fonction de distance totale sur les permutations des coordonnées des villes $ D : E \to \mathbb{R} $,
+    \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
+
+    \item Une distribution cible, avec $\beta \in ]0,+\infty[$ un paramètre ajustable, plus $\beta$ est grand, plus la distribution sera concentrée sur les plus petite distances totales, dans notre cas, plus il sera grand, plus l'algorithme aura une convergence proche de notre distance minimal, mais en contrepartie, le nombre d'itérations nécessaires pour avoir une convergence résonnable sera grand.
+    \[ \pi(p) = e^{-\beta \cdot D(p)} \]
+    
+    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
+    Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
+\end{itemize}
+\end{tcolorbox}
+
+Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant : \\
+
+\begin{tcolorbox}[colback=white,colframe={rgb,255:red,150; green,56; blue,235},title=Procédure Hastings-Metropolis TSP, breakable]
+\begin{enumerate}
+    \item On prend $p_0$, une permutation donnée
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
+    \begin{itemize}
+        \item On tire $p$ avec la variable aléatoire$S_{p_t}$, on peut utilisé la fonction ``permutation'' défini plus tôt.
+        \item Calculer $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ si la transition est symétrique, c'est-à-dire $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$.
+        \item Sinon $\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
+
+        \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
+        \begin{itemize}
+            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq p$  
+            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq p_t$  
+        \end{itemize}
+    \end{itemize}
+    \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+\end{enumerate}
+
+On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$.
+\end{tcolorbox}
+
 \subsection{Exemples d'applications d'Hastings-Metropolis}
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple 1, breakable]
@@ -960,7 +1084,7 @@ Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement 
 
 Dans cet exemple, la distribution cible $\pi(x)$ est représentée par la courbe grise, ici une distribution normale. L'axe des ordonnées indique les valeurs prises par cette densité, tandis que l'axe des abscisses correspond aux différents états que la chaîne de Markov peut atteindre au fil des itérations. \\
 Nous choisissons arbitrairement l'état $x_0$ comme départ et cherchons à créer un échantillon de taille 4. Cet état fait donc partie de l'échantillon. \\
-L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') \, g(x \mid x')}{\pi(x) \, g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
+L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') g(x \mid x')}{\pi(x) g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
 Si $u \leqslant \alpha$ on accepte ce nouvel état, sinon on le rejette. \\
 Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également accepté. Un autre candidat $x'$ est ensuite rejeté, ce qui conduit à conserver $x_2$ pour l'itération suivante, et ainsi de suite. \\
 À noter que certains états peuvent être sélectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$).
@@ -1030,60 +1154,16 @@ Et un exemple de chemin accepté par HM, en noir et bleu :
 \end{center}
 \end{tcolorbox}
 
-\subsection{Application au cas du voyageur de commerce}
+% \subsection{Autres cas d'application}
 
-\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
-Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
-Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
-$
-E = \{(x_1,x_2,x_3), (x_2,x_1,x_3), (x_2,x_3,x_1), (x_1,x_3,x_2), (x_3,x_2,x_1), (x_3,x_1,x_2)\}
-$, 
-ce qui, avec notre implémentation actuelle, nécessiterait de manipuler une matrice $6 \times 6$. Lorsque le nombre de villes augmente, nous aurions besoin d'une matrice carrée de taille $n!$, où $n$ est le nombre de points, ce qui devient rapidement irréaliste.
+% \begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
+% Cette algorithme peut également être appliqué pour d'autres problèmes.
+% Il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique, ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
+% \end{tcolorbox}
 
-Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin{itemize} \item Une fonction de distance totale sur les permutations des coordonnées des villes $ D : E \to \mathbb{R} $,
-    \[ D(p) = \sum_{i = 1}^{n} \Vert x_i - x_{i+1}\Vert : \forall p = (x_1,x_2,\ldots , x_n) \in E, x_{n+1} = x_{1}\]
+\subsection{Brêves descriptions d'autres méthodes MCMC permettant de résoudre le TSP}
 
-    \item Une distribution cible, avec $\beta \in ]0,+\infty[$ un paramètre ajustable, plus $\beta$ est grand, plus la distribution sera concentrée sur les plus petite distances totales, dans notre cas, plus il sera grand, plus l'algorithme aura une convergence proche de notre distance minimal, mais en contrepartie, le nombre d'itérations nécessaires pour avoir une convergence résonnable sera grand.
-    \[ \pi(p) = e^{-\beta \cdot D(p)} \]
-    
-    \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
-    Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
-\end{itemize}
-\end{tcolorbox}
-
-Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant : \\
-
-\begin{tcolorbox}[colback=white,colframe={rgb,255:red,150; green,56; blue,235},title=Procédure Hastings-Metropolis TSP]
-\begin{enumerate}
-    \item On prend $p_0$, une permutation donnée
-    \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
-    \begin{itemize}
-        \item On tire $p$ avec la variable aléatoire$S_{p_t}$, on peut utilisé la fonction ``permutation'' défini plus tôt.
-        \item Calculer $\alpha \coloneqq \frac{\pi(p)}{\pi(p_t)}$ si la transition est symétrique, c'est-à-dire $\mathbb{P}(S_{p_t} = p) = \mathbb{P}(S_p = p_t)$.
-        \item Sinon $\alpha \coloneqq \frac{\pi(p) \mathbb{P}(S_p = p_t)}{\pi(p_t) \mathbb{P}(S_{p_t} = p) } ) $ 
-
-        \item On tire $u \in [0;1]$, tel que $u  \sim \mathcal{U}(0,1)$ 
-        \begin{itemize}
-            \item Si $u \leqslant \alpha$ alors : $p_{t+1} \coloneqq p$  
-            \item Sinon : on conserve l'état précédent $p_{t+1} \coloneqq p_t$  
-        \end{itemize}
-    \end{itemize}
-    \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
-\end{enumerate}
-
-On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$.
-\end{tcolorbox}
-
-\subsection{Autres cas d'application}
-
-\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
-Cette algorithme peut également être appliqué pour d'autres problèmes.
-Il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique, ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
-\end{tcolorbox}
-
-\subsection{Brêves descriptions d'autres méthodes MCMC qui peuvent r"soudre le TSP}
-
-Il existe plusieurs autres méthodes de MCMC qui peuvent en fonction du contexte, s'avérer plus pertinentes que l'algorithme de Hastings-Metropolis. 
+Il existe plusieurs autres méthodes de MCMC qui peuvent en fonction du contexte, s'avérer plus pertinentes que l'algorithme de Hastings-Metropolis.
 En voici une liste non exhaustive, accompagnée d'une brève présentation. \\
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=L'échantillonnage de Gibbs]
