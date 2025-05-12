@@ -50,8 +50,8 @@
 
 \sloppy % Pour que les URLs ne dépassent pas des marges.
 
-\title{Algorithme d'Hasting Metropolis - Problème du voyageur de commerce}
-\author{PEROTTINO Tony, VAILLANT Corentin, \\ LE BER Tom}
+\title{Algorithme d'Hastings-Metropolis - Problème du voyageur de commerce}
+\author{PEROTTINO Tony, LE BER Tom, \\ VAILLANT Corentin et BERNARD Léo}
 
 \begin{document}
 \maketitle
@@ -79,7 +79,7 @@ Cette méthode est marquante, car elle a été conceptualisée tôt dans l'histo
 Historiquement, c'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
 Cela illustre une dynamique fréquente dans les sciences, où le mérite est disproportionnellement attribué à une personne alors qu'il s'agit des efforts de toute une équipe. En particulier, Arianna Rosenbluth était considérée comme brillante par le monde scientifique. \\
 
-En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribution quelconque, et c'est cette version généralisée qui est connue sous le nom d'algorithme de Metropolis-Hastings. Cette extension a eu de nombreuses applications dans divers domaines scientifiques, comme en statistique bayésienne (espaces complexes multidimensionnels), en biologie computationnelle (analyse des séquences génétiques), en économie et en finance (modèles stochastiques MCMC en général), etc. \\
+En 1970, W. K. Hastings (1930-2016) a étendu l'algorithme au cas d'une distribution quelconque, et c'est cette version généralisée qui est connue sous le nom d'algorithme d'Hastings-Metropolis. Cette extension a eu de nombreuses applications dans divers domaines scientifiques, comme en statistique bayésienne (espaces complexes multidimensionnels), en biologie computationnelle (analyse des séquences génétiques), en économie et en finance (modèles stochastiques MCMC en général), etc. \\
 
 Quant à lui, le problème du voyageur de commerce (dit "TSP", comme Travelling Salesman Problem en anglais) est un problème classique et bien connu pour être un problème NP-difficile, ce qui signifie qu'il n'existe actuellement aucune méthode connue capable de le résoudre de manière optimale en temps polynomial pour toutes les tailles d'instances, et qu'il est au moins aussi difficile que les problèmes de NP. 
 L'origine du problème est assez incertaine : il a été formulé pour la première fois vers 1850 dans un manuel d'un commerçant voyageant en Suisse et en Allemagne. Ce n'est que dans les années 1930 que le problème fut énoncé d'abord comme un casse-tête (par William Rowan et Thomas Kirkman), puis étudié (par, entre autres, Thomas Kirkman, Jillian Beardwood, J. H. Halton et John Hammersley). \\ 
@@ -148,7 +148,7 @@ $(X_n)_{n \in \mathbb{N}}$ est appelée \textbf{chaîne de Markov} si et seuleme
     \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
-\forall n \geq 0, \quad \forall x_0, x_1, \dots, x_{n+1} \in E,
+\forall n \in \mathbb{N}, \quad \forall x_0, x_1, \dots, x_{n+1} \in E,
 \]
 \[
 \mathbb{P}(X_{n+1} = x_{n+1} \mid X_0 = x_0, \dots, X_n = x_n) = \mathbb{P}(X_{n+1} = x_{n+1} \mid X_n = x_n).
@@ -162,7 +162,7 @@ Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l
 Cette propriété, que l'on peut qualifier de « sans mémoire » ou de propriété de Markov, constitue la caractéristique fondamentale de ces processus stochastiques. \\
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Chaine de Markov Homogène]
-Un chaîne de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
+Une chaîne de Markov est dite homogène quand $\forall n \in \mathbb{N}$ :
 \[
   \mathbb{P}[X_{n+1} = j \mid X_n = i] = \mathbb{P}[X_1 = j \mid X_0 = i].
 \]
@@ -557,7 +557,7 @@ Dans cette chaîne de Markov, nous avons trois classes de communication :
         \begin{itemize}
             \item Cette classe est transciente car les chemins $3 \to 2$ ou $3 \to 7$ existent avec une probabilité strictement positive. Ce qui signifie qu'il existe un moment où on quittera l'état $3$ sans plus jamais y revenir. Autrement dit :
                 \[
-                \exists n \in \mathbb{N}^{*}, \text{ tel que } X_n \in \{2, 7\} \text{ et } \forall m \geq 0, \mathbb{P}(X_{n+m} \in \{3, 4\}) = 0.
+                \exists n \in \mathbb{N}^{*}, \text{ tel que } X_n \in \{2, 7\} \text{ et } \forall m \in \mathbb{N}, \mathbb{P}(X_{n+m} \in \{3, 4\}) = 0.
                 \]
             \item La transcience étant une propriété de classe, chaque état de la classe est alors transient. Ainsi, il existe un moment $n$ à partir duquel nous ne reviendrons plus dans $3$ ou $4$, même après un nombre infini de transitions.
         \end{itemize}
@@ -694,7 +694,7 @@ Le théorème ergodique peut également être perçu comme une sorte de loi des 
 \newpage % TODO
 \subsection{Comportement en temps long}
 
-Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\ % ??? - Tom
+Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le théorème de convergence d'une chaine de Markov homogène. \\
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème de convergence]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Soit P sa matrice de transition.\\
@@ -760,10 +760,10 @@ Soit $X$ une chaine de Markov homogène irréductible, alors pour toute mesure i
 Il s'agit de la méthode utilisée dans les algorithmes de Monte-Carlo.
 \end{tcolorbox}
   
-Ces théorèmes nous permettront de conclure quant à la preuve de Hasting-Metropolis.
+Ces théorèmes nous permettront de conclure quant à la preuve de Hastings-Metropolis.
 
 \newpage % TODO
-\section{Fonctionnement de l'algorithme de Hasting-Metropolis}
+\section{Fonctionnement de l'algorithme de Hastings-Metropolis}
 
 \subsection{Qu'est-ce qu'une méthode dite MCMC ?}
 
@@ -779,23 +779,41 @@ On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes
 
 \subsection{Définitions}
 
-\subsubsection{Algorithme d'échantillonnage}
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Notations]
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
+Soit $Q$ la matrice de transition associée à cette chaîne de Markov. \\
 
+$\forall i, j \in E$, on pose :
+\[
+Q(i,j) = Q_{i,j}.
+\]
+\vspace{1mm}
+
+Soit $\pi$ une probabilité sur $E$. \\
+
+$\forall i \in E$, on pose :
+\[
+\pi(i) = \pi_i.
+\]
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Algorithme d'échantillonnage]
 Un algorithme d'échantillonnage est un algorithme nous permettant d'obtenir un échantillonnage, à partir d'une certaine probabilité sur la population.
 La plus part du temps, le but de ce genre d'algorithmes est de donnée un échantillonnage à partir d'une loi dure à échantillonner.
-\subsubsection{Hasting Metropolis}
+\end{tcolorbox}
 
-L’algorithme de Hastings-Metropolis est une méthode d’échantillonnage MCMC qui produit une chaîne de Markov ayant pour distribution stationnaire une loi cible $\pi$. 
-Il repose sur une règle d’acceptation/rejet de propositions successives, selon une probabilité $\alpha$ calculée à chaque étape.
+\begin{tcolorbox}[colback=white,colframe=red!80!black,title=Algorithme d'Hastings-Metropolis]
+L'algorithme d'Hastings-Metropolis est une méthode d'échantillonnage MCMC qui produit une chaîne de Markov ayant pour distribution stationnaire une loi cible $\pi$. 
+Il repose sur une règle d'acceptation/rejet de propositions successives, selon une probabilité $\alpha$ calculée à chaque étape.
+\end{tcolorbox}
 
 \label{description-algo-hast-met}
-\subsection{Description des étapes de l'algorithme}
+\subsection{Pseudo-code de l'algorithme d'Hastings-Metropolis}
 
-Voici une description de cet algorithme:
-
-{\bf Hasting Metropolis} \begin{enumerate}
-    \item Il faut avant tout choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, et aussi une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
-    \item Ensuite nous itérons sur $t$ allant de 0 à $N-1$ inclus (notre nombre d'itérations voulu)
+\begin{tcolorbox}[colback=white,colframe={rgb,255:red,150; green,56; blue,235},title=Procédure Hastings-Metropolis]
+\begin{enumerate}
+    \item On commence par choisir un point $x_0$, comme étant le premier échantillon de notre loi cible, ainsi qu'une probabilité de transition $g$, en donnant les fonctions correspondant à $g_y(x)$ et $g(x)$, $\forall x,y \in E$.
+    \item Ensuite nous itérons sur $t$ allant de 0 à $N-1$ inclus (le nombre d'itérations voulu)
     \begin{itemize}
         \item On tire $x$ avec $g_{x_t}(x)$  
         \item On pose $\alpha \coloneqq \frac{ \pi(x) g_x(x_t)}{\pi(x_t) g_{x_t}(x)}$ (notons que si nous ne possédons qu'une densité proportionnelle à $\pi$, $f$ nous pouvons poser $\alpha \coloneqq \frac{ f(x) g_x(x_t)}{f(x_t) g_{x_t}(x)}$)  
@@ -805,81 +823,90 @@ Voici une description de cet algorithme:
             \item Sinon : on conserve l'état précédent $x_{t+1} \coloneqq x_t$  
         \end{itemize}
     \end{itemize}
-    \item La séquence $\{x_0,x_1, \ldots ,x_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
+    \item La séquence $\{x_0,x_1, \ldots ,x_{N-1}\}$ constitue donc l'échantillon obtenu à partir de la chaîne de Markov associée à la loi $\pi$
 \end{enumerate}
+\end{tcolorbox}
 
 \subsection{Preuve de l'algorithme}
 
 % Démontrer pourquoi l'algorithme marche en se basant sur la catégorie des chaînes de Markov pour appuyer la preuve.
 
-\textbf{Définitions :} \\ 
-On définit $Q$ comme la matrice de transition associée à la chaîne de Markov, où $Q(x, y)$ est la probabilité de passer de l'état $x$ à $y$.\\
-On définit la probabilité d'acceptation rejet comme le facteur $\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)$.
-
-\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
-    \vspace{1em}
-
-    \textbf{Objectif de la preuve :} On souhaite vérifier que la chaîne obtenue à partir de l'algorithme admet comme matrice de transition P, définie comme la matrice Q multipliée par la probabilité d'acceptation rejet.
-    \vspace{1em}
-
-    Un saut partant de $x$ est simulé en choisissant un candidat $y$ par la loi $Q(x, \cdot)$, puis on saute sur $y$ avec probabilité d'acceptation rejet $\alpha$, sinon on reste sur $x$.
-    % ^ A mettre dans l'intro plutôt
-    \vspace{1em}
-
-    Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effectuer le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$.
-    \vspace{1em}
-
-    Soient $x, y \in E$, avec $x \neq y$.\\
-    \begin{align*}
-        &\mathbb{P}(X_{n+1} = y | X_n = x) \\
-        &= \mathbb{P}\big( Y_{n+1} = y
-        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(Y_{n+1}) Q(Y_{n+1}, X_n)}{\pi(X_n) Q(X_n, Y_{n+1})} \big| X_n = x \big) \\
-        &\text{On remplace $Y_{n+1}$ par y, et $X_n$ par $x$ :}\\
-        &= \mathbb{P}\big( Y_{n+1} = y
-        \mathbf{\;et\;} U_{n+1} \leq \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big| X_n = x \big)\\
-        &\text{Puis, par l'indépendance de $U_i$ avec $X_i$ et $Y_i$} :\\
-        &= \min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big)Q(x, y)
-    \end{align*}
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Probabilité d'acceptation/rejet]
+On définit la probabilité d'acceptation/rejet comme le facteur :
+\[
+\min\big(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \big),
+\]
+pour $x, y \in E$, et pour $\pi$ et $Q$ une probabilité et une matrice de transition sur $E$ respectivement.
 \end{tcolorbox}
 
-Ensuite, montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$.
-
-On suppose ici que $\pi(x) \neq 0$ pour tout $x \in E$ et que $Q(x, y) > 0 \iff Q(y, x) > 0$.
+\textbf{Objectif de la preuve :}
+On souhaite vérifier que la chaîne obtenue à partir de l'algorithme admet comme matrice de transition P, définie comme la matrice Q multipliée par la probabilité d'acceptation/rejet. \\
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration]
-    Montrons que la mesure $\pi$ est réversible pour $P$ :
-    Pour tout couple $(x, y) \in E^2$, et $\mu$ une probabilité quelconque :
-    $$
-        \mu(x)P(x, y) = \mu(y) P(y, x)
-    $$
+Un saut partant de $x$ est simulé en choisissant un candidat $y$ par la loi $Q(x, \cdot)$, puis on saute sur $y$ avec probabilité d'acceptation/rejet $\alpha$, sinon on reste sur $x$. \\ % A mettre dans l'intro, plutôt ?
 
-    Vérifions qu’une mesure réversible est invariante. 
-    \begin{align*}
-        \mu P(y) &= \sum_{x \in E}{\mu(x) P(x, y)}\\
-        &= \sum_{x \in E}{\mu(y) P(y, x)}\\
-        &= \mu(y) \sum_{x \in E}{P(y, x)}\\
-        &= \mu(y)
-    \end{align*}
+Pour chaque étape $i$, on note $Y_i$ la variable aléatoire tirée selon la loi $Q(x_{i-1}, \cdot)$, et $U_i$ la variable aléatoire utilisée pour effectuer le choix de sauter ou non. $U_i$ est indépendante de $Y_i$ et $X_{i-1}$. \\
 
-    Vérifions maintenant cette propriété.
+Soient $x, y \in E$, $x \neq y$, on a donc :
+\[
+\mathbb{P}(X_{n+1} = y \mid X_n = x)
+\]
+\[
+= \mathbb{P}(Y_{n+1} = y \text{ et } U_{n+1} \leq \frac{\pi(Y_{n+1}) Q(Y_{n+1}, X_n)}{\pi(X_n) Q(X_n, Y_{n+1})} \mid X_n = x)
+\]
 
-    Si $x = y$ : La propriété est vraie.
+On remplace $Y_{n+1}$ par y, et $X_n$ par $x$ :
+\[
+= \mathbb{P}(Y_{n+1} = y \text{ et } U_{n+1} \leq \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)} \mid X_n = x)
+\]
 
-    Si $x \neq y$ :
-    si $Q(x, y) = Q(y, x) = 0$, alors on a $\pi(x)P(x, y) = \pi(y)P(y, x) = 0$, et
-
-    \begin{align*}
-        \pi(x)P(x, y) &= \pi(x)Q(x, y)\min\Big(1, \frac{\pi(y)Q(y, x)}{\pi(x)Q(x, y)}\Big)\\
-        &= \min(\pi(x)Q(x, y), \pi(y)Q(y, x))\\
-        &= \pi(y)Q(y, x )\min\Big(\pi(x)Q(x, y)\pi(y)Q(y, x), 1)\\
-        &= \pi(y)P(y, x)\\
-    \end{align*}
-    si $Q(x, y)$ et $Q(y, x)$ sont non nuls.
+Puis, par l'indépendance de $U_i$ avec $X_i$ et $Y_i$ :
+\[
+= \min(1, \frac{\pi(y) Q(y, x)}{\pi(x) Q(x, y)})Q(x, y)
+\]
 \end{tcolorbox}
 
-\subsection{Exemples d'applications simples de HM} %Nouveau titre plus clair, enlever ce commentaire après le merge
+Ensuite, montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$. \\
 
-Afin de comprendre le déroulement de l'algorithme, on peut s'appuyer sur un graphique illustrant le début d'une simulation de Metropolis-Hastings dans un espace d'états continu. Bien que cet exemple diffère du reste du rapport qui traite d'états discrets, les propriétés énumérées de l'algorithme restent les mêmes. \\
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration (suite)]
+On suppose que $\forall x \in E$, $\pi(x) \neq 0$ et que $\forall x, y \in E$, $Q(x, y) > 0 \iff Q(y, x) > 0$. \\
+
+Montrons que la mesure $\pi$ est réversible pour $P$. \\
+Pour tout couple $x, y \in E$, et $\mu$ une probabilité quelconque :
+\[
+    \mu(x)P(x, y) = \mu(y) P(y, x)
+\]
+
+Vérifions qu'une mesure réversible est invariante :
+\[
+\mu P(y) = \sum_{x \in E}{\mu(x) P(x, y)} = \sum_{x \in E}{\mu(y) P(y, x)} = \mu(y) \sum_{x \in E}{P(y, x)} = \mu(y)
+\]
+
+Vérifions maintenant cette propriété.
+\begin{itemize}
+    \item Si $x = y$ : la propriété est vraie.
+    \item Si $x \neq y$ :
+        \begin{itemize}
+            \item Si $Q(x, y) = Q(y, x) = 0$, alors :
+            \[
+                \pi(x)P(x, y) = \pi(y)P(y, x) = 0.
+            \]
+            \item Si $Q(x, y)$ et $Q(y, x)$ sont non nuls, alors :
+            \begin{align*}
+                \pi(x)P(x, y) 
+                &= \pi(x)Q(x, y)\min\left(1, \frac{\pi(y)Q(y, x)}{\pi(x)Q(x, y)}\right) \\
+                &= \min\left(\pi(x)Q(x, y), \pi(y)Q(y, x)\right) \\
+                &= \pi(y)Q(y, x)\min\left(1, \frac{\pi(x)Q(x, y)}{\pi(y)Q(y, x)}\right) \\
+                &= \pi(y)P(y, x).
+            \end{align*}
+        \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Exemples d'applications d'Hastings-Metropolis}
+
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple 1, breakable]
+Afin de comprendre le déroulement de l'algorithme, on peut s'appuyer sur un graphique illustrant le début d'une simulation d'Hastings-Metropolis dans un espace d'états continu. Bien que cet exemple diffère du reste du rapport qui traite d'états discrets, les propriétés énumérées de l'algorithme restent les mêmes. \\
 Ce cas a été choisi pour sa clarté visuelle : il permet de suivre facilement les étapes de l'algorithme, voici le schéma : \\
 
 \begin{center}
@@ -936,8 +963,10 @@ Nous choisissons arbitrairement l'état $x_0$ comme départ et cherchons à cré
 L'algorithme propose un nouvel état $x_1$, tiré avec la loi de transition $g(x_1 \mid x_0)$ à partir de l'état courant. On tire alors le taux d'acceptation $\alpha = \min\left(1, \frac{\pi(x') \, g(x \mid x')}{\pi(x) \, g(x' \mid x)}\right)$ connu à un coefficient près, et un tirage de la loi uniforme $u \sim \mathcal{U}(0,1)$. 
 Si $u \leqslant \alpha$ on accepte ce nouvel état, sinon on le rejette. \\
 Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également accepté. Un autre candidat $x'$ est ensuite rejeté, ce qui conduit à conserver $x_2$ pour l'itération suivante, et ainsi de suite. \\
-À noter que certains états peuvent être sélectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$). \\
+À noter que certains états peuvent être sélectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$).
+\end{tcolorbox}
 
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple 2, breakable]
 Considérons maintenant un cas simple du TSP avec 5 villes $A, B, C, D$ et $E$, donc dans un système d'états finis par lequel on essaie d'obtenir le chemin de longueur minimale. \\
 La différence notable avec le précédent exemple est que l'on ne cherche plus à échantillonner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
 À l'issue de l'exécution, on obtient alors un échantillon de chemins optimisés les plus courts qui ont été sélectionné plus fréquemment. On peut ainsi approcher de manière probabiliste une solution optimale au problème du voyageur de commerce.
@@ -999,9 +1028,11 @@ Et un exemple de chemin accepté par HM, en noir et bleu :
     \draw[blue, thick] (A) -- (E);
 \end{tikzpicture}
 \end{center}
+\end{tcolorbox}
 
 \subsection{Application au cas du voyageur de commerce}
 
+\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
 Dans le cas du problème du voyageur de commerce (dit ``TSP''), l'algorithme nécessite une application adaptée.
 Notre espace d'état $E$ correspond aux permutations des points. Par exemple, dans le cas de 3 points ${x_1,x_2,x_3}$,
 $
@@ -1018,10 +1049,12 @@ Nous définissons donc des fonctions adaptées sur l'espace d'état $E$ : \begin
     \item Une variable aléatoire $S: E \to E$, suivant une loi de chaîne de Markov.  
     Nous pouvons modéliser cette transition par une fonction \texttt{permutation}( $[x_1, \ldots, x_n]$), qui renvoie la même liste avec seulement deux villes permutées. 
 \end{itemize}
+\end{tcolorbox}
 
-Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
+Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant : \\
 
-{\bf Hasting Metropolis TSP} \begin{enumerate}
+\begin{tcolorbox}[colback=white,colframe={rgb,255:red,150; green,56; blue,235},title=Procédure Hastings-Metropolis TSP]
+\begin{enumerate}
     \item On prend $p_0$, une permutation donnée
     \item Ensuite nous itérons sur $t$ allant de 0 à $N$ (notre nombre d'itérations voulu)
     \begin{itemize}
@@ -1038,28 +1071,33 @@ Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant :
     \item La séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ constitue donc l'échantillon obtenue à partir de la chaîne de Markov associé à la loi $\pi$
 \end{enumerate}
 
-On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$ 
+On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$.
+\end{tcolorbox}
 
 \subsection{Autres cas d'application}
 
-Cette algorithme est aussi appliqué pour d'autres problèmes,
-il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique.
-Ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
+\begin{tcolorbox}[colback=white,colframe=black!80!black,title=???, breakable]
+Cette algorithme peut également être appliqué pour d'autres problèmes.
+Il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique, ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
+\end{tcolorbox}
 
-\subsection{Comparaison avec d'autres méthodes de Monte Carlo}
+\subsection{Brêves descriptions d'autres méthodes MCMC qui peuvent r"soudre le TSP}
 
-Il existe plusieurs autres méthodes de Monte Carlo qui peuvent, selon le contexte, s’avérer plus ou moins pertinentes que l’algorithme de Hastings-Metropolis. En voici une liste non exhaustive, accompagnée d’une brève présentation :
+Il existe plusieurs autres méthodes de MCMC qui peuvent en fonction du contexte, s'avérer plus pertinentes que l'algorithme de Hastings-Metropolis. 
+En voici une liste non exhaustive, accompagnée d'une brève présentation. \\
 
-\begin{enumerate}
-\item \textbf{L'échantillonnage de Gibbs} : Comme l’algorithme de Hastings-Metropolis, 
-cette méthode repose sur la construction d’une chaîne de Markov ayant pour distribution stationnaire une distribution cible $\pi$. 
-L’échantillonnage de Gibbs consiste à mettre à jour séquentiellement chaque composante d’un vecteur aléatoire, conditionnellement aux autres composantes. 
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=L'échantillonnage de Gibbs]
+Comme l'algorithme de Hastings-Metropolis, 
+cette méthode repose sur la construction d'une chaîne de Markov ayant pour distribution stationnaire une distribution cible $\pi$. 
+L'échantillonnage de Gibbs consiste à mettre à jour séquentiellement chaque composante d'un vecteur aléatoire, conditionnellement aux autres composantes. 
 Cette méthode est particulièrement efficace lorsque les distributions conditionnelles $\pi(x_i \mid \cdot)$ sont facilement échantillonnables.
+\end{tcolorbox}
 
-\item \textbf{Le Monte Carlo Hamiltonien (HMC)} : Inspirée de la mécanique Hamiltonienne et dérivée de l’algorithme de Hastings-Metropolis, cette méthode exploite les gradients de la distribution cible pour guider la dynamique d’échantillonnage. Elle permet de générer des échantillons efficaces dans des espaces de grande dimension, en particulier lorsqu’on souhaite estimer des intégrales par rapport à une distribution cible, par exemple pour le calcul d’espérances.
-\end{enumerate}
+\begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Le Monte Carlo Hamiltonien (HMC)]
+Inspirée de la mécanique Hamiltonienne et dérivée de l'algorithme de Hastings-Metropolis, cette méthode exploite les gradients de la distribution cible pour guider la dynamique d'échantillonnage. Elle permet de générer des échantillons efficaces dans des espaces de grande dimension, en particulier lorsqu'on souhaite estimer des intégrales par rapport à une distribution cible, par exemple pour le calcul d'espérances.
+\end{tcolorbox}
 
-Bien entendu, d’autres méthodes existent (comme les algorithmes de recuit simulé ou les approches par échantillonnage adaptatif), 
+D'autres méthodes existent (comme les algorithmes de recuit simulé ou les approches par échantillonnage adaptatif), 
 mais elles sont généralement plus complexes à mettre en œuvre ou spécifiques à certains types de problèmes.
 
 \newpage % TODO
@@ -1131,11 +1169,11 @@ def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
 \end{python}
 
 \newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page du bloc de code) /!\
-La fonction \texttt{hasting\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
-renvoie un tirage en suivant l’algorithme de Hastings-Metropolis :
+La fonction \texttt{hastings\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
+renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
 
 \begin{python}
-def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
+def hastings_metropolis_tirage(x0: int, distribution_cible,proposition: np.array, iterations: int = 1000) -> np.array:
     x_t = x0
     tirage = [x_t]
 
@@ -1160,23 +1198,23 @@ def hasting_metropolis_tirage(x0: int, distribution_cible,proposition: np.array,
     return np.array(tirage)
 \end{python}
 
-Enfin, la fonction \texttt{hasting\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme:
+Enfin, la fonction \texttt{hastings\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme:
 
 \begin{python}
-def hasting_metropolis(x0: int, distribution_cible, 
+def hastings_metropolis(x0: int, distribution_cible, 
                        proposition: np.array, iterations: int = 1000) -> np.array:
-    tirage = hasting_metropolis_tirage(x0, distribution_cible, proposition, iterations)
+    tirage = hastings_metropolis_tirage(x0, distribution_cible, proposition, iterations)
     return markov_chain_from_tirage(tirage, proposition.shape[0])
 \end{python}
 
 \newpage
-\subsubsection{Applications du code d'Hasting Metropolis}
+\subsubsection{Applications du code d'Hastings-Metropolis}
 
 Dans cette section vous trouverais des exemples d'application des différents algorithmes implémentés 
 
 \paragraph{Exemples Hastings-Metropolis}
 
-Voici les exemples d'application d'Hasting-Metropolis que nous avons effectuer,
+Voici les exemples d'application d'Hastings-Metropolis que nous avons effectuer,
 à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
 
 \paragraph{Application à une loi binomiale :}
@@ -1192,7 +1230,7 @@ proposition = np.array([ ligne / ligne.sum()
 ])
 
 
-tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
+tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
 \end{center}
@@ -1212,7 +1250,7 @@ distribution_cible = poisson(5)
 # Matrice de transition uniforme de taille N*N
 proposition = np.full((N,N),1/N)
 
-tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
 \end{center}
@@ -1234,7 +1272,7 @@ proposition = np.array([ ligne / ligne.sum()
 ])
 
 
-tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
 \end{center}
@@ -1255,7 +1293,7 @@ proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
 
-tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
 \end{center}
@@ -1279,7 +1317,7 @@ proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.array([abs(np.random.normal(i,1)) for _ in range(N)]) for i in range(N)]
 ])
 
-tirage = hasting_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
+tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=100_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
 \end{center}
@@ -1289,7 +1327,7 @@ Résultats :
 
 
 \newpage
-\subsection{Sources}
+\subsection{Bibliographie}
 
 \subsubsection{Documents textuels :}
 \begin{itemize}
@@ -1306,9 +1344,9 @@ Résultats :
     \item \url{https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo_par_chaînes_de_Markov}
     \item \url{https://www.math.u-bordeaux.fr/~mchabano/Agreg/ProbaAgreg1314-COURS5-CM.pdf}
     \item \url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
-    \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius} \\
+    \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius}
     \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
-    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} \\ % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
 \end{itemize}
 
 \subsubsection{Documents vidéos :}

@@ -48,6 +48,6 @@ def my_plot_graph_mat(trans_mat: np.ndarray) -> None:
     # ajout de l'échelle des couleurs
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
-    plt.colorbar(sm, label="probabilité de transition")
+    plt.colorbar(sm, label="probabilité de transition") # @CorentinVaillant !ERROR HERE !!
 
     plt.show()
