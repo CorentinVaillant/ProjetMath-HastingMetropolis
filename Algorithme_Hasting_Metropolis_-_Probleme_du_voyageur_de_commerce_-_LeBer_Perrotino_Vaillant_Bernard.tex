@@ -942,10 +942,11 @@ Puis, par l'indépendance de $U_i$ avec $X_i$ et $Y_i$ :
 \]
 \end{tcolorbox}
 
-Ensuite, montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$. \\
+On suppose à partir de maintenant que $\forall x \in E$, $\pi(x) \neq 0$ et que $\forall x, y \in E$, $Q(x, y) > 0 \iff Q(y, x) > 0$. \\
+
+Montrons que la mesure $\pi$ est bien la mesure invariante associée à la chaine de Markov de matrice $P$. \\
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration (suite)]
-On suppose que $\forall x \in E$, $\pi(x) \neq 0$ et que $\forall x, y \in E$, $Q(x, y) > 0 \iff Q(y, x) > 0$. \\
 
 Montrons que la mesure $\pi$ est réversible pour $P$. \\
 Pour tout couple $x, y \in E$, et $\mu$ une probabilité quelconque :
@@ -978,6 +979,18 @@ Vérifions maintenant cette propriété.
         \end{itemize}
 \end{itemize}
 \end{tcolorbox}
+
+Finalement, montrons que si de plus Q est irréductible, alors P est également irréductible, et qu'on a ainsi les convergences usuelles vers $\pi$ quand $n \rightarrow \infty$.
+
+
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration (suite)]
+
+Vu que nous avions supposé que $\pi(x) \neq 0$ : on a $P(x, y) > 0$ dès que $Q(x, y) > 0$. \\
+
+Ainsi, toute trajectoire réalisable à partir de Q est également réalisable à partir de P, et l'irréductibilité de Q entraîne l'irréductibilité de P.
+\end{tcolorbox}
+
+On a ainsi démontré la correction de l'algorithme d'Hastings-Metropolis.
 
 \subsection{Application au cas du voyageur de commerce}
 
