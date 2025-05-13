@@ -708,29 +708,69 @@ Autrement dit, la loi invariante reste inchangée peu importe le nombre de trans
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration,breakable]
-On fixe $n \in \mathbb{N}^{*}$. Nous allons maintenant montrer que $\pi P^n = \pi$. \\
+Soit $(X_n)_{n\in\mathbb{N}}$ une chaîne de Markov homogène sur un espace d'états $E$, de matrice de transition $P$, et soit $\pi$ une probabilité invariante.
+On a alors $\pi P = \pi$. \\
 
-Pour tout $i \in E$ :
+Prouvons par \textbf{récurrence} sur $n \in \mathbb{N}^*$ que $\pi P^n = \pi$. \\
+
+\textbf{Cas initial :}
+
+Pour $n=1$, on a
 \[
-(\pi P^n)_i = \sum_{j \in E}\pi_j(P^n)_{j,i}
+  \pi P^1 = \pi P = \pi,
 \]
-Or, par la décomposition des puissances,
+car $\pi$ est invariante par définition. \\
+
+\textbf{Hypothèse de récurrence :}
+
+On suppose que la propriété est vraie pour $n-1$, c'est-à-dire que :
 \[
-(P^n)_{j,i} = \sum_{k \in E}(P^{n-1})_{j,k} P_{k,i}.
+  \pi P^{n-1} = \pi.
 \]
-Donc :
+
+\textbf{Pas de récurrence :}
+
+Montrons que la propriété est vraie pour le rang $n$, c'est-à-dire que :
 \[
-(\pi P^n)_i = \sum_{j \in E}\pi_j \cdot \sum_{k \in E}(P^{n-1})_{j,k} P_{k,i} = \sum_{k \in E}\Bigl[\sum_{j \in E}\pi_j (P^{n-1})_{j,k}\Bigr]P_{k,i}.
+  \pi P^n = \pi.
 \]
-Or, par hypothèse d'invariance pour la puissance $n-1$, on a :
+
+Pour tout $i \in E$,
 \[
-\sum_{j \in E}\pi_j(P^{n-1})_{j,k} = (\pi P^{n-1})_k = \pi_k
+  (\pi P^n)_i = \sum_{j \in E} \pi_j (P^n)_{j,i}.
 \]
-Ainsi :
+
+Or, par la décomposition des puissances de $P^n$ :
 \[
-(\pi P^n)_i = \sum_{k \in E}\pi_kP_{k,i} = \pi_i.
+  (P^n)_{j,i} = \sum_{k \in E} (P^{n-1})_{j,k} P_{k,i}.
 \]
-Ce qui montre bien que $\pi P^n = \pi$ pour tout $n \in \mathbb{N}^{*}$.
+
+D'où :
+\[
+  (\pi P^n)_i
+  = \sum_{j \in E} \pi_j \sum_{k \in E} (P^{n-1})_{j,k} P_{k,i}
+  = \sum_{k \in E} \Bigl[\sum_{j \in E} \pi_j (P^{n-1})_{j,k}\Bigr] P_{k,i}.
+\]
+
+Et par hypothèse de récurrence :
+\[
+  \sum_{j \in E} \pi_j (P^{n-1})_{j,k}
+  = (\pi P^{n-1})_k
+  = \pi_k.
+\]
+
+Ainsi, on a :
+\[
+  (\pi P^n)_i
+  = \sum_{k \in E} \pi_k P_{k,i}
+  = \pi_i,
+\]
+
+Ce qui donne bien que $\pi P^n = \pi$. \\
+
+\textbf{Conclusion :}
+
+On a donc montré, par récurrence sur $n$, que pour tout $n \in \mathbb{N}^*$, $\pi P^n = \pi$.
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Probabilité invariante d'une chaîne de Markov irréductible]
@@ -980,10 +1020,9 @@ Vérifions maintenant cette propriété.
 \end{itemize}
 \end{tcolorbox}
 
-Finalement, montrons que si de plus Q est irréductible, alors P est également irréductible, et qu'on a ainsi les convergences usuelles vers $\pi$ quand $n \rightarrow \infty$.
+Finalement, montrons que si de plus Q est irréductible, alors P est également irréductible, et qu'on a ainsi les convergences usuelles vers $\pi$ quand $n \rightarrow \infty$. \\
 
-
-\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration (suite)]
+\begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration (conclusion)]
 
 Vu que nous avions supposé que $\pi(x) \neq 0$ : on a $P(x, y) > 0$ dès que $Q(x, y) > 0$. \\
 
