@@ -1,6 +1,8 @@
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+
 
 from math import factorial, comb
 
@@ -13,10 +15,6 @@ def binomial(n,p):
 def geo(p):
     return lambda k: p*((1-p)**(k-1))
 
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 
 def my_plot_graph_mat(trans_mat: np.ndarray) -> None:
     G = nx.DiGraph()
