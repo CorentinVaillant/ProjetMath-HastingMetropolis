@@ -16,7 +16,7 @@ def geo(p):
     return lambda k: p*((1-p)**(k-1))
 
 
-def my_plot_graph_mat(trans_mat: np.ndarray) -> None:
+def plot_graph_mat(trans_mat: np.ndarray) -> None:
     G = nx.DiGraph()
 
     # ajout des arcs avec poids
@@ -46,6 +46,6 @@ def my_plot_graph_mat(trans_mat: np.ndarray) -> None:
     # ajout de l'échelle des couleurs
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
-    plt.colorbar(sm, label="probabilité de transition") # @CorentinVaillant !ERROR HERE !!
+    plt.colorbar(sm, label="probabilité de transition") 
 
     plt.show()
