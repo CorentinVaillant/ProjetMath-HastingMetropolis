@@ -1250,20 +1250,57 @@ Cette section contient des implémentations des algorithmes abordés. Le code so
 
 Voici le code source de `utilis.py` qui contient des fonctions utiles au reste du projet. Seul le code des utilitaires mathématiques est présenté ici — les fonctions utilitaires liées aux graphiques sont disponibles directement dans le dépôt.
 \begin{python}
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
-
-from math import factorial, comb
-
-def poisson(l):
-    return lambda k: ((l**k)/(factorial(k)))*np.exp(-l)
-
-def binomial(n, p):
-    return lambda k: comb(n, k) * p**k * (1-p)**(n-k)
-
-def geo(p):
-    return lambda k: p * ((1-p)**(k-1))
+    import numpy as np
+    import networkx as nx
+    import matplotlib.pyplot as plt
+    import matplotlib.colors as mcolors
+    
+    
+    from math import factorial, comb
+    
+    def poisson(l):
+        return lambda k: ((l**k)/(factorial(k)))*np.exp(-l)
+    
+    def binomial(n,p):
+        return lambda k: comb(n,k) * p**k * (1-p)**(n-k)
+    
+    def geo(p):
+        return lambda k: p*((1-p)**(k-1))
+    
+    
+    def plot_graph_mat(trans_mat: np.ndarray) -> None:
+        G = nx.DiGraph()
+    
+        # ajout des arcs avec poids
+        num_states = trans_mat.shape[0]
+        edges, weights = [], [] 
+        for i in range(num_states):
+            for j in range(num_states):
+                if trans_mat[i, j] > 0:
+                    G.add_edge(i, j, weight=trans_mat[i, j])
+                    edges.append((i, j))
+                    weights.append(trans_mat[i, j])
+    
+        # normalization des poids pour la coloration
+        norm = mcolors.Normalize(vmin=min(weights), vmax=max(weights))
+        cmap = plt.cm.Blues  
+        edge_colors = [cmap(norm(w)) for w in weights]
+    
+        pos = nx.spring_layout(G)
+    
+        # affichage des noeuds
+        plt.figure(figsize=(6, 6))
+        nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=700, arrowsize=20)
+    
+        # affichages des arcs
+        nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color=edge_colors, edge_cmap=cmap, width=2, arrows=True)
+    
+        # ajout de l'echelle des couleurs
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        plt.colorbar(sm, label="probabilite de transition") 
+    
+        plt.show()    
 \end{python}
 \newpage
 \subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
@@ -1273,27 +1310,40 @@ L'implémentation de l'algorithme de Hastings-Metropolis, comme décrit en \ref{
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
 \begin{python}
-def next_state_markov(x: int, transitions: np.array) -> int:
-    return np.random.choice(len(transitions), p=transitions[x])
+#Tire aleatoirement le prochaine etat d'une chaine de Markov representee par une matrice
+def next_state_markov(x:int,transitions:np.array)->int:
+        return np.random.choice(len(transitions),p=transitions[x])    
 \end{python}
 
 La fonction \texttt{markov\_chain\_from\_tirage(tirage, nb\_etats)} transforme un tirage en une matrice de transition, représentant une chaîne de Markov :
 
 \begin{python}
-def markov_chain_from_tirage(tirage, nb_etats) -> np.array:
-    sommes = np.full((nb_etats, nb_etats), 0)
-    derniere_etat = tirage[0]
-    for col in tirage[1:]:
-        sommes[derniere_etat][col] += 1
-        derniere_etat = col
-    result = []
-    for i in range(nb_etats):
-        denominateur = sum(sommes[i])
-        result.append([
-            sommes[i][j] / denominateur if denominateur != 0 else 0 
-            for j in range(nb_etats)
-        ])
-    return np.array(result)
+#Implementation de HM
+def hastings_metropolis_tirage(x0:int,distribution_cible,proposition : np.array,iterations:int = 1000)->np.array:
+    x_t = x0
+    tirage = [x_t]
+
+    for _ in range(iterations):
+        # tirage de x
+        x = next_state_markov(x_t,proposition)
+
+        # a:= (PI(x)*g(x_t|x)) / (PI(x_t)*g(x|x_t))
+        pi_xt = distribution_cible(x_t)
+        pi_x = distribution_cible(x)
+        g_xt_x = proposition[x_t][x]
+        g_x_xt = proposition[x][x_t]
+        if pi_xt * g_xt_x == 0 : alpha = 1 # on evite la division par 0
+        else : alpha = min(1,(pi_x * g_x_xt)/(pi_xt * g_xt_x))
+
+        #on tire u de maniere uniforme dans [0;1]
+        u = np.random.uniform(0,1)
+
+        # Si u <= a alors : x_(t+1) = x'
+        # Sinon : x_(t+1) = x_t
+        if u <= alpha : x_t = x
+        tirage.append(x_t)
+
+    return np.array(tirage)
 \end{python}
 
 \newpage % TODO - /!\ TEMPORAIRE (Pour une bonne mise en page du bloc de code) /!\
