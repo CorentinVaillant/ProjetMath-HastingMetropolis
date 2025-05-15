@@ -62,9 +62,10 @@
 
 \section*{Préambule}
 
-Ce rapport s'inscrit dans le cadre de la matière "Projet de Mathématiques" de l'université de Toulouse (Paul Sabatier). \\
-L'objectif de ce rapport est de présenter et de prouver l'algorithme d'Hastings-Metropolis. À la fois d'expliquer en détail son fonctionnement, mais aussi de comprendre l'intérêt qu'il présente dans les sciences et en quoi il prend sa valeur. \\
-Pour illustrer l'algorithme, nous nous intéresserons au problème du voyageur de commerce et étudierons sa complexité.
+Ce rapport s'inscrit dans le cadre de la matière "Projet de Mathématiques" de l'Université de Toulouse (Paul Sabatier). \\
+L'objectif de ce rapport est de présenter et de prouver l'algorithme d'Hastings-Metropolis, et la théorie mathématique qui en découle.
+Notre but est d'expliquer en détail son fonctionnement, mais aussi de comprendre l'intérêt qu'il présente dans les sciences et en quoi il prend sa valeur. \\
+Pour illustrer l'algorithme, nous nous intéresserons au problème du voyageur de commerce.
 
 
 \section{Introduction}
@@ -73,7 +74,8 @@ Afin de comprendre en profondeur ce sujet, il est nécessaire de s'en faire une 
 
 \subsection{Informations générales et description historique}
 
-L'algorithme d'Hastings-Metropolis (noté "HM" dans ce rapport) consiste en une méthode d'échantillonnage stochastique permettant, à partir d'une distribution de probabilité donnée, de pouvoir décrire son comportement et d'obtenir des statistiques dessus. Cet algorithme prend sa valeur quand la distribution est difficile à analyser (systèmes multidimensionnels, par exemple) et permet de résoudre de nouveaux problèmes avec une complexité temporelle décente. \\
+L'algorithme d'Hastings-Metropolis (abrégé par "HM" dans ce rapport) consiste en une méthode d'échantillonnage stochastique permettant de générer des échantillons représentatifs d'une distribution de probabilité donnée. L'objectif est de pouvoir décrire le comportement de la distribution à l'aide de statistiques générés par l'étude des échantillons.
+Cet algorithme prend sa valeur quand la distribution est difficile à analyser (systèmes multidimensionnels, par exemple) et permet de résoudre de nouveaux problèmes avec une complexité temporelle décente. \\
 Cette méthode est marquante, car elle a été conceptualisée tôt dans l'histoire de l'informatique et a mis des décennies avant d'être prouvée et expliquée entièrement. \\
 
 Historiquement, c'est en 1949 que l'écriture de l'algorithme a été publiée dans un article de Nicholas Metropolis et Stanisław Ulam. La paternité de l'algorithme est soumise à débat, car l'algorithme s'inscrit sous le nom de son chef de projet (Metropolis), alors que l'équipe composée de Nicholas Metropolis, Arianna et Marshall Rosenbluth, Augusta et Edward Teller a contribué à cette méthode. Ils étudiaient alors plus particulièrement le cas de la distribution de Boltzmann, une des distributions les plus utilisées en physique statistique, dans des travaux datant de 1953. \\
@@ -92,7 +94,7 @@ Quant au problème du voyageur de commerce, il peut être représenté par un gr
 Par résoluble, il est important de préciser qu'il s'agit d'une résolution approximative parce que le TSP est NP-difficile comme mentionné précédemment.
 En conséquence, l'objectif de HM n'est pas d'apporter la réponse exacte au problème, mais une approximation fiable de la solution, ce qui peut sembler contre-intuitif. Cette approximation est la caractéristique principale des méthodes MCMC que nous aborderons dans leur partie dédiée. \\
 
-Il convient de souligner que, dans le cas du TSP, c'est à la version d'optimisation que l'on s'intéresse, par opposition au problème décisionnel, qui, lui, est NP-complet. La différence entre ces deux formulations repose sur leur objectif : dans le TSP décisionnel, on pose une question du type "Existe-t-il un chemin de coût inférieur ou égal à une valeur donnée ?", à laquelle il s'agit de répondre par oui ou non.
+Il convient de souligner que, dans le cas du TSP, c'est la version d'optimisation qui nous intéresse, par opposition au problème décisionnel, qui, lui, est NP-complet. La différence entre ces deux formulations repose sur leur objectif : dans le TSP décisionnel, on pose une question du type "Existe-t-il un chemin de coût inférieur ou égal à une valeur donnée ?", à laquelle il s'agit de répondre par oui ou non.
 Alors que le TSP d'optimisation cherche à partir de la situation initiale la meilleure solution : donc optimiser le chemin au fil des itérations. C'est cette version du problème pour laquelle l'approche par échantillonnage stochastique est envisageable.
 Précisons toutefois que HM n'est habituellement pas la méthode que l'on utilise pour le TSP en pratique. Usuellement, le nombre de ville étant grand (suffisamment pour que la solution par brute force ne soit pas trouvable) mais pas absurde (une centaine par exemple), on préfère utiliser des versions déterministes optimisées comme l'algorithme de Held-Karp de complexité $O(2^n \times n^2)$, ou dans le cas de situation avec encore plus de villes, des méthodes similaires à HM plus adaptées comme l'échantillonnage de Gibbs.
 
@@ -101,7 +103,7 @@ Cette nuance est essentielle, car elle met en lumière la sophistication de HM e
 
 \subsection{Objectif de ce rapport}
 
-L'objectif de ce rapport étant d'apporter une solution fiable au TSP grâce à HM, nous prouverons alors le fonctionnement dde ce dernier grâce à la théorie mathématique des chaînes de Markov. Nous en expliciterons les définitions et propriétés fondamentales dans un premier temps, qui permettront de prouver l'algorithme d'HM dans un second temps. Nous présenterons alors à la fin du rapport une implémentation personnelle de l'algorithme.
+L'objectif de ce rapport étant d'apporter une solution fiable au TSP grâce à HM, nous prouverons alors le fonctionnement de ce dernier grâce à la théorie mathématique des chaînes de Markov. Nous en expliciterons les définitions et propriétés fondamentales dans un premier temps, qui permettront de prouver l'algorithme d'HM dans un second temps. Nous présenterons alors à la fin du rapport une implémentation personnelle de l'algorithme.
 
 \section{Chaînes de Markov à états finis}
 
@@ -142,7 +144,7 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une suite de variables aléatoires à valeurs da
 
 $(X_n)_{n \in \mathbb{N}}$ est appelée \textbf{chaîne de Markov} si et seulement si :
 \begin{enumerate}[leftmargin=5em, label=(\arabic*)]
-    \item Sa loi de probabilité initiale $X_0$ est bien définie.
+    \item La loi de probabilité initiale de $X_0$ est bien définie.
     \item Elle respecte la \textbf{propriété de Markov}, telle que :
 \end{enumerate}
 \[
@@ -153,7 +155,7 @@ $(X_n)_{n \in \mathbb{N}}$ est appelée \textbf{chaîne de Markov} si et seuleme
 \]
 \end{tcolorbox}
 
-Une chaîne de Markov est un processus de Markov à temps discret ou à temps continu et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
+Une chaîne de Markov est un processus de Markov à temps discret et à espace d'états discret. Un processus de Markov est un processus stochastique possédant la propriété de Markov : l'information utile pour la prédiction du futur est entièrement contenue dans l'état présent du processus et n'est pas dépendante des ses états antérieurs.
 
 Autrement dit, la loi de probabilité $\mathbb{P}$ régissant la transition de l'état présent $X_n$ vers l'état futur $X_{n+1}$ dépend uniquement du dernier terme $X_n$, et reste totalement indépendante des tous ses états antérieurs $\{X_0, X_1, \dots, X_{n-1}\}$.
 
@@ -397,12 +399,12 @@ Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Formule du nombre de visite d'un état]
 Soit $i \in E$. On pose $N_i \in \mathbb{N}\cup \{\infty\} $ le nombre de visites de l'état $i$ par :
 \[
-N_i = \sum_{n \in \mathbb{N}^{*}} \text{1}_{\{X_n = i\}}.
+N_i = \sum_{n \in \mathbb{N}^{*}} \mathbbm{1}_{\{X_n = i\}}.
 \]
 
 où
 \[
-\text{1}_{\{X_n = i\}} = \begin{cases}
+\mathbbm{1}_{\{X_n = i\}} = \begin{cases}
     1 \text{ si } X_n = i\\
     0 \text{ sinon} 
 \end{cases}    
@@ -413,7 +415,7 @@ où
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple (Application de $N_i$ à l'espérance)]
 Soit $i, j \in E$. On a alors :
 \[
-\mathbb{E}(N_j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} \cdot \mathbb{P}(X_n = j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} P_{i,j}^{(n)}.
+\mathbb{E}(N_j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} \mathbb{P}(X_n = j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} P_{i,j}^{(n)}.
 \]
 \end{tcolorbox}
 
@@ -791,12 +793,15 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
 
-Soit $E$ fini et $(X_n)$ une chaîne de Markov irréductible.
-Alors, pour toute fonction $f$, et toute loi initial $\nu_0$, on a :
+Soit $(X_n)_{n \geq 0}$ une chaîne de Markov irréductible sur $E$ fini. Soit $\pi$ l'unique probabilité invariante. Alors, pour toute fonction $f : E \to \mathbb{R}$, on a
 \[
-\forall k > 0, \quad \lim_{n \to \infty}{ \frac{1}{n-k+1}\sum_{i=k}^{n}{f(X_k)} } = \int_{E} f(x) d{\mu(x)},
+\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} f(X_k) = \sum_{x \in E} f(x)\pi(x),
 \]
-avec $\mu$ la probabilité invariante.
+avec probabilité 1. En particulier, en prenant $f = \mathbbm{1}_{\{x\}}$, on a
+\[
+\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \mathbbm{1}_{\{X_k = x\}} = \pi(x),
+\]
+avec probabilité 1.
 
 \end{tcolorbox}
 
@@ -1699,6 +1704,7 @@ et voici ce que nous obtenons
     \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius}
     \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
     \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of} \url{-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} \\ % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+    \item \url{https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm}
 \end{itemize}
 
 \subsubsection{Documents vidéos :}
