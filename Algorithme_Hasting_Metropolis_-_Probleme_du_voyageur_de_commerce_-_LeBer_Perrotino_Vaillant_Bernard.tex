@@ -232,16 +232,16 @@ Considérons par exemple une chaîne de Markov ayant trois états $i, j, k$, ord
 \begin{center}
 $
 P = \begin{bmatrix}
-0.1 & 0.4 & 0.5 \\
-0.6 & 0.4 & 0 \\
-0.1 & 0.1 & 0.8 \\
+0,1 & 0,4 & 0,5 \\
+0,6 & 0,4 & 0,0\\
+0,1 & 0,1 & 0,8 \\
 \end{bmatrix}
 $
 \end{center}
 
-Dans cette configuration, la probabilité de transition de l'état $i$ vers l'état $j$ est donnée par :
+Dans cette configuration, la probabilité de transition de l'état $1$ vers l'état $2$ est donnée par :
 \[
-P_{i,j} = P_{1,2} = \mathbb{P}(X_{n+1} = j \mid X_n = i) = 0.4
+P_{1,2} = \mathbb{P}(X_{n+1} = 2 \mid X_n = 1) = 0.4
 \]
 
 \newpage 
@@ -303,7 +303,8 @@ Ce qui équivaut en termes matriciels :
 P_{i,j}^{(n+m)} = \sum_{k \in E} P_{i,k}^{(n)} \cdot P_{k,j}^{(m)}.
 \]
 
-Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. \\
+Cette relation peut s'interpréter en disant que pour passer de $i$ à $j$ en $n+m$ étapes, 
+il a fallu en $n$ étapes aller de $i$ à un certain $k$ puis en $m$ étapes aller de $k$ à $j$. 
 
 On reconnaît alors l'expression de l'associativité du produit matriciel tel que :
 \[
@@ -322,9 +323,9 @@ P^{5} = \begin{bmatrix}
 \end{bmatrix}
 $
 \end{center}
-Toujours en reprenant notre exemple, la probabilité de passer de l'état $i$ à l'état $j$ au bout d'exactement $5$ étapes est donc de :
+Toujours en reprenant notre exemple, la probabilité de passer de l'état $1$ à l'état $2$ au bout d'exactement $5$ étapes est donc de :
 \[
-P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
+P_{1,2}^{(5)} = \mathbb{P}(X_{k+5} = 1 \mid X_k = 2) = 24,385\%
 \]
 \end{tcolorbox}
 
@@ -333,7 +334,8 @@ P_{i,j}^{(5)} = \mathbb{P}(X_{k+5} = j \mid X_k = i) = 24,385\%
 \subsubsection{Classification des états}
 \label{subsubsec: Les différents types d'états}
 
-Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long. \\
+Dans une chaîne de Markov, chaque état peut être classifié en différentes catégories en fonction de ses liaisons avec les autres états. 
+Ces différentes classifications nous permettrons d'analyser le comportement de la chaîne en temps long. 
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Accessibilité et communication]
 Soient $i$ et $j$ deux éléments de $E$. On dit que $j$ est \textbf{accessible} à partir de $i$ et on note $i \to j$ si :
@@ -356,25 +358,31 @@ Ce que l'on note $i \leftrightarrow j$.
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État récurrent/transient]
 Un état $i$ est dit \textbf{récurrent} si, en partant de cet état, il est certain d'y retourner en un nombre fini de pas. Un état non récurrent est dit \textbf{transient}. \\
 
-On pose :
+On considère la variable :
 \[
 \tau_i = \inf\{n \in \mathbb{N}^{*} \mid X_n = i\}
 \]
-On dit alors que $i$ est récurrent si :
+
+On défini $\mathbb{P}_i(\cdot) = \mathbb{P}(\cdot \mid X_0 = i)$
+
+$i$ est récurrent si:
 \[
-\mathbb{P}_i(\tau_i < +\infty) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i) = 1
+\mathbb{P}_i(\tau_i < +\infty) = 1
 \]
-Et on dit que $i$ est transient si :
+et $i$ est transient si:
 \[
 \mathbb{P}_i(\tau_i < +\infty) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i) < 1
 \]
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=État périodique/apériodique]
-Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$. La période $d(i)$ est définie comme :
+
+On défini la période $d(i)$ d'une chaîne de Markov de transition $P$ comme étant le nombre
 \[
 d(i) = \text{PGCD}\{n \in \mathbb{N}^{*} \mid P_{i,i}^{(n)} > 0\}.
 \]
+
+Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$.
 Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité.
 \end{tcolorbox}
 
@@ -387,16 +395,25 @@ Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il 
 \subsubsection{Estimation du nombre de visites d'un état}
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Formule du nombre de visite d'un état]
-Soit $i \in E$. On défini $N_i$ le nombre de visites de l'état $i$ par :
+Soit $i \in E$. On pose $N_i \in \mathbb{N}\cup \{\infty\} $ le nombre de visites de l'état $i$ par :
 \[
 N_i = \sum_{n \in \mathbb{N}^{*}} \text{1}_{\{X_n = i\}}.
 \]
+
+où
+\[
+\text{1}_{\{X_n = i\}} = \begin{cases}
+    1 \text{ si } X_n = i\\
+    0 \text{ sinon} 
+\end{cases}    
+\]
+
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple (Application de $N_i$ à l'espérance)]
 Soit $i, j \in E$. On a alors :
 \[
-\mathbb{E}(N_j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} \text{1} \cdot \mathbb{P}(X_n = j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} P_{i,j}^{(n)}.
+\mathbb{E}(N_j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} \cdot \mathbb{P}(X_n = j \mid X_0 = i) = \sum_{n \in \mathbb{N}^{*}} P_{i,j}^{(n)}.
 \]
 \end{tcolorbox}
 
