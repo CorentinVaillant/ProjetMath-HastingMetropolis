@@ -1616,8 +1616,57 @@ avec pour résultat :
 \includegraphics[scale=0.5]{hm_tsp_1000_iter.png}
 \includegraphics[scale=0.5]{hm_tsp_50000_iter.png}
 
-\paragraph{Différences selon le nombre d'itérations}
+\newpage
+\paragraph{Application à un cas concret}
 
+Ici nous avons différentes coordonnées représentants les différentes grandes villes de France, nous avons appliqué notre algorithme afin de trouvé le meilleur ordre pour parcourir ces villes.
+
+\begin{center}
+\begin{python}
+N = 12
+villes = np.array([
+    [7.12,9.7],  #Paris
+    [5.98,10.58],#Rouen
+    [7.8,12.28], #Lille
+    [10.26,2.02], #Marseille
+    [12.18,9.54], #Strasbourg
+    [9.74,7.58], #Dijon
+    [9.58,5.4], #Lyon
+    [6.2,2.32], #Toulouse
+    [4.24,4.22], #Bordeaux
+    [3.54,7.52], #Nantes
+    [3.4,8.88],  #Rennes
+    [6.68,8.36], #Orleans
+])
+img = mpimg.imread('../ressources/externs/carte_france.png') 
+
+xmin, xmax = 0, 1306/91
+ymin, ymax = 0, 1196/91
+
+np.random.shuffle(villes)
+
+distances = matrice_distances(villes)
+p0 = list(range(N))
+
+tirage = hastings_metropolis_tsp(p0, distances, beta=5.0, iterations=10_000)
+meilleur = meilleur_solution(tirage, distances)
+
+print("Distance trouvee :", distance_total(meilleur, distances))
+
+fig, ax = plt.subplots()
+ax.imshow(img, extent=[xmin, xmax, ymin, ymax])  
+
+ax.set_xlim(xmin, xmax)
+ax.set_ylim(ymin, ymax)
+
+tracer_tournee(villes, meilleur, titre="Tournee approximativement optimale", ax=ax)
+plt.show()
+\end{python}
+\end{center}
+
+et voici ce que nous obtenons
+
+\includegraphics{france_tsp.png}
 
 \newpage
 \subsection{Bibliographie}
