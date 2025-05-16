@@ -235,13 +235,13 @@ Considérons par exemple une chaîne de Markov ayant trois états $i, j, k$, ord
 $
 P = \begin{bmatrix}
 0,1 & 0,4 & 0,5 \\
-0,6 & 0,4 & 0,0\\
+0,6 & 0,4 & 0,0 \\
 0,1 & 0,1 & 0,8 \\
 \end{bmatrix}
 $
 \end{center}
 
-Dans cette configuration, la probabilité de transition de l'état $1$ vers l'état $2$ est donnée par :
+Dans cette configuration, par exemple, la probabilité de transition de l'état $1$ vers l'état $2$ est donnée par :
 \[
 P_{1,2} = \mathbb{P}(X_{n+1} = 2 \mid X_n = 1) = 0.4
 \]
@@ -365,13 +365,13 @@ On considère la variable :
 \tau_i = \inf\{n \in \mathbb{N}^{*} \mid X_n = i\}
 \]
 
-On défini $\mathbb{P}_i(\cdot) = \mathbb{P}(\cdot \mid X_0 = i)$
+On défini $\mathbb{P}_i(\cdot) = \mathbb{P}(\cdot \mid X_0 = i)$.
 
-$i$ est récurrent si:
+Ainsi, $i$ est récurrent si:
 \[
 \mathbb{P}_i(\tau_i < +\infty) = 1
 \]
-et $i$ est transient si:
+Et $i$ est transient si:
 \[
 \mathbb{P}_i(\tau_i < +\infty) = \mathbb{P}(\tau_i < +\infty \mid X_0 = i) < 1
 \]
@@ -385,6 +385,7 @@ d(i) = \text{PGCD}\{n \in \mathbb{N}^{*} \mid P_{i,i}^{(n)} > 0\}.
 \]
 
 Un état $i$ est dit \textbf{périodique} si la chaîne ne peut revenir à cet état qu'après un nombre d'étapes multiple (un certain entier $d > 1$), appelé la période de $i$.
+
 Si $d(i) = 1$, l'état $i$ est dit \textbf{apériodique}, ce qui signifie qu'il est possible de revenir à cet état à chaque nouvelle transition /  sans contrainte de périodicité.
 \end{tcolorbox}
 
@@ -402,7 +403,7 @@ Soit $i \in E$. On pose $N_i \in \mathbb{N}\cup \{\infty\} $ le nombre de visite
 N_i = \sum_{n \in \mathbb{N}^{*}} \mathbbm{1}_{\{X_n = i\}}.
 \]
 
-où
+Où
 \[
 \mathbbm{1}_{\{X_n = i\}} = \begin{cases}
     1 \text{ si } X_n = i\\
@@ -793,7 +794,9 @@ Toute chaine de Markov homogène irréductible admet une mesure invariante stric
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
 
-Soit $(X_n)_{n \geq 0}$ une chaîne de Markov irréductible sur $E$ fini. Soit $\pi$ l'unique probabilité invariante. Alors, pour toute fonction $f : E \to \mathbb{R}$, on a
+Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov irréductible sur un espace d'états $E$ fini. Soit $\pi$ l'unique probabilité invariante de la chaîne. \\
+
+Alors, pour toute fonction $f : E \to \mathbb{R}$, on a :
 \[
 \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} f(X_k) = \sum_{x \in E} f(x)\pi(x),
 \]
@@ -805,7 +808,7 @@ avec probabilité 1.
 
 \end{tcolorbox}
 
-On peut donc estimer $\mu(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
+On peut donc estimer $\pi(x)$ avec $\mathbbm{1}_{\{x\}} $, où :
 \[
     \mathbbm{1}_{A} : B \to \{0,1\}, A \subseteq B
 \]
@@ -1246,8 +1249,7 @@ mais elles sont généralement plus complexes à mettre en œuvre ou spécifique
 \newpage % TODO
 \section{Conclusion}
 
-En conclusion de ce rapport, nous avons exploré l'algorithme de Hastings-Metropolis et la théorie mathématique des chaînes de Markov qu'il utilise pour générer des échantillons fiables,
-permettant ainsi de résoudre rapidement plusieurs types de problèmes, tels que celui du voyageur de commerce. \\
+En conclusion, ce rapport a permis d'explorer l'algorithme de Hastings-Metropolis ainsi que la théorie des chaînes de Markov sur laquelle il s'appuie pour générer des échantillons fiables, ouvrant la voie à la résolution efficace de divers problèmes complexes, comme celui du voyageur de commerce. \\
 
 La force des approches probabilistes, fondées sur un parcours astucieux des distributions imposées, réside dans leur capacité à résoudre des problèmes là où les algorithmes déterministes échouent.
 Plus qu'une simple solution, Hastings-Metropolis marque un tournant fondamental en 1970 : sa stratégie probabiliste, capable de simplifier des situations complexes en ensembles plus abordables et pertinents, a révolutionné l'approche de nombreux problèmes dans des domaines variés. \\
@@ -1259,19 +1261,27 @@ Encore largement utilisé aujourd'hui, son modèle a donné lieu à de nombreuse
 
 \subsection{Implémentation en Python}
 
-Cette section contient des implémentations en python des algorithmes abordés. 
-Le code source complet est disponible à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}
+L'annexe de ce rapport contient les implémentations en Python 3 de l'algorithme de Hastings-Metropolis, ainsi que différents exemples d'applications de cet algorithme.
 
-\subsubsection{Code utilitaires}
+\subsection{Accès interactif au code source et aux implémentations}
+Le code source complet du projet est disponible sur GitHub à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis} \\
 
-Voici le code source de `utilis.py` qui contient des fonctions utiles au reste du projet. Seul le code des utilitaires mathématiques est présenté ici — les fonctions utilitaires liées aux graphiques sont disponibles directement dans le dépôt.
+Pour une exploration interactive des implémentations, un notebook Jupyter est accessible via Google Collaboration : \url{...} \\
+
+Ce notebook Jupyter regroupe l'ensemble des implémentations présentées dans ce rapport, et peut être exécuté directement depuis votre navigateur sans installation préalable, permettant ainsi de pouvoir tester et manipuler les algorithmes de manière interactive.
+
+\subsection{Implémentation de l'algorithme d'Hastings-Metropolis}
+
+Cette sous-section contient l'implémentation de l'algorithme de Hastings-Metropolis, comme décrite dans la sous-section \ref{description-algo-hast-met}. Le code source est divisé en plusieurs fonctions / groupe de fonctions, chacune ayant un rôle spécifique dans l'implémentation de l'algorithme.
+
+\subsubsection{Fonctions utilitaires}
+
+Le groupe de fonctions ci-dessous est constitué de toutes les fonctions utilitaires nécessaires à l'implémentation de l'algorithme de Hastings-Metropolis. Elles sont toutes directement intégrées dans le notebook.
 \begin{python}
     import numpy as np
     import networkx as nx
     import matplotlib.pyplot as plt
     import matplotlib.colors as mcolors
-    
-    
     from math import factorial, comb
     
     def poisson(l):
@@ -1318,18 +1328,19 @@ Voici le code source de `utilis.py` qui contient des fonctions utiles au reste d
     
         plt.show()    
 \end{python}
-\newpage
-\subsubsection{Implémentation de l'algorithme de Hastings-Metropolis}
 
-L'implémentation de l'algorithme de Hastings-Metropolis, comme décrit en \ref{description-algo-hast-met} et relativement idiomatique, voici son implémentation, en différentes fonctions: 
+\subsubsection{Fonctions de l'algorithme Hastings-Metropolis}
+
+Les fonctions ci-dessous constituent le coeur de l'implémentation de l'algorithme de Hastings-Metropolis. Elles permettent de simuler des tirages aléatoires selon une distribution cible à l'aide d'une chaîne de Markov construite progressivement. \\
 
 La fonction \texttt{next\_state\_markov(x, transitions)} renvoie un état $y$ (un entier), avec une probabilité donnée par $g_x(y)$ :
 
 \begin{python}
 #Tire aleatoirement le prochaine etat d'une chaine de Markov representee par une matrice
 def next_state_markov(x:int,transitions:np.array)->int:
-        return np.random.choice(len(transitions),p=transitions[x])    
+        return np.random.choice(len(transitions),p=transitions[x])
 \end{python}
+\vspace{0.3cm}
 
 La fonction \texttt{markov\_chain\_from\_tirage(tirage, nb\_etats)} transforme un tirage en une matrice de transition, représentant une chaîne de Markov :
 
@@ -1337,10 +1348,9 @@ La fonction \texttt{markov\_chain\_from\_tirage(tirage, nb\_etats)} transforme u
 #Tire aleatoirement le prochain etat d'une chaine de Markov representee par une matrice
 def next_state_markov(x:int,transitions:np.array)->int:
         return np.random.choice(len(transitions),p=transitions[x])
-    
 \end{python}
+\vspace{0.3cm}
 
-\newpage
 La fonction \texttt{hastings\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
 renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
 
@@ -1371,10 +1381,10 @@ def hastings_metropolis_tirage(x0:int,distribution_cible,proposition : np.array,
         tirage.append(x_t)
 
     return np.array(tirage)
-    
 \end{python}
+\vspace{0.3cm}
 
-Enfin, la fonction \texttt{hastings\_metropolis} combine tout pour générer directement une chaîne de Markov à partir de l'algorithme:
+Enfin, la fonction \texttt{hastings\_metropolis} combine le tout afin de générer directement une chaîne de Markov à partir de l'algorithme:
 
 \begin{python}
 #Utilise hastings_metropolis_tirage pour creer une chaine de Markov (matrice de transition) ayant la distribution du tirage obtenue  
@@ -1384,16 +1394,12 @@ def hastings_metropolis(x0:int,distribution_cible,proposition : np.array,iterati
 \end{python}
 
 \newpage
-\subsubsection{Implémentation d'Hastings-Metropolis}
+\subsection{Exemples d'application de l'algorithme d'Hastings-Metropolis}
 
-Dans cette section vous trouverais des exemples d'application des différents algorithmes implémentés 
+Cette section présente plusieurs exemples d'application de l'algorithme de Hastings-Metropolis. Les visualisations ont été réalisées à l'aide de la bibliothèque \texttt{matplotlib}, et reposent sur les implémentations décrites précédemment.
 
-\paragraph{Exemples Hastings-Metropolis}
+\subsubsection{Application à une loi binomiale}
 
-Voici les exemples d'application d'Hastings-Metropolis que nous avons effectuer,
-à partir de la librairie mathplotlib, le code source est trouvable sur \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis}.
-
-\paragraph{Application à une loi binomiale}
 \begin{center}
 \begin{python}
 # Application a petite loi binomial
@@ -1406,7 +1412,6 @@ proposition = np.array([ ligne / ligne.sum()
     for ligne in [np.random.rand(N) for _ in range(N)]
 ])
 
-
 tirage = hastings_metropolis_tirage(0,distribution_cible,proposition,iterations=10_000)
 mk_c = markov_chain_from_tirage(tirage,N)
 \end{python}
@@ -1417,7 +1422,8 @@ Résultat et graphe de la matrice de transition :
 \includegraphics[scale=0.25]{loi bin graph.png}
 
 \newpage
-\paragraph{Application à une loi de Poisson :}
+\subsubsection{Application à une loi de Poisson}
+
 \begin{center}
 \begin{python}
 # Application loi de poisson
@@ -1437,7 +1443,8 @@ Résultats :
 \includegraphics[scale=0.5]{poisson.png}
 
 \newpage
-\paragraph{Application à une loi uniforme :}
+\subsubsection{Application à une loi uniforme}
+
 \begin{center}
 \begin{python}
 # Application loi uniforme
@@ -1461,7 +1468,8 @@ Résultats :
 \includegraphics[scale=0.5]{uniforme.png}
 
 \newpage
-\paragraph{Application à une loi géométrique :}
+\subsubsection{Application à une loi géométrique}
+
 \begin{center}
 \begin{python}
 # Demonstration loi geometrique
@@ -1484,7 +1492,8 @@ Résultats :
 \includegraphics[scale=0.5]{géometrique.png}
 
 \newpage
-\paragraph{Application à une loi quelconque :}
+\subsubsection{Application à une loi quelconque}
+
 \begin{center}
 \begin{python}
 # Demonstration loi quelconque
@@ -1509,42 +1518,37 @@ Résultats :
 
 \includegraphics[scale=0.5]{loi aléatoire.png}
 
-\subsubsection{Implémentation d'Hastings-Metropolis pour le TSP}
-
-Vous trouverez ici l'application de l'algorithme au TSP, avec le code, et des exemples illustrés  
-
-Plusieurs fonctions ont était implémenter afin de pouvoir appliqué l'algorithme au TSP
-
-La fonction \texttt{echanger\_points} copie une liste et échange deux éléments de la liste copié, 
-\texttt{distance\_total} retourne la somme des distance entre tous les points d'une liste, les distances sont données par une matrice ``distances'',
-et enfin la fonction \texttt{tsp\_distribution\_cible} correspond à la distribution cible pour notre algorithme. 
-
 \newpage
-\begin{center}
+\subsection{Implémentation de l'algorithme d'Hastings-Metropolis pour le TSP}
+
+Cette section présente l'application de l'algorithme de Hastings-Metropolis au problème du voyageur de commerce (TSP), accompagnée du code source et d'exemples illustrés.
+Plusieurs fonctions ont été spécifiquement développées pour adapter l'algorithme au problème du voyageur de commerce. \\
+
+La fonction \texttt{echanger\_points} copie une liste et échange au hasard la position de deux points dans cette liste. \\
+La fonction \texttt{distance\_total} retourne la somme des distance entre tous les points d'une liste. Les distances sont données par une matrice \texttt{distances}. \\
+Enfin, la fonction \texttt{tsp\_distribution\_cible} correspond à la distribution cible pour notre algorithme :
+
 \begin{python}
-#echange deux points
+# Echange deux points
 def echanger_points(p):
     p_new = p.copy()
     i, j = np.random.choice(len(p), size=2, replace=False)
     p_new[i], p_new[j] = p_new[j], p_new[i]
     return p_new
 
-#calcule 
+# Calcule la distance totale d'une liste de points 
 def distance_total(tournee, distances):
     return sum(distances[tournee[i], tournee[(i+1) % len(tournee)]] for i in range(len(tournee)))
 
-#distribution cible pou le TSP
+# Distribution cible pour le TSP
 def tsp_distribution_cible(tournee, distances, beta=1):
     return np.exp(-beta * distance_total(tournee, distances))
-    
-
 \end{python}
-\end{center}
+\vspace{0.3cm}
 
-Et voici donc la fonction \texttt{hastings\_metropolis\_tsp} qui est une application Hasting Metropolis pour le tsp, 
-ainsi que la fonction \texttt{meilleur\_solution} qui renvoie la meilleure solution trouvée durant l'éxécution de l'agorithme. 
+La fonction \texttt{hastings\_metropolis\_tsp} applique l'algorithme de Hastings-Metropolis à la résolution du problème du voyageur de commerce (TSP). \\
+La fonction \texttt{meilleur\_solution} renvoie quant à elle la meilleure solution rencontrée au cours de l'exécution de l'algorithme :
 
-\begin{center}
 \begin{python}
 def hastings_metropolis_tsp(p0, distances, beta=1.0, iterations = 1_000):
     p_t = p0.copy()
@@ -1569,20 +1573,16 @@ def hastings_metropolis_tsp(p0, distances, beta=1.0, iterations = 1_000):
 
 def meilleur_solution(tirage, distances):
     return min(tirage, key=lambda tour: distance_total(tour, distances))
-
 \end{python}
-\end{center}
 
+\subsection{Exemples d'application d'Hastings-Metropolis pour le TSP}
 
-\subsubsection{Application d'Hastings-Metropolis pour le TSP}
+Cette section présente plusieurs exemples illustrant le fonctionnement de l'algorithme de Hastings-Metropolis appliqué au TSP. \\
 
-Ici vous trouverais des exemples illustrer de l'éxécution de l'algorithme.
+Cependant, afin de générer les données nécessaires à l'exécution des simulations, nous avons besoin des deux nouvelles fonctions utilitaires suivantes. \\
+La fonction \texttt{generer\_villes} crée aléatoirement les coordonnées de $n$ villes dans le plan. \\
+La fonction \texttt{matrice\_distances} calcule la matrice des distances euclidiennes entre toutes les paires de villes générées :
 
-\paragraph{Un peu de code utilitaire}
-
-Voici quelques fonctions d'utilitaire pour cette section
-
-\begin{center}
 \begin{python}
 
 #generes de facon aleatoire des coordonnees 
@@ -1594,14 +1594,12 @@ def matrice_distances(villes):
     return np.linalg.norm(villes[:, np.newaxis] - villes, axis=2)
 
 \end{python}
-\end{center}
 
-\paragraph{Différences selon le nombre d'itérations}
+\subsubsection{Différences obtenues selon le nombre d'itérations}
 
-Plus le nombre d'itération est élevé plus le résultat est sensé être proche de la solution optimal, 
-ici vous pouvez visualiser les différences de résultat selon le nombre d'itérations
+Plus le nombre d'itérations augmente, plus le résultat obtenu tend à se rapprocher de la solution optimale. \\
+Les extraits de code suivants montrent l'application de l'algorithme pour différents nombres d'itérations, ainsi que la visualisation des meilleures tournées obtenues :
 
-\begin{center}
 \begin{python}
 n_villes = 20
 villes = generer_villes(n_villes)
@@ -1614,7 +1612,6 @@ meilleur = meilleur_solution(tirage, distances)
 
 tracer_tournee(villes, meilleur, titre="Tournee peu optimale (iterations=10)")
 
-
 tirage = hastings_metropolis_tsp(p0, distances, beta=5.0, iterations=1000)
 meilleur = meilleur_solution(tirage, distances)
 
@@ -1623,20 +1620,31 @@ tracer_tournee(villes, meilleur, titre="Tournee moyennement optimale (iterations
 tirage = hastings_metropolis_tsp(p0, distances, beta=5.0, iterations=50000)
 meilleur = meilleur_solution(tirage, distances)
 \end{python}
-\end{center}
 
-avec pour résultat :
+\newpage
+Nous avons ici appliqué l'algorithme de Hastings-Metropolis à un ensemble de 20 villes, placées aléatoirement sur le plan, et avons ensuite visualisé les résultats obtenus pour 10, 1000 et 50000 itérations respectivement. \\ 
 
 \includegraphics[scale=0.5]{hm_tsp_10_iter.png}
 \includegraphics[scale=0.5]{hm_tsp_1000_iter.png}
 \includegraphics[scale=0.5]{hm_tsp_50000_iter.png}
+\vspace{0.3cm}
+
+Ces résultats illustrent clairement l'impact du nombre d'itérations sur la qualité de la solution obtenue :
+\begin{itemize}
+    \item Pour seulement 10 itérations, la tournée est généralement très éloignée de l'optimale, présentant un parcours inefficace contenant de nombreux détours.
+    \item Pour 1000 itérations, même si la tournée devient nettement plus cohérente et optimisée, plusieurs améliorations restent possibles.
+    \item Enfin, pour 50000 itérations, la solution proposée se rapproche grandement de la solution optimale. \\
+\end{itemize}
+
+Cependant, il est essentiel de noter que le temps de calcul de l'algorithme augmente proportionnellement au nombre d'itérations.
+De plus, le temps nécessaire pour améliorer significativement la solution augmente de façon logarithmique avec le nombre d'itérations : l'écart de qualité entre 10 et 1000 itérations se réduit beaucoup plus rapidement que celui entre 1000 et 50000 itérations.
+Ainsi, augmenter les itérations améliore la qualité de la solution, mais alourdit aussi la complexité temporelle, ce qui peut devenir un facteur limitant selon les ressources disponibles ou les contraintes de temps.
 
 \newpage
-\paragraph{Application à un cas concret}
+\subsubsection{Application à un cas concret}
 
-Ici nous avons différentes coordonnées représentants les différentes grandes villes de France, nous avons appliqué notre algorithme afin de trouvé le meilleur ordre pour parcourir ces villes.
+Voici différentes coordonnées représentant les 12 grandes villes de France. Nous avons appliqué notre algorithme pour déterminer l'ordre optimal permettant de parcourir ces villes.
 
-\begin{center}
 \begin{python}
 N = 12
 villes = np.array([
@@ -1677,16 +1685,19 @@ ax.set_ylim(ymin, ymax)
 tracer_tournee(villes, meilleur, titre="Tournee approximativement optimale", ax=ax)
 plt.show()
 \end{python}
-\end{center}
 
-et voici ce que nous obtenons
+\newpage
+Nous obtenons alors le résultat suivant :
+\begin{center}
 
 \includegraphics{france_tsp.png}
 
-\newpage
-\subsection{Bibliographie}
+\end{center}
 
-\subsubsection{Documents textuels :}
+\newpage
+\section{Bibliographie}
+
+\subsection{Documents textuels :}
 \begin{itemize}
     \item Physical Based Rendering, from the theory to implementation Matt Pharr, Wenzel Jakob, Gre
     \item \url{https://fr.wikipedia.org/wiki/Chaîne_de_Markov}
@@ -1707,7 +1718,7 @@ et voici ce que nous obtenons
     \item \url{https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm}
 \end{itemize}
 
-\subsubsection{Documents vidéos :}
+\subsection{Documents vidéos :}
 \begin{itemize}
     \item \url{https://www.youtube.com/watch?v=yCv2N7wGDCw}
     \item \url{https://www.youtube.com/watch?v=MxI78mpq_44}
