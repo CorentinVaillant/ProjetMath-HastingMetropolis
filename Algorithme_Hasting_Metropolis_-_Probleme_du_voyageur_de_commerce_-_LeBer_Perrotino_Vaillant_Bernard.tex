@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[a4paper, top=35mm, bottom=35mm, left=35mm, right=35mm]{geometry} % Modification des tailles des marges (on en parlera après).
+\usepackage[a4paper, top=35mm, bottom=35mm, left=33mm, right=33mm]{geometry} % Modification des tailles des marges (on en parlera après).
 
 % Gestion des polices en fonction de l'encodage (PDFLaTeX, XeLaTeX, LuaTeX ou autre) :
 \usepackage{ifxetex}
@@ -331,6 +331,7 @@ P_{1,2}^{(5)} = \mathbb{P}(X_{k+5} = 1 \mid X_k = 2) = 24,385\%
 \]
 \end{tcolorbox}
 
+\newpage
 \subsection{Classes d'équivalence}
 
 \subsubsection{Classification des états}
@@ -512,7 +513,7 @@ Autrement dit :
 Ce qui signifie que pour tous les couples d'états $(i, j)$ de $E$, avec $i \neq j$, il existe un chemin (de probabilité strictement positive) permettant d'aller de $i$ à $j$, et réciproquement. On a donc $i \leftrightarrow j$.
 \end{tcolorbox}
 
-\newpage % TODO
+\newpage
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple, breakable]
 Prenons par exemple la chaîne de Markov suivante, dont la représentation sous forme de graphe orienté est donnée ci-dessous :
 
@@ -790,6 +791,7 @@ On a donc montré, par récurrence sur $n$, que pour tout $n \in \mathbb{N}^*$, 
 Toute chaine de Markov homogène irréductible admet une mesure invariante strictement positive sur E et toutes les probabilité invariantes sont proportionnelles entre elles.
 \end{tcolorbox}
 
+\newpage
 \subsubsection{Théorème ergodique}
 
 \begin{tcolorbox}[colback=white,colframe=red!80!black,title=Théorème ergodique (admis)]
@@ -1093,6 +1095,7 @@ Nous pouvons donc redéfinir l'algorithme avec le pseudo code suivant : \\
 On peut retirer de la séquence $\{p_0,p_1, \ldots ,p_{N-1}\}$ le meilleur résultat en prenant la $p_{m} \in E : D(p_{m}) = \min(D(E))$.
 \end{tcolorbox}
 
+\newpage
 \subsection{Exemples d'applications d'Hastings-Metropolis}
 
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple 1, breakable]
@@ -1156,6 +1159,7 @@ Sur le schéma, $x_1$ est proposé puis accepté, suivi de $x_2$ également acce
 À noter que certains états peuvent être sélectionnés même s'ils semblent se situer dans des zones de faible densité (c'est le cas ici de $x_3$).
 \end{tcolorbox}
 
+\newpage
 \begin{tcolorbox}[colback=white,colframe=yellow!80!black,title=Exemple 2, breakable]
 Considérons maintenant un cas simple du TSP avec 5 villes $A, B, C, D$ et $E$, donc dans un système d'états finis par lequel on essaie d'obtenir le chemin de longueur minimale. \\
 La différence notable avec le précédent exemple est que l'on ne cherche plus à échantillonner des points sur une courbe de densité mais des chemins entre les villes. Chaque possibilité est donc un ordre de visite des villes, et il en existe $5! = 120$ au total. \\
@@ -1227,6 +1231,7 @@ Et un exemple de chemin accepté par HM, en noir et bleu :
 % Il est utilisé notamment pour approximer l'équation de rendu afin de faire de la synthèse d'image basé sur la physique, ou encore en sécurité informatique, afin de détecter des cas d'activité suspectes.
 % \end{tcolorbox}
 
+\newpage
 \subsection{Brèves descriptions d'autres méthodes MCMC permettant de résoudre le TSP}
 
 Il existe plusieurs autres méthodes de MCMC qui peuvent en fonction du contexte, s'avérer plus pertinentes que l'algorithme de Hastings-Metropolis.
@@ -1266,10 +1271,11 @@ L'annexe de ce rapport contient les implémentations en Python 3 de l'algorithme
 \subsection{Accès interactif au code source et aux implémentations}
 Le code source complet du projet est disponible sur GitHub à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis} \\
 
-Pour une exploration interactive des implémentations, un notebook Jupyter est accessible via Google Collaboration : \url{...} \\
+Pour une exploration interactive des implémentations, un notebook Jupyter est accessible via Google Collaboration : \url{https://colab.research.google.com/drive/1gUXCEhjoGEOfXZ4Y-LxVnypVxw9O451R?usp=sharing} \\
 
 Ce notebook Jupyter regroupe l'ensemble des implémentations présentées dans ce rapport, et peut être exécuté directement depuis votre navigateur sans installation préalable, permettant ainsi de pouvoir tester et manipuler les algorithmes de manière interactive.
 
+\newpage
 \subsection{Implémentation de l'algorithme d'Hastings-Metropolis}
 
 Cette sous-section contient l'implémentation de l'algorithme de Hastings-Metropolis, comme décrite dans la sous-section \ref{description-algo-hast-met}. Le code source est divisé en plusieurs fonctions / groupe de fonctions, chacune ayant un rôle spécifique dans l'implémentation de l'algorithme.
@@ -1329,6 +1335,7 @@ Le groupe de fonctions ci-dessous est constitué de toutes les fonctions utilita
         plt.show()    
 \end{python}
 
+\newpage
 \subsubsection{Fonctions de l'algorithme Hastings-Metropolis}
 
 Les fonctions ci-dessous constituent le coeur de l'implémentation de l'algorithme de Hastings-Metropolis. Elles permettent de simuler des tirages aléatoires selon une distribution cible à l'aide d'une chaîne de Markov construite progressivement. \\
@@ -1351,8 +1358,7 @@ def next_state_markov(x:int,transitions:np.array)->int:
 \end{python}
 \vspace{0.3cm}
 
-La fonction \texttt{hastings\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} 
-renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
+La fonction \texttt{hastings\_metropolis\_tirage(x0, distribution\_cible, proposition, iterations)} renvoie un tirage en suivant l'algorithme de Hastings-Metropolis :
 
 \begin{python}
 #Implementation de HM
