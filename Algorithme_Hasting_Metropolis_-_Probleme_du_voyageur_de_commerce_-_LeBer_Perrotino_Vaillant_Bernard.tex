@@ -55,10 +55,15 @@
 
 \begin{document}
 \maketitle
+\thispagestyle{empty}
 
 \newpage
 \tableofcontents
+\thispagestyle{empty}
+
 \newpage
+\pagenumbering{arabic}  % Redémarre la numérotation à 1
+\setcounter{page}{1}    % Définit le numéro de page actuel
 
 \section*{Préambule}
 
@@ -664,7 +669,7 @@ Cela signifie que $\pi$ est un vecteur propre à droite de la transposée $P^{\t
 
 De plus dans notre cas, comme $\pi$ est une probabilité, elle respecte les conditions suivantes :
 \[
-\forall i \in E, \quad \pi_i \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi_i = 1.
+\forall i \in E, \quad \pi(i) \geq 0 \quad \text{et} \quad \sum_{i \in E} \pi(i) = 1.
 \]
 
 \begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Existence d'une probabilité invariante]
@@ -724,6 +729,12 @@ Autrement dit, la loi invariante reste inchangée peu importe le nombre de trans
 \begin{tcolorbox}[colback=white,colframe=green!80!black,title=Démonstration,breakable]
 Soit $(X_n)_{n\in\mathbb{N}}$ une chaîne de Markov homogène sur un espace d'états $E$, de matrice de transition $P$, et soit $\pi$ une probabilité invariante.
 On a alors $\pi P = \pi$. \\
+
+Par souci de clarté dans les manipulations matricielles qui suivent, et uniquement pour cette preuve, nous noterons :
+\[
+\pi_i := \pi(i)
+\]
+Autrement dit, $\pi_i$ désigne la $i$-ème composante du vecteur de probabilité $\pi$. \\
 
 Prouvons par \textbf{récurrence} sur $n \in \mathbb{N}^*$ que $\pi P^n = \pi$. \\
 
@@ -802,7 +813,9 @@ Alors, pour toute fonction $f : E \to \mathbb{R}$, on a :
 \[
 \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} f(X_k) = \sum_{x \in E} f(x)\pi(x),
 \]
-avec probabilité 1. En particulier, en prenant $f = \mathbbm{1}_{\{x\}}$, on a
+avec probabilité 1.
+
+En particulier, en prenant $f = \mathbbm{1}_{\{x\}}$, on a :
 \[
 \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \mathbbm{1}_{\{X_k = x\}} = \pi(x),
 \]
@@ -836,12 +849,12 @@ Maintenant que nous avons défini la loi stationnaire, nous pouvons énoncer le 
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène, irréductible et apériodique à espace d'états fini. Soit P sa matrice de transition.\\
 Alors, il existe une unique mesure invariante $\pi$, et pour tout état initial $i \in E$ et tout $j \in E$,
 \[
-\lim_{n \to \infty} P^n_{i,j} = \pi_j.
+\lim_{n \to \infty} P^n_{i,j} = \pi(j).
 \]
 
 Ce qui implique :
 \[
-\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi_i P^k = \pi_j.
+\lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \pi(i) P^k = \pi(j).
 \]
 
 Donc la loi de $X_n$ converge vers $\pi$ indépendamment de l'état initial, on a une convergence en loi.
@@ -882,7 +895,7 @@ Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène irréductible. \
 
 Alors, pour toute mesure initiale $\lambda$ et $\forall j \in E$ :
 \[
-\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi_j.
+\frac{1}{n} \sum_{k=1}^{n} 1_{\{X_k = j\}} \rightarrow \pi(j).
 \]
 Où $\pi$ est l'unique probabilité invariante.
 \end{tcolorbox}
@@ -915,21 +928,13 @@ On pourra citer les méthodes MCMC d'échantillonnage de Gibbs (et ses variantes
 
 \subsection{Définitions}
 
-\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Notations]
+\begin{tcolorbox}[colback=white,colframe=blue!80!black,title=Notation]
 Soit $(X_n)_{n \in \mathbb{N}}$ une chaîne de Markov homogène à valeurs dans un ensemble fini ou dénombrable $E$.
 Soit $Q$ la matrice de transition associée à cette chaîne de Markov. \\
 
 $\forall i, j \in E$, on pose :
 \[
 Q(i,j) = Q_{i,j}.
-\]
-\vspace{1mm}
-
-Soit $\pi$ une probabilité sur $E$. \\
-
-$\forall i \in E$, on pose :
-\[
-\pi(i) = \pi_i.
 \]
 \end{tcolorbox}
 
@@ -1271,9 +1276,11 @@ L'annexe de ce rapport contient les implémentations en Python 3 de l'algorithme
 \subsection{Accès interactif au code source et aux implémentations}
 Le code source complet du projet est disponible sur GitHub à l'adresse suivante : \url{https://github.com/CorentinVaillant/ProjetMath-HastingMetropolis} \\
 
-Pour une exploration interactive des implémentations, un notebook Jupyter est accessible via Google Collaboration : \url{https://colab.research.google.com/drive/1gUXCEhjoGEOfXZ4Y-LxVnypVxw9O451R?usp=sharing} \\
+Pour une exploration interactive des implémentations, un Jupyter notebook est accessible via Google Collaboration : \url{https://colab.research.google.com/drive/1gUXCEhjoGEOfXZ4Y-LxVnypVxw9O451R?usp=sharing} \\
 
-Ce notebook Jupyter regroupe l'ensemble des implémentations présentées dans ce rapport, et peut être exécuté directement depuis votre navigateur sans installation préalable, permettant ainsi de pouvoir tester et manipuler les algorithmes de manière interactive.
+Ce Jupyter notebook regroupe l'ensemble des implémentations présentées dans la suite de ce rapport ainsi que d'autres représentations n'ayant pas pues être présentées ici du à une contrainte de place.
+
+Il peut être exécuté directement depuis votre navigateur sans installation préalable, vous permettant ainsi de pouvoir tester et manipuler tous les algorithmes implémentés de manière interactive.
 
 \newpage
 \subsection{Implémentation de l'algorithme d'Hastings-Metropolis}
@@ -1720,8 +1727,8 @@ Nous obtenons alors le résultat suivant :
     \item \url{https://fr.wikipedia.org/wiki/Algorithme_de_Metropolis-Hastings#cite_note-2}
     \item \url{https://www.radcliffe.harvard.edu/news-and-ideas/flash-of-genius}
     \item \url{https://fr.wikipedia.org/wiki/Probl\%C3\%A8me_du_voyageur_de_commerce}
-    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of} \url{-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} \\ % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
-    \item \url{https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm}
+    \item \url{https://www.cambridge.org/core/journals/mathematical-proceedings-of} \url{-the-cambridge-philosophical-society/article/abs/shortest-path-through-many-points/F1C28B5730B94887F4659FCBF8A1F2BB} % Document de Thomas Kirkman, Jillian Beardwood, J.H. Halton ou John Hammersley.
+    \item \url{https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm} \\
 \end{itemize}
 
 \subsection{Documents vidéos :}
